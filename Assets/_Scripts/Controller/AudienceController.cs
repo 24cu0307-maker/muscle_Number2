@@ -8,7 +8,7 @@ public class AudienceController : MonoBehaviour
         
     }
 
-    // Update is called once per frameaaa
+    // Update is called once per frame
     void Update()
     {
         

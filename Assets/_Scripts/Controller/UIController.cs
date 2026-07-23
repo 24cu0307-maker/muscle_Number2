@@ -38,6 +38,8 @@ public class UIController : MonoBehaviour
 
     private const int size = 200;
 
+    bool check = true;
+
     /*
     [SerializeField] private GameObject uiPrefab1;
     [SerializeField] private GameObject uiPrefab2;
@@ -59,21 +61,21 @@ public class UIController : MonoBehaviour
                 //開始時間
                 if (!isPoseShown && seconds >= pose.start && seconds < pose.end)
                 {
-                    m_currentFrame = new GameObject[12];
-                    for (int i = 0; i < 12; i++)
+                    m_currentFrame = new GameObject[8];
+                    for (int i = 0; i < m_currentFrame.Length; i++)
                     {
                         int poseID = i / 4;          // 0,0,0,0,1,1,1,1,2,2,2,2
                         int addFrameID = (i % 4) * 3; // 0,3,6,9
 
                         Vector2 pos = poseID switch
                         {
-                            0 => new Vector2(0, 0),
-                            1 => new Vector2(500, 0),
+                            0 => new Vector2(100, 0),
+                            1 => new Vector2(-100, 0),
                             2 => new Vector2(-500, 0),
                             _ => Vector2.zero
                         };
 
-                        m_currentFrame[i] = CreateFrame(poseID, addFrameID, pos, m_thirdPersonCanvas, new Vector2(500, 500));
+                        m_currentFrame[i] = CreateFrame(poseID, addFrameID, pos, m_thirdPersonCanvas, new Vector2(1000, 1000));
                     }
 
                     for (int i = 1; i < m_currentFrame.Length; i += 2)
@@ -93,43 +95,53 @@ public class UIController : MonoBehaviour
                     {
                         ScaleDown(m_currentFrame[i]);
                     }
-
                     //イベント実行　当たり判定
                     for (int i = 0; i < 3; i++)
                     {
                         PoseJudgeFrame?.Invoke(i);
                     }
 
-                    for (int poseID = 0; poseID < 3; poseID++)
-                    {
-                        int index = poseID * 4 + 1;
+                }
 
-                        if (m_poseJudgeController.GetisPose(poseID) &&
-                            m_poseJudgeController.PoseJudge_Normal(
-                                m_currentFrame[index],
-                                m_currentFrame[index + 2]))
-                        {
-                            Show(m_currentFrame[index - 1]);
-                            Hide(m_currentFrame[index]);
-                            Hide(m_currentFrame[index + 2]);
-                        }
+                Debug.Log("[ace] " + check);
+                if (!check) break;
+                Debug.Log("[ace1] " + check);
+
+                for (int poseID = 0; poseID < 2; poseID++)
+                {
+                    int index = poseID * 4 + 1;
+
+                    Debug.Log("[ace2] " + check);
+                    if (!check) break;
+                    Debug.Log("[ace3] " + check);
+                    //通常
+                    if (m_poseJudgeController.GetisPose(poseID) &&
+                        m_poseJudgeController.PoseJudge_Normal(
+                            m_currentFrame[index],
+                            m_currentFrame[index + 2]))
+                    {
+                        Show(m_currentFrame[index - 1]);
+                        Hide(m_currentFrame[index]);
+                        Hide(m_currentFrame[index + 2]);
+                        check = false;
                     }
 
-                    for (int poseID = 0; poseID < 3; poseID++)
-                    {
-                        int index = poseID * 4 + 1;
+                    if (!check) break;
 
-                        if (m_poseJudgeController.GetisPose(poseID) &&
-                            m_poseJudgeController.PoseJudge_Perfect(
-                                m_currentFrame[index],
-                                m_currentFrame[index + 2]))
-                        {
-                            Show(m_currentFrame[index - 1]);
-                            Hide(m_currentFrame[index]);
-                            Hide(m_currentFrame[index + 2]);
-                        }
+                    //完璧
+                    if (m_poseJudgeController.GetisPose(poseID) &&
+                       m_poseJudgeController.PoseJudge_Perfect(
+                           m_currentFrame[index],
+                           m_currentFrame[index + 2]))
+                    {
+                        Show(m_currentFrame[index - 1]);
+                        Hide(m_currentFrame[index]);
+                        Hide(m_currentFrame[index + 2]);
+                        check = false;
                     }
                 }
+
+            
                 break;
 
             //溜めてタイミング
@@ -151,7 +163,7 @@ public class UIController : MonoBehaviour
                     m_currentFrame = new GameObject[4];
                     for (int i = 0; i < 4; i++)
                     {
-                        m_currentFrame[i] = CreateFrame(pose.PoseID, i * 3, Vector2.zero, m_canvas, new Vector2(2400,2400));
+                        m_currentFrame[i] = CreateFrame(pose.PoseID, i * 3, Vector2.zero, m_canvas, new Vector2(650,650));
 
 
                     }
@@ -318,6 +330,7 @@ public class UIController : MonoBehaviour
             // 次のポーズ用にリセット
             isPoseShown = false;
             //once = true;
+            check = true;
 
         }
 
@@ -329,7 +342,7 @@ public class UIController : MonoBehaviour
     /// <summary>
     public void ScaleDown(GameObject m_uiData)
     {
-        m_uiData.transform.localScale -= Vector3.one * Time.deltaTime * 0.05f;
+        m_uiData.transform.localScale -= Vector3.one * Time.deltaTime * 0.02f;
     }
 
     /// <summary>

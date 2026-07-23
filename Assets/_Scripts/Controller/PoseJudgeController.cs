@@ -51,6 +51,7 @@ public class PoseJudgeController : MonoBehaviour
         ///指定されたポーズデータを入れる
         CSVPoseData pose = poseDatas[poseID];
 
+        Debug.Log("[posecheck]Per" + poseID);
         ///ポーズの判定
         if (AngleDataManager.Instance.angleData.angle[0] <= (pose.LeftelbowRotation[0] + pose.LeftelbowRotation[1]) &&
             AngleDataManager.Instance.angleData.angle[0] >= (pose.LeftelbowRotation[0] - pose.LeftelbowRotation[1]) &&
@@ -83,8 +84,8 @@ public class PoseJudgeController : MonoBehaviour
     public bool PoseJudge_Perfect(GameObject _uinumber_approaching, GameObject _uinumber_wating)
     {
         Debug.Log("[posecheck]Per");
-        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.01f &&
-               _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.01f;
+        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.001f &&
+               _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.001f;
 
     }
 
@@ -94,8 +95,8 @@ public class PoseJudgeController : MonoBehaviour
     public bool PoseJudge_Normal(GameObject _uinumber_approaching, GameObject _uinumber_wating)
     {
         Debug.Log("[posecheck]Guu");
-        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.03f &&
-                _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.03f;
+        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.005f &&
+                _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.005f;
 
     }
 

@@ -56,7 +56,7 @@ public sealed class InGameManager : MonoBehaviour
 
     private void Update()
     {
-        //if (m_endtimer <= GameTimeSeconds) { m_gameManager.FinishGame(); }
+        if (m_endtimer <= GameTimeSeconds) { m_gameManager.FinishGame(); }
 
 
         //現在のゲーム時間の更新
