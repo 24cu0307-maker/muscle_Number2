@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8716cc62ad9626b4b9150252f98c4256, type: 3}
+  m_Name: Shot_RadiusConstant
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShotPreset
+  m_memo: "\u534A\u5F84\u78BA\u8A8D1\uFF1A\u958B\u59CB\u534A\u5F84\u3068\u7D42\u4E86\u534A\u5F84\u30924.5\u306B\u56FA\u5B9A\u3057\u3001\u4E00\u5B9A\u8DDD\u96E2\u3067\u80F8\u306E\u5468\u56F2\u3092\u5186\u79FB\u52D5\u3057\u307E\u3059\u3002"
+  m_targetPoint: 1
+  m_transitionDuration: 0
+  m_moveDuration: 3
+  m_moveSpeed: 1
+  m_startHoldDuration: 0
+  m_holdDuration: 0.5
+  m_moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_pathType: 1
+  m_pointA: {x: 0, y: 0, z: 5}
+  m_pointB: {x: 10, y: 0, z: 3}
+  m_orbitAngleOffset: 10
+  m_startYaw: -100
+  m_startPitch: -5
+  m_startRadius: 4.5
+  m_startHeight: 0.3
+  m_startSide: 0
+  m_startFieldOfView: 45
+  m_startRoll: 0
+  m_endYaw: 100
+  m_endPitch: -5
+  m_endRadius: 4.5
+  m_endHeight: 0.3
+  m_endSide: 0
+  m_endFieldOfView: 45
+  m_endRoll: 0

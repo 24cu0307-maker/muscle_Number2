@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8716cc62ad9626b4b9150252f98c4256, type: 3}
+  m_Name: Shot_CheckPerfect
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShotPreset
+  m_memo: "確認3A：速度倍率0.5の低速円軌道です。次の高速Shotと比較します。"
+  m_targetPoint: 1
+  m_transitionDuration: 0
+  m_moveDuration: 2
+  m_moveSpeed: 0.5
+  m_holdDuration: 0.5
+  m_moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_startYaw: 120
+  m_startPitch: -5
+  m_startRadius: 4
+  m_startHeight: 0.5
+  m_startSide: 0
+  m_startFieldOfView: 45
+  m_startDutch: 0
+  m_endYaw: -120
+  m_endPitch: -5
+  m_endRadius: 4
+  m_endHeight: 0.5
+  m_endSide: 0
+  m_endFieldOfView: 45
+  m_endDutch: 0

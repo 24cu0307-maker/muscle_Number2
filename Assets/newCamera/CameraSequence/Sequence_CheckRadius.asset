@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c62f6ef7b0171b46894045fc62c2d4b, type: 3}
+  m_Name: Sequence_CheckRadius
+  m_EditorClassIdentifier: Assembly-CSharp::CameraSequence
+  m_memo: "\u958B\u59CB\u30FB\u7D42\u4E86\u534A\u5F84\u306E\u78BA\u8A8D\u7528\u3002\u4E00\u5B9A\u534A\u5F84\u3001\u63A5\u8FD1\u3001\u96E2\u8131\u306E\u9806\u756A\u3067\u518D\u751F\u3057\u307E\u3059\u3002"
+  b_mPauseGameTime: 1
+  b_mReturnToGameplayCamera: 1
+  b_mLoop: 0
+  m_cameraShotPresetList:
+  - {fileID: 11400000, guid: 5fa68cf9c4fb42feae07aaabed3226fb, type: 2}

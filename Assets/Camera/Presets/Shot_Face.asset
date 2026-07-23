@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e2a53bd6688954e937fc7471158be8, type: 3}
+  m_Name: Shot_Face
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShotPreset
+  memo: "\u4F55\u3092\u898B\u305B\u308B\u30AB\u30E1\u30E9\u304B\u3092\u66F8\u304D\u307E\u3059\u3002"
+  targetPoint: 0
+  transitionDuration: 0.25
+  moveDuration: 1
+  holdDuration: 0.4
+  moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startYaw: -30
+  startPitch: 0
+  startDistance: 4.2
+  startHeight: 0
+  startSide: 0
+  startFieldOfView: 45
+  startDutch: 0
+  endYaw: 84
+  endPitch: 26
+  endDistance: 3.5
+  endHeight: 1.06
+  endSide: 1.29
+  endFieldOfView: 65.3
+  endDutch: -10.3
