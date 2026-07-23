@@ -1253,7 +1253,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -1281,7 +1281,7 @@ Transform:
   m_GameObject: {fileID: 929223766}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1470,7 +1470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1062348413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1585,11 +1585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd139875104f3bb41919cb4b760153a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIController
-  excelLoader: {fileID: 1056911007}
-  timer: {fileID: 1832734946}
-  uIData: {fileID: 2027467366}
-  angleJudge: {fileID: 89153419}
-  poseCameraDirector: {fileID: 2006347345}
 --- !u!4 &1158038485
 Transform:
   m_ObjectHideFlags: 0
@@ -1649,7 +1644,7 @@ MonoBehaviour:
     FieldOfView: 60.000004
     OrthographicSize: 5
     NearClipPlane: 0.3
-    FarClipPlane: 1000
+    FarClipPlane: 100
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -1674,7 +1669,7 @@ Transform:
   m_GameObject: {fileID: 1223162701}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1909,7 +1904,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1394361668
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2105,11 +2100,6 @@ Transform:
 --- !u!4 &1514706966 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4039658466086195967, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
-  m_PrefabInstance: {fileID: 8948611308192900609}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1617299744 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8910641140367164492, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
   m_PrefabInstance: {fileID: 8948611308192900609}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1735199688
@@ -2581,22 +2571,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 2006347344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f1542643fb828a448b8a40de1bab301, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f96dfc55dd66be4190238e054011ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoseCameraDirector
-  gameplayCamera: {fileID: 1223162702}
-  poseCamera: {fileID: 1266276406}
-  cinemachineBrain: {fileID: 929223767}
-  characterRoot: {fileID: 65146561}
-  frontReference: {fileID: 1617299744}
-  waistTarget: {fileID: 453332931}
-  chestTarget: {fileID: 1514706966}
-  faceTarget: {fileID: 1851564454}
-  gameplayPriority: 10
-  activePosePriority: 100
-  inactivePosePriority: 0
-  testSequence: {fileID: 11400000, guid: 0ebb9e2ebed4d2e4e9712f655f724f69, type: 2}
-  testPlay: 0
+  m_gameplayCamera: {fileID: 1266276406}
+  m_poseCamera: {fileID: 1266276406}
+  m_cinemachineBrain: {fileID: 929223767}
+  m_characterRoot: {fileID: 65146561}
+  m_frontReference: {fileID: 65146561}
+  b_mKeepCharacterCentered: 1
+  m_waistTarget: {fileID: 453332931}
+  m_chestTarget: {fileID: 1514706966}
+  m_faceTarget: {fileID: 1851564454}
+  m_gameplayPriority: 10
+  m_activePosePriority: 100
+  m_inactivePosePriority: 0
+  m_testSequence: {fileID: 11400000, guid: 5be130d8b89bcb246b3eed833c7baa3e, type: 2}
+  m_testSequenceList: []
+  m_testSequenceIndex: 0
+  m_testPlayKey: 112
+  m_stopKey: 111
 --- !u!4 &2006347346
 Transform:
   m_ObjectHideFlags: 0
@@ -2791,17 +2785,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 451059425251622963, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3612253396115997058, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3612253396115997058, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -67
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 267
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
       propertyPath: m_LocalRotation.w

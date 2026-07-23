@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8716cc62ad9626b4b9150252f98c4256, type: 3}
-  m_Name: Shot_CheckFront
+  m_Name: Third-person camera1
   m_EditorClassIdentifier: Assembly-CSharp::CameraShotPreset
-  m_memo: "\u78BA\u8A8D1\uFF1AMain Camera\u306B\u4F9D\u5B58\u305B\u305A\u5DE6\u5074\u304B\u3089\u958B\u59CB\u3057\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u3092\u5E38\u306B\u753B\u9762\u4E2D\u592E\u3078\u6620\u3057\u307E\u3059\u3002"
-  m_targetPoint: 1
-  m_transitionDuration: 0
-  m_moveDuration: 3
-  m_moveSpeed: 1.5
-  m_startHoldDuration: 0.2
-  m_holdDuration: 1.5
+  m_memo: "\u4F55\u3092\u898B\u305B\u308B\u30AB\u30E1\u30E9\u304B\u3092\u66F8\u304D\u307E\u3059\u3002"
+  m_targetPoint: 2
+  m_transitionDuration: 0.25
+  m_moveDuration: 1
+  m_moveSpeed: 1
+  m_startHoldDuration: 0
+  m_holdDuration: 20
   m_moveCurve:
     serializedVersion: 2
     m_Curve:
@@ -43,21 +43,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_pathType: 1
-  m_pointA: {x: 0, y: 50, z: 0}
-  m_pointB: {x: 0, y: 0.2, z: 3}
-  m_orbitAngleOffset: 20
-  m_startYaw: -90
-  m_startPitch: -5
-  m_startRadius: 3.17
+  m_pathType: 2
+  m_pointA: {x: 0, y: 0, z: 4.2}
+  m_pointB: {x: 0, y: 8, z: -15}
+  m_orbitAngleOffset: 0
+  m_startYaw: 0
+  m_startPitch: 0
+  m_startRadius: 12
   m_startHeight: 0
   m_startSide: 0
-  m_startFieldOfView: 40
-  m_startRoll: -720
-  m_endYaw: 0
-  m_endPitch: -5
-  m_endRadius: 4
-  m_endHeight: 0
+  m_startFieldOfView: 45
+  m_startRoll: 0
+  m_endYaw: -180
+  m_endPitch: -3
+  m_endRadius: 30
+  m_endHeight: -3
   m_endSide: 0
-  m_endFieldOfView: 90
+  m_endFieldOfView: 36
   m_endRoll: 0
