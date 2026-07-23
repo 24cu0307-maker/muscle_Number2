@@ -38,7 +38,7 @@ public sealed class CameraShotPreset : ScriptableObject
     private const float E_DEFAULT_END_PITCH = -3.0f;             //終了縦角度の初期値
 
     private const float E_MIN_RADIUS = 1.5f;                     //円軌道半径の最小値
-    private const float E_MAX_RADIUS = 12.0f;                    //円軌道半径の最大値
+    private const float E_MAX_RADIUS = 50.0f;                    //円軌道半径の最大値
     private const float E_DEFAULT_START_RADIUS = 4.2f;           //開始半径の初期値
     private const float E_DEFAULT_END_RADIUS = 3.5f;             //終了半径の初期値
 

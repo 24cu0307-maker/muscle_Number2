@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8716cc62ad9626b4b9150252f98c4256, type: 3}
-  m_Name: Shot_Test2
+  m_Name: Standard Pose Angles1
   m_EditorClassIdentifier: Assembly-CSharp::CameraShotPreset
-  m_memo: "\u53F3\u304B\u3089\u6B63\u9762"
-  m_targetPoint: 1
-  m_transitionDuration: 0.25
+  m_memo: "\u4F55\u3092\u898B\u305B\u308B\u30AB\u30E1\u30E9\u304B\u3092\u66F8\u304D\u307E\u3059\u3002"
+  m_targetPoint: 0
+  m_transitionDuration: 0
   m_moveDuration: 1
-  m_moveSpeed: 0.5
+  m_moveSpeed: 1
   m_startHoldDuration: 0
-  m_holdDuration: 0.4
+  m_holdDuration: 0
   m_moveCurve:
     serializedVersion: 2
     m_Curve:
@@ -43,21 +43,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_pathType: 2
-  m_pointA: {x: 4, y: 0, z: -2}
-  m_pointB: {x: 0, y: 0, z: 4.5}
+  m_pathType: 1
+  m_pointA: {x: 0, y: 0, z: 15}
+  m_pointB: {x: 0, y: 0, z: 4}
   m_orbitAngleOffset: 0
   m_startYaw: 0
   m_startPitch: 0
-  m_startRadius: 4.2
+  m_startRadius: 5
   m_startHeight: 0
   m_startSide: 0
   m_startFieldOfView: 45
   m_startRoll: 0
   m_endYaw: 0
   m_endPitch: 0
-  m_endRadius: 5
-  m_endHeight: 0
+  m_endRadius: 2
+  m_endHeight: -2
   m_endSide: 0
-  m_endFieldOfView: 36
+  m_endFieldOfView: 40
   m_endRoll: 0
