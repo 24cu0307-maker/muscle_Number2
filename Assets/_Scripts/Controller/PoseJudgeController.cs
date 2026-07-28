@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
-[DefaultExecutionOrder(-100)]
+[DefaultExecutionOrder(-0)]
 public class PoseJudgeController : MonoBehaviour
 {
     [Header("UIÇÃï€ë∂èÍèä")]
@@ -53,7 +53,8 @@ public class PoseJudgeController : MonoBehaviour
 
         Debug.Log("[posecheck]Per" + poseID);
         ///É|Å[ÉYÇÃîªíË
-        if (AngleDataManager.Instance.angleData.angle[0] <= (pose.LeftelbowRotation[0] + pose.LeftelbowRotation[1]) &&
+        if (AngleDataManager.Instance &&
+            AngleDataManager.Instance.angleData.angle[0] <= (pose.LeftelbowRotation[0] + pose.LeftelbowRotation[1]) &&
             AngleDataManager.Instance.angleData.angle[0] >= (pose.LeftelbowRotation[0] - pose.LeftelbowRotation[1]) &&
             AngleDataManager.Instance.angleData.angle[1] <= (pose.LeftShoulderRotation[0] + pose.LeftShoulderRotation[1]) &&
             AngleDataManager.Instance.angleData.angle[1] >= (pose.LeftShoulderRotation[0] - pose.LeftShoulderRotation[1]) &&

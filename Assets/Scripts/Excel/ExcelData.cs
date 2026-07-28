@@ -25,7 +25,6 @@ public struct CSVDataPoseFlow
     public int FlowNumber;
     public int PoseID;       // ŒÅ’è‚Ìƒ|[ƒY”Ô†
     public string PoseName;
-    public float start;
-    public float end;
+    public float time;
 
 }

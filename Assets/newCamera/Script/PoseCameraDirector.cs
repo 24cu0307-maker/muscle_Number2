@@ -111,6 +111,7 @@ public sealed class PoseCameraDirector : MonoBehaviour
     [SerializeField]
     private int m_testSequenceIndex; //選択中の確認用Sequence番号
 
+    
     [Tooltip("テスト再生キー")]
     [SerializeField]
     [FormerlySerializedAs("testPlayKey")]
@@ -120,6 +121,22 @@ public sealed class PoseCameraDirector : MonoBehaviour
     [SerializeField]
     [FormerlySerializedAs("stopKey")]
     private KeyCode m_stopKey = KeyCode.O; //演出停止キー
+    
+
+    [Tooltip("テスト再生キー")]
+    [SerializeField]
+    [FormerlySerializedAs("testPlayKey")]
+    private bool m_SetPlay = false; //テスト再生キー
+    /*
+    [Tooltip("演出停止キー")]
+    [SerializeField]
+    [FormerlySerializedAs("stopKey")]
+    private bool m_SetStop = true; //演出停止キー
+    */
+    public void Play()
+    {
+        m_SetPlay = true ;
+    }
 
     private Coroutine m_playRoutine;        //再生中のCoroutine
     private Coroutine m_restoreBlendRoutine; //カメラ切り替え後にBlend設定を戻すCoroutine
@@ -146,18 +163,22 @@ public sealed class PoseCameraDirector : MonoBehaviour
         }
         //初期状態は通常カメラを有効にする
         SetGameplayCameraActive();
+
+        m_SetPlay = false;
     }
 
     //テスト用の再生キーと停止キーを確認
     private void Update()
     {
+        Debug.Log("aaaa" + m_SetPlay);
         //テスト用のキー入力で再生・停止を切り替え
-        if (CameraInputUtility.IsKeyDown(m_testPlayKey))
+        if (m_SetPlay)
         {
             if (IsPlaying) { StopSequence(); }
             else { PlayTestSequences(); }
+            m_SetPlay = false;
         }
-
+        
         if (CameraInputUtility.IsKeyDown(m_stopKey)) { StopSequence(); }
     }
 

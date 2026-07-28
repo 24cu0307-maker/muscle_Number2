@@ -27,6 +27,7 @@ namespace GameFlowTemplate
         [SerializeField] private TMP_Text m_timeText;        //ゲーム中時間を表示するText
         [SerializeField] private bool m_bUseUnscaledDeltaTime = false; //Time.timeScaleの影響を受けずに計測するか
 
+
         public float GameTimeSeconds { get; private set; }   //インゲームの経過時間。演出停止中は増えない
         public bool IsTimerRunning { get; private set; }     //ゲーム時間を計測中か
         public bool IsDirectionPaused { get; private set; }  //演出などでゲーム時間を止めているか

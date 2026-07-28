@@ -25,6 +25,7 @@ namespace GameFlowTemplate
         [SerializeField] private string m_titleSceneName = EmptySceneName;  //タイトル画面のシーン名
         [SerializeField] private string m_gameSceneName = EmptySceneName;   //インゲーム画面のシーン名
         [SerializeField] private string m_resultSceneName = EmptySceneName; //結果画面のシーン名
+        [SerializeField] private string m_mediaSceneName = EmptySceneName; //Mediapipeのシーン名
         [SerializeField] private bool m_bUseResultScene = false;            //ゲーム終了時に結果シーンへ遷移するか
 
         public event Action<string> SceneLoadRequested;                     //シーンロード要求時に通知するイベント
@@ -32,7 +33,7 @@ namespace GameFlowTemplate
         public void LoadTitleScene()
         {
             //タイトル画面へ遷移する。
-            LoadScene(m_titleSceneName);
+            LoadScene(m_titleSceneName, LoadSceneMode.Single);
         
 
         }
@@ -40,22 +41,28 @@ namespace GameFlowTemplate
         public void LoadGameScene()
         {
             //インゲーム画面へ遷移する。
-            LoadScene(m_gameSceneName);
+            LoadScene(m_gameSceneName, LoadSceneMode.Single);
+        }
+
+        public void LoadMediapipe()
+        {
+            //インゲーム画面へ遷移する。
+            LoadScene(m_mediaSceneName, LoadSceneMode.Additive);
         }
 
         public void LoadResultScene()
         {
             //結果画面へ遷移する。
-            LoadScene(m_resultSceneName);
+            LoadScene(m_resultSceneName, LoadSceneMode.Single);
         }
 
-        public void LoadScene(string _scenename)
+        public void LoadScene(string _scenename, LoadSceneMode mode)
         {
             //指定シーン名が空なら、誤遷移を防ぐため何もしない。
             if (string.IsNullOrWhiteSpace(_scenename)) { return; }
 
             SceneLoadRequested?.Invoke(_scenename);
-            UnitySceneManager.LoadScene(_scenename);
+            UnitySceneManager.LoadScene(_scenename, mode);
         }
 
         public void LoadResultSceneIfNeeded()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
-[DefaultExecutionOrder(-200)]
+[DefaultExecutionOrder(-0)]
 public class ScoreController : MonoBehaviour
 {
 
@@ -24,6 +24,8 @@ public class ScoreController : MonoBehaviour
 
     [Header("ポーズを判定する")]
     [SerializeField] private PoseJudgeController m_poseJudgeController;
+
+    public float GetScore() { return m_score; }
 
     private void Start()
     {
@@ -56,7 +58,7 @@ public class ScoreController : MonoBehaviour
             Mathf.Abs(pose.LeftelbowRotation[0] - AngleDataManager.Instance.angleData.angle[0]), Mathf.Abs(pose.RightelbowRotation[0] - AngleDataManager.Instance.angleData.angle[2])
             );
 
-        m_gameManager.AddScore((int)m_score);
+       
     }
 
   

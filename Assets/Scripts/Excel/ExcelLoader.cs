@@ -7,7 +7,7 @@ using UnityEngine;
 ///<summary>
 ///CSVデータの読み込みと保存
 ///</summary>
-[DefaultExecutionOrder(-300)]
+[DefaultExecutionOrder(-400)]
 public class ExcelLoader : MonoBehaviour
 {
     //インスタンス化
@@ -140,9 +140,8 @@ public class ExcelPoseTimeFlowLoader
             //名前を保存
             pose.PoseName = cells[2];
 
-            //始まる時間　終わる時間
-            pose.start = float.Parse(cells[3]);
-            pose.end = float.Parse(cells[4]);
+            //表示時間
+            pose.time = float.Parse(cells[3]);
 
             //ポーズを追加
             poseList.Add(pose);

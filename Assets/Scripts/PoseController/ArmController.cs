@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 ///<summary>
@@ -39,6 +40,12 @@ public class ArmController : MonoBehaviour
     //方向計算するクラス
     DirectionVectorCalculator _DirectionVectorCalculator;
 
+    [SerializeField] private TMP_Text scoreText;
+
+    public float debugfloat;
+
+    public float Getfloat() { return debugfloat; }
+
     public void Awake()
     {
         //カメラ
@@ -60,7 +67,6 @@ public class ArmController : MonoBehaviour
 
         //座標を取得
         _Body = PositionDataManager.Instance.positionData.Body;
-
 
 
 

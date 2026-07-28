@@ -5,13 +5,45 @@
 // https://opensource.org/licenses/MIT.
 
 using System.Collections;
+using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace Mediapipe.Unity.Sample
 {
   public class Bootstrap : MonoBehaviour
   {
-    [SerializeField] private AppSettings _appSettings;
+        /*
+        public static void SaveCameraLog()
+        {
+            // 実行ファイルと同じフォルダに出力
+            string path = @"D:\Log.txt";
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("===== MediaPipe Camera Log =====");
+            sb.AppendLine("Time : " + System.DateTime.Now);
+
+            sb.AppendLine("Application.dataPath");
+            sb.AppendLine(Application.dataPath);
+
+            sb.AppendLine();
+
+            sb.AppendLine("WebCam Devices");
+
+            foreach (var device in WebCamTexture.devices)
+            {
+                sb.AppendLine("・" + device.name);
+            }
+
+            sb.AppendLine();
+
+
+            File.WriteAllText(path, "asgae");
+
+            Debug.Log("Log Saved : " + path);
+        }
+        */
+        [SerializeField] private AppSettings _appSettings;
 
     public InferenceMode inferenceMode { get; private set; }
     public bool isFinished { get; private set; }
@@ -80,7 +112,7 @@ namespace Mediapipe.Unity.Sample
           Debug.LogWarning("If your native library is built for CPU, change 'Preferable Inference Mode' to CPU from the Inspector Window for AppSettings");
         }
       }
-
+           // SaveCameraLog();
       Debug.Log("Preparing ImageSource...");
       ImageSourceProvider.Initialize(
         _appSettings.BuildWebCamSource(), _appSettings.BuildStaticImageSource(), _appSettings.BuildVideoSource());
@@ -113,4 +145,7 @@ namespace Mediapipe.Unity.Sample
       Protobuf.ResetLogHandler();
     }
   }
+
+
 }
+

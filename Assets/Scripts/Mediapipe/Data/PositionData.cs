@@ -27,6 +27,8 @@ public class PositionData
     ///</summary>
     public Vector3[] RightHand { get; private set; } = new Vector3[21];
 
+    
+
     ///<summary>
     ///‘Ì‚ÌÀ•W‚ğ•Û‘¶
     ///‚Ì‚¿‚Ì‚¿ŒvZ‚ğ•ª‚¯‚é
@@ -51,6 +53,8 @@ public class PositionData
         Body[34] = (_BodyBetweenSide[2] + _BodyBetweenSide[3]) / 2;
         Body[35] = (_BodyBetweenSide[4] + _BodyBetweenSide[5]) / 2;
         Body[36] = ((Body[11] + Body[12]) / 2);
+
+
     }
 
     ///<summary>
