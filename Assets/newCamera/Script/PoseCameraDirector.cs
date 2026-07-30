@@ -172,7 +172,7 @@ public sealed class PoseCameraDirector : MonoBehaviour
     {
         Debug.Log("aaaa" + m_SetPlay);
         //テスト用のキー入力で再生・停止を切り替え
-        if (m_SetPlay)
+        if (m_SetPlay || CameraInputUtility.IsKeyDown(m_testPlayKey))
         {
             if (IsPlaying) { StopSequence(); }
             else { PlayTestSequences(); }
