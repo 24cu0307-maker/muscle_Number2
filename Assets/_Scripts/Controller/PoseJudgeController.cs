@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 [DefaultExecutionOrder(-0)]
 public class PoseJudgeController : MonoBehaviour
 {
-    [Header("UIの保存場所")]
-    [SerializeField] private UIController m_uiController;
+    [Header("InGame")]
+    [SerializeField] private InGameManager m_InGameManager;
 
     [Header("UIの保存場所")]
     [SerializeField] private ExcelLoader m_excelLoader;
@@ -37,13 +38,13 @@ public class PoseJudgeController : MonoBehaviour
     //オブザーバー
     private void OnEnable()
     {
-        m_uiController.PoseJudgeFrame += PoseJudge;
+        m_InGameManager.PoseJudgeFrame += PoseJudge;
     }
 
     //オブザーバー
     private void OnDisable()
     {
-        m_uiController.PoseJudgeFrame -= PoseJudge;
+        m_InGameManager.PoseJudgeFrame -= PoseJudge;
     }
     public void PoseJudge(int poseID)
     {
@@ -84,10 +85,12 @@ public class PoseJudgeController : MonoBehaviour
     /// <summary>
     public bool PoseJudge_Perfect(GameObject _uinumber_approaching, GameObject _uinumber_wating)
     {
-        Debug.Log("[posecheck]Per");
-        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.001f &&
-               _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.001f;
+    
 
+        float ratio = Mathf.Abs(_uinumber_wating.transform.localScale.x - _uinumber_approaching.transform.localScale.x)
+              / _uinumber_approaching.transform.localScale.x;
+
+        return ratio <= 0.01f;    // ±1%
     }
 
     /// <summary>
@@ -95,11 +98,27 @@ public class PoseJudgeController : MonoBehaviour
     /// <summary>
     public bool PoseJudge_Normal(GameObject _uinumber_approaching, GameObject _uinumber_wating)
     {
-        Debug.Log("[posecheck]Guu");
-        return _uinumber_wating.transform.localScale.x >= _uinumber_approaching.transform.localScale.x - 0.005f &&
-                _uinumber_wating.transform.localScale.x <= _uinumber_approaching.transform.localScale.x + 0.005f;
+    
+        float ratio = Mathf.Abs(_uinumber_wating.transform.localScale.x - _uinumber_approaching.transform.localScale.x)
+                / _uinumber_approaching.transform.localScale.x;
+
+        return ratio <= 0.03f;    // ±3%
 
     }
 
- 
+    /// <summary>
+    ///失敗判定 
+    /// <summary>
+    public bool PoseJudge_Failure(GameObject _uinumber_approaching, GameObject _uinumber_wating)
+    {
+
+        // return _uinumber_wating.transform.localScale.x - 0.01f >= _uinumber_approaching.transform.localScale.x;
+
+
+        float ratio = _uinumber_approaching.transform.localScale.x / _uinumber_wating.transform.localScale.x;
+        return ratio < (1.0f - 0.07f);
+
+    }
+
 }
+// 10 10 - 0.01

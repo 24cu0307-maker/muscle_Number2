@@ -1,0 +1,54 @@
+EffectWorkからGameplayへの反映方法
+
+1. Assets/Scenes/GameFlow/Gameplay_EffectWork.unityで演出を編集します。
+2. Sceneを保存します。
+3. Unity上部メニューから次を実行します。
+   Tools > Effect System > Apply EffectWork To Gameplay
+4. 確認画面で「反映する」を押します。
+5. 自動的にGameplay.unityが開き、反映結果が保存されます。
+6. Gameplayを再生して、Effect、Timeline、Voltage参照、BGM、観客を確認します。
+
+反映されるもの
+
+・EFF_List
+・LightController
+・LiveEffectDeployment
+・AudienceSystem
+・StageGeneratedEffects60
+・VenueVoltageSystem
+・VoltageBGM
+・VoltageTimelineTemplateDirector
+・stage_0728_2（配置、Scale、Collider、Renderer、Material設定を含む）
+・Stage、prehub、Prehubという名前のステージRootが存在する場合は、その子階層全体
+・InGame上のEffectSystemコンポーネント設定
+・今後Gameplay_EffectWorkへ追加され、Gameplayにまだ存在しない新規Root Object
+
+上書きしないもの
+
+・InGame本体
+・UI
+・Camera
+・GameFlow
+・Score処理
+・Node判定処理
+・その他のメインプログラムObject
+
+注意
+
+・Gameplay側にある同名の演出Rootは、二重配置防止のためEffectWork版へ置き換わります。
+・AudienceSystem配下の生成範囲、生成禁止範囲、観客Prefab、Voltage反応設定もまとめて移動します。
+・EffectWork Sceneそのものは変更しません。
+・TimelineやComponentのScene参照はGameplay側の同じHierarchy位置へ自動的に張り直します。
+・LiveEffectDeployment置換後、InGameManagerやUIが参照するEffectSystemも自動的に再接続します。
+・反映後に各Rootの子Object数を検証し、不完全な場合はGameplayを保存せず中止します。
+・実行前に開いているSceneに未保存変更がある場合、Unityの保存確認が表示されます。
+・GitHubへ共有する前にGameplayを一度再生してConsole Errorがないことを確認してください。
+
+Toolsメニュー
+
+通常使用する項目だけを表示しています。
+
+・Apply EffectWork To Gameplay
+・Music Node Editor
+
+旧生成、修復、検証版作成用のコードはAsset互換性のため残していますが、Toolsメニューには表示しません。
