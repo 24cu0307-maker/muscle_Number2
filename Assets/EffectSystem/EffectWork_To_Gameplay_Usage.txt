@@ -40,6 +40,7 @@ EffectWorkからGameplayへの反映方法
 ・EffectWork Sceneそのものは変更しません。
 ・TimelineやComponentのScene参照はGameplay側の同じHierarchy位置へ自動的に張り直します。
 ・LiveEffectDeployment置換後、InGameManagerやUIが参照するEffectSystemも自動的に再接続します。
+・InGameManagerの成功／失敗判定が参照するVenueVoltageSystemも自動的に再接続します。
 ・反映後に各Rootの子Object数を検証し、不完全な場合はGameplayを保存せず中止します。
 ・実行前に開いているSceneに未保存変更がある場合、Unityの保存確認が表示されます。
 ・GitHubへ共有する前にGameplayを一度再生してConsole Errorがないことを確認してください。

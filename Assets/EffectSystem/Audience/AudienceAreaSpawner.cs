@@ -70,6 +70,14 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         new List<AudienceReaction>(); //生成済み観客一覧
     private readonly List<AudienceReaction> m_visibleAudiences =
         new List<AudienceReaction>(); //現在画面内の観客一覧
+
+    public IReadOnlyList<AudienceReaction> Audiences
+    {
+        get
+        {
+            return m_audiences;
+        }
+    }
     private readonly List<Bounds> m_audienceBounds =
         new List<Bounds>(); //観客ごとの基準Bounds
     private float m_nextReactionTime; //次回Reaction時刻
