@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file PoseFlowRandomResolver.cs*
 *@brief ランダム指定ポーズIDをポーズ定義CSV内のIDへ置き換える*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks PoseIDが-1の行をポーズ定義CSV内のIDから等確率で抽選する*

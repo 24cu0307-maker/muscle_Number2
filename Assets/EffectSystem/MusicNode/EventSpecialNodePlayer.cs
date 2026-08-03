@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EventSpecialNodePlayer.cs*
 *@brief 特殊Event中に専用Node一覧を時間順に表示する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/08/03*
 *最終更新日 2026/08/03*
 *@remarks 通常InGame進行を一時停止しEvent Nodeを独立再生する*

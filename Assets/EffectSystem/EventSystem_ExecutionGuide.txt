@@ -1,0 +1,92 @@
+特殊イベント実行ガイド
+
+1. 実装済みイベント
+
+【Audience Choice】
+- 通常ノード番号1の成功で起動します。
+- 観客の頭上に3種類の選択ノードを表示します。
+- プレイヤーが選んだ種類に対する全観客の平均好感度を計算します。
+- 好感度に応じて100～1200点のボーナスを加算します。
+- 選択後は通常のノード進行へ戻ります。
+
+【Special Node Branch】
+- 通常ノード番号2の成功で起動します。
+- 通常のノード進行を一時停止します。
+- イベント専用ノード101～104を時間順に表示します。
+- 専用ノード列の終了後に通常進行へ戻ります。
+
+2. 必要なScene Object / Component
+
+- InGame
+  - InGameManager
+- EventSceneVisualDirector
+  - EventSceneVisualDirector
+  - EventSpecialNodePlayer
+- EventAudienceCanvas
+  - EventAudienceCanvasController
+- AudiencePreferenceSystem
+- AudienceSystem
+  - AudienceAreaSpawnerと生成済みAudienceが必要です。
+- UIController
+- PoseCameraDirector
+
+参照がInspectorで未設定の場合、実行時に同一Sceneから自動検索します。
+ただしMusicNodeSequenceだけはGameplayのEventSceneVisualDirectorへ設定してください。
+
+3. 必要なData Asset
+
+Assets/EffectSystem/MusicNode/Sequences/NumbMusicNodeSequence.asset
+
+Event Scenes内に以下の2件が登録されています。
+
+- Audience Choice
+  - Event Type: AudienceChoice
+  - Trigger Node Number: 1
+  - Minimum Bonus Score: 100
+  - Maximum Bonus Score: 1200
+
+- Special Node Branch
+  - Event Type: SpecialNodeBranch
+  - Trigger Node Number: 2
+  - Event Nodes: 101、102、103、104
+
+Trigger Node Number、得点範囲、イベント専用ノードはMusic Node Editorまたは
+NumbMusicNodeSequence.assetのInspectorから変更できます。
+
+4. 自動起動の流れ
+
+1) InGameManagerが通常ノードの成功を判定します。
+2) 成功したCSVDataPoseFlow.FlowNumberを
+   EventSceneVisualDirector.TryPlayEvent(int nodeNumber)へ渡します。
+3) MusicNodeSequence内のTrigger Node Numberと一致したEventを開始します。
+4) Event中は通常のInGameManager進行を一時停止します。
+5) Event終了後に通常進行を復帰します。
+
+CSV側のFlowNumberとTrigger Node Numberが一致しない場合は起動しません。
+
+5. 手動確認方法
+
+- Gameplay Sceneを再生します。
+- EventVisualTestButtonを押すとAudience Choiceの表示を確認できます。
+- EventSceneVisualDirectorのContext MenuにあるPlay Event Visualでも確認できます。
+- 実際の自動分岐は通常ノード番号1または2を成功させて確認します。
+
+6. 主な関連ファイル
+
+- Assets/EffectSystem/MusicNodeSequence.cs
+- Assets/EffectSystem/MusicNode/Sequences/NumbMusicNodeSequence.asset
+- Assets/EffectSystem/Audience/EventSceneVisualDirector.cs
+- Assets/EffectSystem/Audience/AudiencePreferenceSystem.cs
+- Assets/EffectSystem/Audience/EventAudienceCanvasController.cs
+- Assets/EffectSystem/MusicNode/EventSpecialNodePlayer.cs
+- Assets/EffectSystem/MusicNode/EventNodeRuntimeContext.cs
+- Assets/GameFlowTemplate/Runtime/InGameManager.cs
+- Assets/Scenes/GameFlow/Gameplay.unity
+
+7. 注意事項
+
+- Audience ChoiceはAudience生成後でないと3択を表示できません。
+- Special Node BranchのPose IDはUI表示に使用されます。
+- 同じEventの再生中は二重起動しません。
+- Event終了時にはCamera、Canvas、Runtime Contextを解除します。
+- EventSystem関連素材やScriptを移動した場合はScene参照を再確認してください。

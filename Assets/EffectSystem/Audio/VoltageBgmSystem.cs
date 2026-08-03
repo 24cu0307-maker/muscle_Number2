@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageBgmSystem.cs*
 *@brief Voltageに応じてBGMの音量、Layer、空間Audio Effectを連続制御する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Pitchを変えず複数AudioClipの同期再生と軽い音響変化を行う*

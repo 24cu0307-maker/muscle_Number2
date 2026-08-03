@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageLightEffect.cs*
 *@brief EffectSystem再生Lightへボルテージ連動の色と光量を適用する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Lightと同じObjectへ追加して使用*

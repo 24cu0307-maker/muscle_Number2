@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EventAudienceCanvasController.cs*
 *@brief Event Camera上で観客頭上へ三種類のNodeをCanvas表示する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/08/03*
 *最終更新日 2026/08/03*
 *@remarks Screen Space Camera Canvas上で観客のWorld座標を追従する*

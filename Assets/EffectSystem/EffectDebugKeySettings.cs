@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EffectDebugKeySettings.cs*
 *@brief EffectSystem関連のDebug表示キーを一括管理する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Inspectorから各Debug表示キーを変更可能*

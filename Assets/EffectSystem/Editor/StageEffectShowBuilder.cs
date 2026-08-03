@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file StageEffectShowBuilder.cs*
 *@brief ステージ地形へ60個のEffectと20本のTimelineを生成する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Gameplay_EffectWork専用のEditor生成機能*

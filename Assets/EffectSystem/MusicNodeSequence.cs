@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file MusicNodeSequence.cs*
 *@brief BGMとPose Nodeのタイミングを保存するData Asset*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Music Node Editorから作成、編集する*
@@ -23,6 +23,12 @@ public struct SMusicNodeEvent
     public string m_eventName; //表示名
 }
 
+public enum EMusicEventType
+{
+    AudienceChoice,
+    SpecialNodeBranch
+}
+
 /// <summary>
 /// 特定Node成功後に開くEvent Sceneと専用Node一覧です。
 /// </summary>
@@ -32,6 +38,9 @@ public sealed class MusicEventSceneData
     public bool b_m_enabled = true; //Event遷移を使用するか
     public string m_eventName = "Event"; //Event識別名
     public int m_triggerNodeNumber = 1; //遷移を発生させる通常Node番号
+    public EMusicEventType m_eventType = EMusicEventType.AudienceChoice;
+    public int m_minimumBonusScore = 100;
+    public int m_maximumBonusScore = 1000;
     public List<SMusicNodeEvent> m_eventNodesList =
         new List<SMusicNodeEvent>(); //Event Scene専用Node一覧
 }
