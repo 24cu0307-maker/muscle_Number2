@@ -89,14 +89,16 @@ public static class EffectWorkToGameplaySync
         SceneManager.MoveGameObjectToScene(copiedBundle, targetScene);
         UnpackBundle(copiedBundle, targetScene);
         Object.DestroyImmediate(copiedBundle);
-
         int reboundCount =
             RebindSourceSceneReferences(sourceScene, targetScene); //参照修復数
         EffectSystem targetEffectSystem =
             FindComponent<EffectSystem>(targetScene); //複製後の同期先
-        reboundCount += RebindEffectSystemReferences(
+        VenueVoltageSystem targetVoltageSystem =
+            FindComponent<VenueVoltageSystem>(targetScene); //判定連携先
+        reboundCount += RebindRuntimeSystemReferences(
             targetScene,
-            targetEffectSystem);
+            targetEffectSystem,
+            targetVoltageSystem);
         int missingRootCount = ValidateTransferredRoots(
             targetScene,
             sourceRootsList); //反映漏れ数
@@ -331,14 +333,22 @@ public static class EffectWorkToGameplaySync
     /// <summary>
     /// 置換前のLiveEffectDeploymentを指していたEffectSystem参照を再設定します。
     /// </summary>
-    private static int RebindEffectSystemReferences(
+    private static int RebindRuntimeSystemReferences(
         Scene _scene,
-        EffectSystem _effectSystem)
+        EffectSystem _effectSystem,
+        VenueVoltageSystem _voltageSystem)
     {
         if (_effectSystem == null)
         {
             Debug.LogError(
                 "反映後のGameplayにEffectSystemが見つかりません。");
+            return 0;
+        }
+
+        if (_voltageSystem == null)
+        {
+            Debug.LogError(
+                "反映後のGameplayにVenueVoltageSystemが見つかりません。");
             return 0;
         }
 
@@ -357,9 +367,20 @@ public static class EffectWorkToGameplaySync
                 b_enterChildren = true;
                 if (property.propertyType
                     != SerializedPropertyType.ObjectReference)continue;
-                if (property.name != "m_effectSystem")continue;
+                Object targetReference = null; //再接続先
+                if (property.name == "m_effectSystem")
+                {
+                    targetReference = _effectSystem;
+                }
+                else if (property.name == "m_venueVoltageSystem"
+                    || property.name == "m_voltageSystem")
+                {
+                    targetReference = _voltageSystem;
+                }
 
-                property.objectReferenceValue = _effectSystem;
+                if (targetReference == null)continue;
+
+                property.objectReferenceValue = targetReference;
                 b_changed = true;
                 ++reboundCount;
             }

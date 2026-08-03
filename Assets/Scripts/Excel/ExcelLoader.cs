@@ -15,19 +15,16 @@ public class ExcelLoader : MonoBehaviour
 
     public ExcelPoseJudgeLoader excelPoseJudgeLoader;
     public ExcelPoseTimeFlowLoader excelPoseTimeFlowLoader;
-    public ExcelPoseTimeFlowLoader excelPoseTimeFlowLoader_SP;
 
     private void Awake()
     {
         //CSVファイルを読み込む為のクラス
         excelPoseJudgeLoader = new ExcelPoseJudgeLoader();
         excelPoseTimeFlowLoader = new ExcelPoseTimeFlowLoader();
-        excelPoseTimeFlowLoader_SP = new ExcelPoseTimeFlowLoader();
 
         //CSVファイルを読み込み
         excelPoseJudgeLoader.LoadCsv();
-        excelPoseTimeFlowLoader.LoadCsv("PoseTimeFlow");
-        excelPoseTimeFlowLoader_SP.LoadCsv("PoseTimeFlow_SP");
+        excelPoseTimeFlowLoader.LoadCsv();
     }
 
 
@@ -92,8 +89,6 @@ public class ExcelPoseJudgeLoader
                 float.Parse(cells[8]),
                 float.Parse(cells[9]));
 
-            pose.PoseMax = lines.Length - 1;
-
             //ポーズを追加
             poseList.Add(pose);
 
@@ -112,10 +107,10 @@ public class ExcelPoseTimeFlowLoader
     public List<CSVDataPoseFlow> GetCSVDatas() { return poseList; }
 
 
-    public void LoadCsv(string _excelName)
+    public void LoadCsv()
     {
         TextAsset csv =
-            Resources.Load<TextAsset>(_excelName);
+            Resources.Load<TextAsset>("PoseTimeFlow");
 
         if (csv == null)
         {

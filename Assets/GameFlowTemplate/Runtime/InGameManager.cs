@@ -16,7 +16,6 @@ using GameFlowTemplate;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public sealed class InGameManager : MonoBehaviour
 {
@@ -60,11 +59,7 @@ public sealed class InGameManager : MonoBehaviour
 
     private PoseFlow poseFlow;  　　　　  //ポーズ順の管理
 
-    private PoseFlow poseFlow_SP;  　　　　  //ポーズ順の管理
-
     private CSVDataPoseFlow pose;
-
-    private CSVDataPoseFlow pose_SP;
 
     private int m_SpecialFrame = -1;
 
@@ -73,15 +68,12 @@ public sealed class InGameManager : MonoBehaviour
     public Action<int> PoseJudgeFrame;
 
     bool one = true;
-    bool isSP = true;
 
     private InGameState m_state = InGameState.Start;
 
-    private InGameState_SP m_state_sp = InGameState_SP.None;
 
-    private float m_keepGameTimeSeconds;
+    private float KeepGameTimeSeconds;
 
-    bool check = true;
 
     public void Start()
     {
@@ -94,8 +86,6 @@ public sealed class InGameManager : MonoBehaviour
 
         // CSVのデータをPoseFlowへ渡す
         poseFlow = new PoseFlow(m_excelLoader.excelPoseTimeFlowLoader.GetCSVDatas());
-
-        poseFlow_SP = new PoseFlow(m_excelLoader.excelPoseTimeFlowLoader_SP.GetCSVDatas());
 
         m_effectSystem.PlayEffect("Tesst");
 
@@ -116,24 +106,11 @@ public sealed class InGameManager : MonoBehaviour
         //現在のポーズを取得
         pose = poseFlow.CurrentPose();
 
-        pose_SP = poseFlow_SP.CurrentPose();
-
-        if (pose_SP.PoseName == pose.PoseName && isSP)
-        {
-            Debug.Log("Name" + pose_SP.PoseName);
-            m_state = InGameState.None;
-            m_state_sp = InGameState_SP.Start;
-
-            isSP = false;
-
-        }
-
-
         Debug.Log("pose.PoseID" + pose.PoseID);
         switch (m_state)
         {
             case InGameState.None:
-                /*
+
                 if (one)
                 {
                     poseCameraDirector.Play();
@@ -145,7 +122,8 @@ public sealed class InGameManager : MonoBehaviour
                     m_state = InGameState.Start;
 
                 }
-                */
+
+
                 break;
 
             case InGameState.Start:
@@ -161,7 +139,14 @@ public sealed class InGameManager : MonoBehaviour
                 break;
 
             case InGameState.End:
-                
+                /*
+                m_effectSystem.IsEffectPlay();
+                if (!m_effectSystem.IsPlayEffect())
+                {
+                   
+
+                }
+                */
                 ForcedQuit(poseFlow, pose, GameTimeSeconds);
 
                 break;
@@ -175,34 +160,7 @@ public sealed class InGameManager : MonoBehaviour
                 break;
         }
 
-        switch (m_state_sp)
-        {
-            case InGameState_SP.None:
 
-                break;
-
-            case InGameState_SP.Start:
-                Set_SP(pose, GameTimeSeconds);
-                break;
-
-            case InGameState_SP.Active:
-                Active_SP(pose, GameTimeSeconds);
-                Judge_SP(pose);
-                flowend(pose);
-                break;
-
-            case InGameState_SP.End:
-
-                ForcedQuit(poseFlow, pose, GameTimeSeconds);
-
-                break;
-            case InGameState_SP.Success:
-
-                break;
-            case InGameState_SP.Failure:
-
-                break;
-        }
     }
 
 
@@ -220,7 +178,7 @@ public sealed class InGameManager : MonoBehaviour
     private void flowend(CSVDataPoseFlow _pose)
     {
         Debug.Log("{END0}");
-        if ((m_keepGameTimeSeconds + _pose.time) < GameTimeSeconds)
+        if ((KeepGameTimeSeconds + _pose.time) < GameTimeSeconds)
         {
             m_state = InGameState.End;
 
@@ -244,9 +202,8 @@ public sealed class InGameManager : MonoBehaviour
     //今フレームの設定・表示
     private void Set(CSVDataPoseFlow _pose, float _seconds)
     {
-       
 
-        m_keepGameTimeSeconds = _seconds;
+        KeepGameTimeSeconds = _seconds;
         //UI設定・表示
         m_uiController.UISet_normal(_pose);
 
@@ -254,59 +211,18 @@ public sealed class InGameManager : MonoBehaviour
         m_state = InGameState.Active;
     }
 
-    //今フレームの設定・表示
-    private void Set_SP(CSVDataPoseFlow _pose, float _seconds)
-    {
-        m_keepGameTimeSeconds = _seconds;
-
-
-        if (pose_SP.PoseName == pose.PoseName)
-        {
-            //UI設定・表示
-            //m_uiController.UISet_thirdPerson(_pose);
-
-        }
-
-
-        m_state_sp = InGameState_SP.Active;
-    }
-
-
     //実行
     private void Active(CSVDataPoseFlow _pose, float _seconds)
     {
 
         // 縮小(通常フレーム)
-        if (_seconds <= (_pose.time + m_keepGameTimeSeconds))
+        if (_seconds <= (_pose.time + KeepGameTimeSeconds))
         {
-            m_uiController.UIMove_normal(_pose);
+            m_uiController.UIMove_normal();
 
             //イベント実行　当たり判定
             PoseJudgeFrame?.Invoke(_pose.PoseID);
         }
-    }
-
-    //実行
-    private void Active_SP(CSVDataPoseFlow _pose, float _seconds)
-    {
-
-        if (pose_SP.PoseName == pose.PoseName)
-        {
-            // 縮小(通常フレーム)
-            if (_seconds <= (_pose.time + m_keepGameTimeSeconds))
-            {
-
-                m_uiController.UIMove_thirdPerson();
-
-
-                //イベント実行　当たり判定
-                for (int i = 0; i < 3; i++)
-                {
-                    PoseJudgeFrame?.Invoke(i);
-                }
-            }
-        }
-       
     }
 
     //判定
@@ -314,28 +230,28 @@ public sealed class InGameManager : MonoBehaviour
     {
         //通常成功時
         if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Normal(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
+            m_poseJudgeController.PoseJudge_Normal(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
         {
-            m_uiController.UIJudgeEnd_normal(_pose);
-            m_uiController.UIForcedQuit(_pose);
+            m_uiController.UIJudgeEnd_normal();
+            m_uiController.UIForcedQuit();
             m_state = InGameState.Success;
 
         }
 
         //完璧成功時
         if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Perfect(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
+            m_poseJudgeController.PoseJudge_Perfect(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
         {
-            m_uiController.UIJudgeEnd_normal(_pose);
-            m_uiController.UIForcedQuit(_pose);
+            m_uiController.UIJudgeEnd_normal();
+            m_uiController.UIForcedQuit();
             m_state = InGameState.Success;
 
         }
 
         //失敗
-        if (m_poseJudgeController.PoseJudge_Failure(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
+        if (m_poseJudgeController.PoseJudge_Failure(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
         {
-            m_uiController.UIForcedQuit(_pose);
+            m_uiController.UIForcedQuit();
             m_state = InGameState.Failure;
 
         }
@@ -344,58 +260,16 @@ public sealed class InGameManager : MonoBehaviour
 
     }
 
-    private void Judge_SP(CSVDataPoseFlow _pose)
-    {
-        for (int poseID = 0; poseID < 2; poseID++)
-        {
-            int index = poseID * 4 + 1;
-
-            if (!check)
-            {
-                m_state = InGameState.Success;
-                break;
-            }
-            
-            //通常
-            if (m_poseJudgeController.GetisPose(poseID) &&
-                m_poseJudgeController.PoseJudge_Normal(
-                  m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
-            {
-                m_uiController.UIJudge_thirdPerson();
-                 check = false;
-
-            }
-
-            if (!check)
-            {
-                m_state = InGameState.Success;
-                break;
-            }
-
-            //完璧
-            if (m_poseJudgeController.GetisPose(poseID) &&
-               m_poseJudgeController.PoseJudge_Perfect(
-                   m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
-            {
-                m_uiController.UIJudge_thirdPerson();
-                check = false;
-
-            }
-            
-        }
-
-    }
-
     //現在のフレームを終了してEffectの再生が終わり次第、次のフレームへ
-    private void ForcedQuit(PoseFlow _poseFlow, CSVDataPoseFlow _pose, float seconds)
+    private void ForcedQuit(PoseFlow poseFlow, CSVDataPoseFlow pose, float seconds)
     {
         // 強制終了時間
-        if (_poseFlow.HasNextPose())
+        if (poseFlow.HasNextPose())
         {
-            m_uiController.UIForcedQuit(_pose);
+            m_uiController.UIForcedQuit();
 
-            m_keepGameTimeSeconds = 0;
-            _poseFlow.NextPose();
+            KeepGameTimeSeconds = 0;
+            poseFlow.NextPose();
 
             m_state = InGameState.Start;
         }

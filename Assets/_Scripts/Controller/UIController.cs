@@ -2,13 +2,8 @@ using GameFlowTemplate;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-
-
-
 
 [DefaultExecutionOrder(-0)]
 public class UIController : MonoBehaviour
@@ -16,44 +11,24 @@ public class UIController : MonoBehaviour
     [Header("UIの保存場所")]
     [SerializeField] private UIData m_uiData;
 
-    [Header("UIの保存場所")]
-    [SerializeField] private ExcelLoader m_excelLoader;
+    //一回表示の管理用
+    private bool isPoseShown = false;
 
-    [Header("CSVのデータリスト")]
-    private List<CSVPoseData> poseDatas;
+    bool check = true;
 
-    //private FlameBase m_FrontDoubleBiceps;
-    //private FlameBase m_Most;
-    //private FlameBase m_Side;
-
-    private FlameBase[] m_Frame;
 
     private GameObject[] m_currentFrame;
 
-    public GameObject GetCurrentSuccessFrame(CSVDataPoseFlow pose) { return m_Frame[pose.PoseID].m_currentFrameSuccess; }
-    public GameObject GetCurrentApproachingFrame(CSVDataPoseFlow pose) { return m_Frame[pose.PoseID].m_currentFrameApproaching; }
-    public GameObject GetCurrentFailureFrame(CSVDataPoseFlow pose) { return m_Frame[pose.PoseID].m_currentFrameFailure; }
-    public GameObject GetCurrentWatingFrame(CSVDataPoseFlow pose) { return m_Frame[pose.PoseID].m_currentFrameWating; }
+    public GameObject[] GetCurrentFrame() { return m_currentFrame; }
 
-
+ 
     //通常用のキャンバス
     [SerializeField] private Transform m_canvas;
 
     //三人称用のキャンバス
     [SerializeField] private Transform m_thirdPersonCanvas;
 
-    private const string m_currentFrameSuccess = "Success";
-    private const string m_currentFrameApproaching = "Approaching";
-    private const string m_currentFrameFailure = "Failure";
-    private const string m_currentFrameWating = "Wating";
 
-    private void Awake()
-    {
-        poseDatas = m_excelLoader.excelPoseJudgeLoader.GetCSVDatas();
-        CSVPoseData pose = poseDatas[0];
-        m_Frame = new FlameBase[pose.PoseMax];
-
-    }
 
     /*
     public void UIAnimation(PoseFlow poseFlow, CSVDataPoseFlow pose, float seconds)
@@ -98,103 +73,108 @@ public class UIController : MonoBehaviour
     public void UISet_normal(CSVDataPoseFlow pose)
     {
 
-
-        m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, Vector2.zero, m_canvas, new Vector2(650, 650));
-        Debug.Log("wafewggg"+m_Frame[pose.PoseID].m_currentFrameSuccess);
-        Show(m_Frame[pose.PoseID].m_currentFrameApproaching);
-        Show(m_Frame[pose.PoseID].m_currentFrameWating);
-        //isPoseShown = true;
-
-    }
-
-    public void UIMove_normal(CSVDataPoseFlow pose)
-    {
-
-        ScaleDown(m_Frame[pose.PoseID].m_currentFrameApproaching);
-
-
-    }
-
-
-    public void UIJudgeEnd_normal(CSVDataPoseFlow pose)
-    {
-
-        Show(m_Frame[pose.PoseID].m_currentFrameSuccess);
-
-
-        Hide(m_Frame[pose.PoseID].m_currentFrameApproaching);
-        Hide(m_Frame[pose.PoseID].m_currentFrameWating);
-
-
-
-    }
-
-    public void UISet_thirdPerson(Vector2 _pos, Transform _canvas)
-    {
-
-    }
-
-
-    public void UISet_thirdPerson(CSVDataPoseFlow pose, Vector2 _pos, Transform _canvas)
-    {
-
-
-        m_currentFrame = new GameObject[12];
-        for (int i = 0; i < m_currentFrame.Length; i++)
+        m_currentFrame = new GameObject[4];
+        for (int i = 0; i < 4; i++)
         {
-            int poseID = i / 4;          // 0,0,0,0,1,1,1,1,2,2,2,2
-            int addFrameID = (i % 4) * 3; // 0,3,6,9
+            m_currentFrame[i] = CreateFrame(pose.PoseID, i * 3, Vector2.zero, m_canvas, new Vector2(650, 650));
 
-            Vector2 pos = poseID switch
-            {
-                0 => new Vector2(100, 0),
-                1 => new Vector2(-100, 0),
-                2 => new Vector2(-500, 0),
-                _ => Vector2.zero
-            };
 
-            //m_currentFrame[i] = CreateFrame(poseID, addFrameID, pos, m_thirdPersonCanvas, new Vector2(1000, 1000));
         }
 
-        for (int i = 0; i < 3; ++i)
+        Show(m_currentFrame[3]);
+        Show(m_currentFrame[1]);
+        isPoseShown = true;
+
+    }
+
+    public void UIMove_normal()
+    {
+
+        ScaleDown(m_currentFrame[1]);
+
+
+    }
+
+
+    public void UIJudgeEnd_normal()
+    {
+
+
+        for (int i = 0; i < m_currentFrame.Length; i += 4)
         {
-            /*
-            m_poseFrame[i].m_currentFrameFailure = m_currentFrame[failure + i];
-            m_poseFrame[i].m_currentFrameSuccess = m_currentFrame[success + i];
-            m_poseFrame[i].m_currentFrameApproaching = m_currentFrame[approaching + i];
-            m_poseFrame[i].m_currentFrameWating = m_currentFrame[wating + i];
-            */
+            Show(m_currentFrame[i]);
+
         }
 
         for (int i = 1; i < m_currentFrame.Length; i += 2)
         {
-            Show(m_currentFrame[i]);
+            Hide(m_currentFrame[i]);
         }
-
-
 
 
     }
 
-    public void UIMove_thirdPerson()
+
+    public void UISet_thirdPerson(CSVDataPoseFlow pose, float seconds)
     {
-
-
-        for (int i = 1; i < m_currentFrame.Length; i += 4)
+        if (!isPoseShown)
         {
-            Debug.Log("kyouhagyuuniku");
-            ScaleDown(m_currentFrame[i]);
+            //m_currentTImte = seconds;
         }
 
+        //開始時間
+        //if (!isPoseShown && seconds <= (pose.time + m_currentTImte))
+        {
+            m_currentFrame = new GameObject[8];
+            for (int i = 0; i < m_currentFrame.Length; i++)
+            {
+                int poseID = i / 4;          // 0,0,0,0,1,1,1,1,2,2,2,2
+                int addFrameID = (i % 4) * 3; // 0,3,6,9
+
+                Vector2 pos = poseID switch
+                {
+                    0 => new Vector2(100, 0),
+                    1 => new Vector2(-100, 0),
+                    2 => new Vector2(-500, 0),
+                    _ => Vector2.zero
+                };
+
+                m_currentFrame[i] = CreateFrame(poseID, addFrameID, pos, m_thirdPersonCanvas, new Vector2(1000, 1000));
+            }
+
+            for (int i = 1; i < m_currentFrame.Length; i += 2)
+            {
+                Show(m_currentFrame[i]);
+            }
+            isPoseShown = true;
+
+            //State?.Invoke(InGameState.Active);
+
+        }
 
 
     }
 
+    public void UIMove_thirdPerson(CSVDataPoseFlow pose, float seconds)
+    {
+        // 縮小(通常フレーム)
+        //if (seconds <= (pose.time + m_currentTImte))
+        {
+            for (int i = 1; i < m_currentFrame.Length; i += 4)
+            {
+                ScaleDown(m_currentFrame[i]);
+            }
+            //イベント実行　当たり判定
+            for (int i = 0; i < 3; i++)
+            {
+                //PoseJudgeFrame?.Invoke(i);
+            }
 
-    /*
+        }
+    }
+
+
+
     public void UIJudgeEnd_thirdPerson()
     {
         for (int poseID = 0; poseID < 2; poseID++)
@@ -242,34 +222,20 @@ public class UIController : MonoBehaviour
                 //m_gameManager.AddScore((int)m_scoreController.GetScore());
 
             }
-            
+            */
         }
 
 
     }
-*/
-    public void UIJudge_thirdPerson()
+
+    public void UIForcedQuit()
     {
-        for (int poseID = 0; poseID < 2; poseID++)
+
+        for (int i = 0; i < m_currentFrame.Length; i++)
         {
-            int index = poseID * 4 + 1;
+            DeleteFrame(m_currentFrame[i]);
 
-            Show(m_currentFrame[index - 1]);
-            Hide(m_currentFrame[index]);
-            Hide(m_currentFrame[index + 2]);
-            //check = false;
         }
-
-    }
-
-    public void UIForcedQuit(CSVDataPoseFlow pose)
-    {
-
-        DeleteFrame(m_Frame[pose.PoseID].m_currentFrameApproaching);
-        DeleteFrame(m_Frame[pose.PoseID].m_currentFrameFailure);
-        DeleteFrame(m_Frame[pose.PoseID].m_currentFrameWating);
-        DeleteFrame(m_Frame[pose.PoseID].m_currentFrameSuccess);
-
 
     }
 
@@ -336,13 +302,10 @@ public class UIController : MonoBehaviour
     }
 
 
-    public GameObject CreateFrame(int _frameID, string _addFrameID, Vector2 _pos, Transform _canvas, Vector2 _size)
+    public GameObject CreateFrame(int _frameID, int _addFrameID, Vector2 _pos, Transform _canvas, Vector2 _size)
     {
-        //m_uiData.getUI(m_currentFrameSuccess, pose.PoseID);
-
-
         GameObject obj = Instantiate(
-            m_uiData.getUI(_addFrameID, _frameID),
+            m_uiData.getUI(_frameID + _addFrameID),
             _canvas
         );
 

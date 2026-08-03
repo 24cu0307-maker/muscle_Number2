@@ -8,7 +8,6 @@
 *━━━━━━━━━*/
 
 using System;
-using GameFlowTemplate;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,7 +51,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     private const int EFirstSampleIndex = 0; //音声サンプルの先頭番号
     private const int EOverlaySortingOrder = 32000; //画面色演出の描画順
 
-    [SerializeField] private ScoreManager m_scoreManager; //既存スコア通知元
     [SerializeField] private float m_comboWindowSeconds = EDefaultComboWindowSeconds; //連続成功受付時間
     [SerializeField] private float m_decayDelaySeconds = EDefaultDecayDelaySeconds; //自然減少開始時間
     [SerializeField] private float m_decayPerSecond = EDefaultDecayPerSecond; //自然減少速度
@@ -80,12 +78,8 @@ public sealed class VenueVoltageSystem : MonoBehaviour
 
     private RawImage m_colorOverlay; //画面全体の薄い色
     private AudioSource m_audioSource; //成功音再生元
-    private UIController m_uiController; //成功・失敗ラウンド通知元
-    private int m_previousScore; //直前のスコア
     private int m_comboCount; //現在の連続成功回数
     private float m_lastSuccessTime; //最後に成功した時刻
-    private bool b_m_isSubscribed; //スコアイベント購読状態
-    private bool b_m_isUiSubscribed; //UI状態イベント購読状態
 
     public event Action<float> m_audienceSuccess; //成功時の観客通知
     public event Action m_audienceFailure; //失敗時の観客通知
@@ -142,8 +136,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     {
         CreateOverlay();
         CreateAudioSource();
-        FindScoreManager();
-        FindUiController();
         ConnectEffectTargets();
         EnsureDebugPanel();
         m_presentedVoltage = m_voltage;
@@ -172,39 +164,10 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// スコア通知の購読を開始します。
-    /// </summary>
-    private void OnEnable()
-    {
-        FindScoreManager();
-        FindUiController();
-        SubscribeScoreEvent();
-    }
-
-    /// <summary>
-    /// スコア通知の購読を解除します。
-    /// </summary>
-    private void OnDisable()
-    {
-        UnsubscribeScoreEvent();
-    }
-
-    /// <summary>
     /// 成功が途切れた後、会場ボルテージをゆっくり下げます。
     /// </summary>
     private void Update()
     {
-        if (m_scoreManager == null)
-        {
-            FindScoreManager();
-            SubscribeScoreEvent();
-        }
-
-        if (m_uiController == null)
-        {
-            FindUiController();
-        }
-
         if (m_voltage > EMinimumVoltage
             && Time.unscaledTime - m_lastSuccessTime >= m_decayDelaySeconds)
         {
@@ -222,80 +185,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         {
             ApplyVoltagePresentation();
         }
-    }
-
-    /// <summary>
-    /// 既存のScoreManagerをシーンから取得します。
-    /// </summary>
-    private void FindScoreManager()
-    {
-        if (m_scoreManager != null)return;
-
-        m_scoreManager = FindFirstObjectByType<ScoreManager>();
-        if (m_scoreManager != null)
-        {
-            m_previousScore = m_scoreManager.CurrentScore;
-        }
-    }
-
-    /// <summary>
-    /// 既存UIControllerをシーンから取得します。
-    /// </summary>
-    private void FindUiController()
-    {
-        if (m_uiController != null)return;
-
-        m_uiController = FindFirstObjectByType<UIController>();
-    }
-
-    /// <summary>
-    /// ScoreChangedイベントへ登録します。
-    /// </summary>
-    private void SubscribeScoreEvent()
-    {
-        if (b_m_isSubscribed || m_scoreManager == null)return;
-
-        m_scoreManager.ScoreChanged += OnScoreChanged;
-        b_m_isSubscribed = true;
-    }
-
-    /// <summary>
-    /// ScoreChangedイベントから解除します。
-    /// </summary>
-    private void UnsubscribeScoreEvent()
-    {
-        if (!b_m_isSubscribed || m_scoreManager == null)return;
-
-        m_scoreManager.ScoreChanged -= OnScoreChanged;
-        b_m_isSubscribed = false;
-    }
-
-    /// <summary>
-    /// ラウンド開始・終了通知へ登録します。
-    /// </summary>
-    
-    /// <summary>
-    /// ラウンド開始・終了通知から解除します。
-    /// </summary>
-
-    /// <summary>
-    /// スコア増加を成功としてボルテージへ反映します。
-    /// </summary>
-    private void OnScoreChanged(int _score)
-    {
-        int scoreGain = _score - m_previousScore; //今回増えたスコア
-        m_previousScore = _score;
-        if (scoreGain <= 0)
-        {
-            if (_score == 0)
-            {
-                ResetVoltage();
-            }
-
-            return;
-        }
-
-        RegisterSuccess(scoreGain);
     }
 
     /// <summary>

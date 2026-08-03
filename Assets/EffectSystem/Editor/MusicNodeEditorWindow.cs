@@ -46,6 +46,9 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private double m_previewPositionSeconds; //Editor試聴位置
     private bool b_m_previewPlaying; //Editor試聴中か
     private bool b_m_previewPaused; //Editor試聴を一時停止中か
+    private readonly List<int> m_eventSelectedIndicesList = new List<int>(); //Event別選択Node
+    private readonly List<Vector2> m_eventScrollPositionsList = new List<Vector2>(); //Event別一覧Scroll
+    private readonly List<bool> b_m_eventFoldoutsList = new List<bool>(); //Event別展開状態
 
     /// <summary>
     /// Music Node Editorを開きます。
@@ -120,6 +123,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         DrawTimeline(timelineRect);
         HandleTimelineInput(timelineRect);
         DrawNodeList();
+        DrawEventSceneList();
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Sort By Time"))
@@ -375,6 +379,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 $"{node.m_poseId}:{node.m_eventName}");
         }
 
+        DrawEventSceneMarkers(_rect, duration);
+
         GUI.Label(
             new Rect(_rect.x + 5.0f, _rect.yMax - 22.0f, 150.0f, 20.0f),
             $"0.00s  -  {duration:F2}s");
@@ -385,6 +391,38 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         EditorGUI.DrawRect(
             new Rect(playheadX - 1.0f, _rect.y, 2.0f, _rect.height),
             Color.white);
+    }
+
+    /// <summary>
+    /// Event Sceneへ移動する通常NodeをTimeline上へ表示します。
+    /// </summary>
+    private void DrawEventSceneMarkers(
+        Rect _rect,
+        float _duration)
+    {
+        for (int i = 0; i < m_sequence.EventScenesList.Count; ++i)
+        {
+            MusicEventSceneData eventData =
+                m_sequence.EventScenesList[i]; //現在Event設定
+            if (eventData == null || !eventData.b_m_enabled)continue;
+
+            for (int j = 0; j < m_sequence.EventsList.Count; ++j)
+            {
+                SMusicNodeEvent node = m_sequence.EventsList[j]; //通常Node
+                if (node.m_nodeNumber
+                    != eventData.m_triggerNodeNumber)continue;
+
+                float x = _rect.x
+                    + Mathf.Clamp01(node.m_time / _duration) * _rect.width;
+                EditorGUI.DrawRect(
+                    new Rect(x - 2.0f, _rect.y, 4.0f, _rect.height),
+                    new Color(1.0f, 0.2f, 0.75f));
+                GUI.Label(
+                    new Rect(x + 5.0f, _rect.y + 24.0f, 180.0f, 20.0f),
+                    $"EVENT: {eventData.m_eventName}");
+                break;
+            }
+        }
     }
 
     /// <summary>
@@ -683,6 +721,319 @@ public sealed class MusicNodeEditorWindow : EditorWindow
 
             EditorUtility.SetDirty(m_sequence);
         }
+    }
+
+    /// <summary>
+    /// 通常Nodeとは別に複数のEvent Sceneと専用Node一覧を編集します。
+    /// </summary>
+    private void DrawEventSceneList()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField(
+            $"Event Scenes ({m_sequence.EventScenesList.Count})",
+            EditorStyles.boldLabel);
+        EditorGUILayout.HelpBox(
+            "Trigger Node成功時にSceneへ移動します。Event Nodesは移動先Scene専用で、"
+            + "通常のPoseTimeFlow.csvには出力されません。",
+            MessageType.Info);
+
+        EnsureEventEditorStates();
+        for (int i = 0; i < m_sequence.EventScenesList.Count; ++i)
+        {
+            DrawEventEditor(i);
+        }
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Add Event Scene"))
+        {
+            AddEventSceneDirect();
+        }
+
+        if (GUILayout.Button("Add 3 Event Slots"))
+        {
+            for (int i = 0; i < 3; ++i)
+            {
+                AddEventSceneDirect();
+            }
+        }
+
+        using (new EditorGUI.DisabledScope(m_sequence.EventScenesList.Count == 0))
+        {
+            if (GUILayout.Button("Remove Last Event"))
+            {
+                Undo.RecordObject(m_sequence, "Remove Event Scene");
+                m_sequence.EventScenesList.RemoveAt(
+                    m_sequence.EventScenesList.Count - 1);
+                EditorUtility.SetDirty(m_sequence);
+            }
+        }
+
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// Event一件分の設定、専用グラフ、専用Node一覧を表示します。
+    /// </summary>
+    private void DrawEventEditor(int _eventIndex)
+    {
+        MusicEventSceneData eventData =
+            m_sequence.EventScenesList[_eventIndex]; //編集対象Event
+        if (eventData == null)return;
+
+        b_m_eventFoldoutsList[_eventIndex] = EditorGUILayout.Foldout(
+            b_m_eventFoldoutsList[_eventIndex],
+            $"Event {_eventIndex + 1}: {eventData.m_eventName}",
+            true);
+        if (!b_m_eventFoldoutsList[_eventIndex])return;
+
+        EditorGUI.indentLevel++;
+        EditorGUI.BeginChangeCheck();
+        eventData.b_m_enabled = EditorGUILayout.Toggle(
+            "Enabled",
+            eventData.b_m_enabled);
+        eventData.m_eventName = EditorGUILayout.TextField(
+            "Event Name",
+            eventData.m_eventName);
+        eventData.m_triggerNodeNumber = EditorGUILayout.IntField(
+            "Trigger Node Number",
+            eventData.m_triggerNodeNumber);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Undo.RecordObject(m_sequence, "Edit Event Settings");
+            EditorUtility.SetDirty(m_sequence);
+        }
+
+        EditorGUILayout.LabelField(
+            $"Event Timeline ({eventData.m_eventNodesList.Count} Nodes)",
+            EditorStyles.boldLabel);
+        Rect timelineRect = GUILayoutUtility.GetRect(
+            100.0f,
+            ETimelineHeight,
+            GUILayout.ExpandWidth(true)); //Event専用波形領域
+        DrawEventTimeline(timelineRect, eventData, _eventIndex);
+        HandleEventTimelineInput(timelineRect, eventData, _eventIndex);
+        DrawEventNodeList(eventData, _eventIndex);
+        EditorGUI.indentLevel--;
+        EditorGUILayout.Space(8.0f);
+    }
+
+    /// <summary>
+    /// Event専用の波形とNode線を描画します。
+    /// </summary>
+    private void DrawEventTimeline(
+        Rect _rect,
+        MusicEventSceneData _eventData,
+        int _eventIndex)
+    {
+        EditorGUI.DrawRect(_rect, new Color(0.08f, 0.07f, 0.12f));
+        float duration = GetEventDuration(_eventData); //Event表示秒数
+        DrawWaveform(_rect);
+        for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
+        {
+            SMusicNodeEvent node = _eventData.m_eventNodesList[i]; //描画Node
+            float x = _rect.x
+                + Mathf.Clamp01(node.m_time / duration) * _rect.width;
+            Color color = i == m_eventSelectedIndicesList[_eventIndex]
+                ? Color.yellow
+                : new Color(1.0f, 0.25f, 0.75f); //Event Node色
+            EditorGUI.DrawRect(
+                new Rect(x - ENodeWidth * 0.5f, _rect.y, ENodeWidth, _rect.height),
+                color);
+            GUI.Label(
+                new Rect(x + 4.0f, _rect.y + 4.0f, 150.0f, 20.0f),
+                $"{node.m_poseId}:{node.m_eventName}");
+        }
+
+        GUI.Label(
+            new Rect(_rect.x + 5.0f, _rect.yMax - 22.0f, 180.0f, 20.0f),
+            $"Event 0.00s - {duration:F2}s");
+    }
+
+    /// <summary>
+    /// Event専用グラフのClick追加とDrag移動を処理します。
+    /// </summary>
+    private void HandleEventTimelineInput(
+        Rect _rect,
+        MusicEventSceneData _eventData,
+        int _eventIndex)
+    {
+        Event currentEvent = Event.current; //現在入力
+        if (!_rect.Contains(currentEvent.mousePosition)
+            || currentEvent.button != 0)return;
+
+        float duration = GetEventDuration(_eventData); //Event表示秒数
+        float time = Mathf.Clamp01(
+            (currentEvent.mousePosition.x - _rect.x) / _rect.width) * duration;
+        if (currentEvent.type == EventType.MouseDown)
+        {
+            int selectedIndex = FindNearestEventNode(
+                _eventData.m_eventNodesList,
+                time,
+                duration); //選択Node
+            if (selectedIndex < 0)
+            {
+                Undo.RecordObject(m_sequence, "Add Event Node");
+                _eventData.m_eventNodesList.Add(new SMusicNodeEvent
+                {
+                    m_nodeNumber = GetNextEventNodeNumber(_eventData),
+                    m_time = time,
+                    m_poseId = 0,
+                    m_eventName = "Event Node"
+                });
+                selectedIndex = _eventData.m_eventNodesList.Count - 1;
+                EditorUtility.SetDirty(m_sequence);
+            }
+
+            m_eventSelectedIndicesList[_eventIndex] = selectedIndex;
+            currentEvent.Use();
+        }
+        else if (currentEvent.type == EventType.MouseDrag
+            && m_eventSelectedIndicesList[_eventIndex] >= 0)
+        {
+            int selectedIndex = m_eventSelectedIndicesList[_eventIndex]; //移動対象
+            Undo.RecordObject(m_sequence, "Move Event Node");
+            SMusicNodeEvent node = _eventData.m_eventNodesList[selectedIndex];
+            node.m_time = time;
+            _eventData.m_eventNodesList[selectedIndex] = node;
+            EditorUtility.SetDirty(m_sequence);
+            Repaint();
+            currentEvent.Use();
+        }
+    }
+
+    /// <summary>
+    /// Event専用Nodeを一覧で直接編集します。
+    /// </summary>
+    private void DrawEventNodeList(
+        MusicEventSceneData _eventData,
+        int _eventIndex)
+    {
+        m_eventScrollPositionsList[_eventIndex] = EditorGUILayout.BeginScrollView(
+            m_eventScrollPositionsList[_eventIndex],
+            GUILayout.Height(ENodeListHeight));
+        int deleteIndex = -1; //削除対象
+        for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
+        {
+            SMusicNodeEvent node = _eventData.m_eventNodesList[i]; //編集Node
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("●", GUILayout.Width(ENodeSelectColumnWidth)))
+            {
+                m_eventSelectedIndicesList[_eventIndex] = i;
+            }
+
+            EditorGUI.BeginChangeCheck();
+            node.m_nodeNumber = EditorGUILayout.IntField(
+                node.m_nodeNumber,
+                GUILayout.Width(ENodeNumberColumnWidth));
+            node.m_time = Mathf.Max(
+                0.0f,
+                EditorGUILayout.FloatField(
+                    node.m_time,
+                    GUILayout.Width(ENodeTimeColumnWidth)));
+            node.m_poseId = EditorGUILayout.IntField(
+                node.m_poseId,
+                GUILayout.Width(ENodePoseColumnWidth));
+            node.m_eventName = EditorGUILayout.TextField(node.m_eventName);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(m_sequence, "Edit Event Node");
+                _eventData.m_eventNodesList[i] = node;
+                EditorUtility.SetDirty(m_sequence);
+            }
+
+            if (GUILayout.Button("×", GUILayout.Width(ENodeDeleteColumnWidth)))
+            {
+                deleteIndex = i;
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.EndScrollView();
+        if (deleteIndex < 0)return;
+
+        Undo.RecordObject(m_sequence, "Delete Event Node");
+        _eventData.m_eventNodesList.RemoveAt(deleteIndex);
+        m_eventSelectedIndicesList[_eventIndex] = -1;
+        EditorUtility.SetDirty(m_sequence);
+    }
+
+    /// <summary>
+    /// Event数に合わせてEditor表示状態を確保します。
+    /// </summary>
+    private void EnsureEventEditorStates()
+    {
+        while (m_eventSelectedIndicesList.Count < m_sequence.EventScenesList.Count)
+        {
+            m_eventSelectedIndicesList.Add(-1);
+            m_eventScrollPositionsList.Add(Vector2.zero);
+            b_m_eventFoldoutsList.Add(true);
+        }
+    }
+
+    /// <summary>
+    /// Event専用グラフの表示時間を返します。
+    /// </summary>
+    private static float GetEventDuration(MusicEventSceneData _eventData)
+    {
+        float duration = 10.0f; //Event初期表示秒数
+        for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
+        {
+            duration = Mathf.Max(
+                duration,
+                _eventData.m_eventNodesList[i].m_time + 1.0f);
+        }
+
+        return duration;
+    }
+
+    /// <summary>
+    /// Click時刻に近いEvent Node番号を返します。
+    /// </summary>
+    private static int FindNearestEventNode(
+        List<SMusicNodeEvent> _nodesList,
+        float _time,
+        float _duration)
+    {
+        float hitSeconds = ENodeHitWidth / 1000.0f * _duration; //選択許容秒数
+        for (int i = 0; i < _nodesList.Count; ++i)
+        {
+            if (Mathf.Abs(_nodesList[i].m_time - _time) <= hitSeconds)return i;
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    /// Event内で未使用の次Node番号を返します。
+    /// </summary>
+    private static int GetNextEventNodeNumber(MusicEventSceneData _eventData)
+    {
+        int maximumNumber = 0; //現在最大番号
+        for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
+        {
+            maximumNumber = Mathf.Max(
+                maximumNumber,
+                _eventData.m_eventNodesList[i].m_nodeNumber);
+        }
+
+        return maximumNumber + 1;
+    }
+
+    /// <summary>
+    /// Event設定を一件追加します。
+    /// </summary>
+    private void AddEventSceneDirect()
+    {
+        Undo.RecordObject(m_sequence, "Add Event Scene");
+        m_sequence.EventScenesList.Add(new MusicEventSceneData
+        {
+            b_m_enabled = true,
+            m_eventName = $"Event {m_sequence.EventScenesList.Count + 1}",
+            m_triggerNodeNumber = 1
+        });
+        EnsureEventEditorStates();
+        EditorUtility.SetDirty(m_sequence);
     }
 
     /// <summary>

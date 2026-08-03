@@ -1,0 +1,237 @@
+特殊イベントとInGameManagerの連携 修正依頼書
+作成日: 2026/08/03
+
+============================================================
+1. 実現したい仕様
+============================================================
+
+1. MusicNodeSequenceへイベント専用ノード配列を設定する。
+2. 通常進行中に特殊ノードを成功判定すると特殊イベントを開始する。
+3. 特殊イベント中はイベント専用ノード配列を時間順に表示する。
+4. 特殊イベント中もBGM時間とゲーム時間は停止しない。
+5. 特殊イベント中に再生時刻を通過した通常ノードは表示しない。
+6. 表示しなかった通常ノードは失敗判定にしない。
+7. 特殊イベント終了後は、その時点のゲーム時間に対応する通常ノードから再開する。
+8. Voltage、Score、通常成功・失敗処理は既存仕様を維持する。
+
+
+============================================================
+2. EffectSystem側で実装済みの機能
+============================================================
+
+・MusicNodeSequence
+  MusicEventSceneData.m_eventNodesListへイベント専用ノードを保存可能。
+
+・EventSceneVisualDirector
+  PlayEventVisual()で以下をまとめて開始する。
+  - 既存PoseCameraDirectorによるCameraSequence
+  - 観客席へ配置したイベントノードCanvas
+  - EventSpecialNodePlayerによるイベント専用ノード再生
+
+・EventSpecialNodePlayer
+  EventNodeRuntimeContext.EventNodesListを優先して時間順に再生する。
+  Runtime Contextがない確認時はMusicNodeSequenceのEvent Scenesを使用する。
+  次のイベントノードを表示する前に、前のイベントノードを削除する。
+
+・EventNodeSceneController
+  外部の特殊ノード処理から以下を呼べる。
+
+  TryStartEvent(int _nodeNumber)
+
+  ただし、今回の仕様ではGameplayを破棄するSingle Scene遷移より、
+  Gameplay内でEventSceneVisualDirector.PlayEventVisual()を呼ぶ方式を推奨する。
+
+
+============================================================
+3. 現状の問題
+============================================================
+
+現在のEventSpecialNodePlayerは、特殊イベント中に
+InGameManager.enabledをfalseにして通常処理を止めている。
+
+この方法ではGameManager側のゲーム時間は進んでも、InGameManager内部の
+PoseFlow、現在Node番号、Node開始時刻は進まない。
+
+そのため特殊イベント終了後に以下が発生する可能性がある。
+
+・イベント中に通過した通常ノードが短時間表示される。
+・古い通常ノードが一つずつ処理される。
+・通過済み通常ノードが失敗判定へ入る。
+・BGM時間と通常ノードの進行位置が一致しない。
+
+PoseFlowなどの必要情報がInGameManagerのprivateメンバであるため、
+EffectSystem側だけでは安全かつ正確なスキップ処理を実装できない。
+
+
+============================================================
+4. InGameManagerへ依頼したい最小変更
+============================================================
+
+以下の二つのpublic関数と、イベント中かを保持するboolを追加してほしい。
+
+private bool b_m_specialEventActive;
+
+/// <summary>
+/// 特殊イベントを開始し、通常ノードの表示と判定だけを停止します。
+/// ゲーム時間とBGM時間は停止しません。
+/// </summary>
+public void BeginSpecialEvent()
+
+/// <summary>
+/// 特殊イベント中に終了時刻を通過した通常ノードを失敗扱いにせず飛ばし、
+/// 現在のゲーム時間に対応する位置から通常進行を再開します。
+/// </summary>
+public void EndSpecialEvent()
+
+
+============================================================
+5. BeginSpecialEventで必要な処理
+============================================================
+
+・既にイベント中なら何もしない。
+・b_m_specialEventActiveをtrueにする。
+・現在表示中の通常ノードUIを削除する。
+・通常ノードの成功判定、失敗判定、Score変更、Voltage変更を行わない状態にする。
+・GameManagerのTimer、BGM、エフェクト時間は止めない。
+
+重要:
+Time.timeScaleを0にしないこと。
+InGameManagerコンポーネント自体を無効化しないこと。
+
+
+============================================================
+6. イベント中のUpdateで必要な処理
+============================================================
+
+UpdateTime()は通常どおり実行する。
+
+その直後、イベント中なら通常Node処理へ入らずreturnする。
+
+処理イメージ:
+
+UpdateTime();
+
+if (b_m_specialEventActive)return;
+
+このreturnより前にゲーム終了時間の確認が必要な場合は、既存仕様に合わせる。
+
+
+============================================================
+7. EndSpecialEventで必要な処理
+============================================================
+
+1. 現在のGameTimeSecondsを更新する。
+2. 現在Nodeの開始時刻から経過した時間を計算する。
+3. 経過時間が現在Nodeの制限時間以上なら次Nodeへ進める。
+4. 次Nodeも既に終了時刻を通過していれば、同様に繰り返す。
+5. 飛ばしたNodeでは以下を行わない。
+   - UI表示
+   - Pose判定
+   - 失敗判定
+   - Score変更
+   - Voltage変更
+   - Effect再生
+6. 現在時刻より後に判定時間が残っているNodeを見つけたら通常進行へ戻す。
+7. b_m_specialEventActiveをfalseにする。
+
+擬似コード:
+
+UpdateTime();
+
+float elapsedSeconds = GameTimeSeconds - KeepGameTimeSeconds;
+pose = poseFlow.CurrentPose();
+
+while (elapsedSeconds >= pose.time && poseFlow.HasNextPose())
+{
+    elapsedSeconds -= pose.time;
+    poseFlow.NextPose();
+    pose = poseFlow.CurrentPose();
+}
+
+KeepGameTimeSeconds = GameTimeSeconds - elapsedSeconds;
+b_m_specialEventActive = false;
+
+再開時に現在Nodeを最初から表示するか、残り時間から途中表示するかは
+ゲーム仕様に合わせて決定する。
+
+推奨:
+イベント終了時点ですでに開始時刻を通過しているNodeは表示せず、
+次に開始予定のNodeから再開する。
+
+
+============================================================
+8. 特殊ノード成功時の接続
+============================================================
+
+特殊ノード判定を担当する側から、成功時に以下を呼ぶ。
+
+eventSceneVisualDirector.PlayEventVisual();
+
+PlayEventVisual()の開始処理から以下を呼ぶ。
+
+inGameManager.BeginSpecialEvent();
+
+イベント専用ノードの再生終了通知を受けたら以下を呼ぶ。
+
+inGameManager.EndSpecialEvent();
+
+その後、EventSceneVisualDirector側で以下を終了する。
+
+・PoseCameraDirector.StopSequence()
+・観客用イベントCanvasの削除
+・イベント用ノードUIの削除
+
+
+============================================================
+9. Scene遷移について
+============================================================
+
+今回の仕様ではBGM時間、ゲーム時間、PoseFlowを維持する必要があるため、
+SceneManager.LoadScene(..., LoadSceneMode.Single)による移動は推奨しない。
+
+推奨方式:
+
+・Gameplay Scene内で特殊イベントモードへ切り替える。
+または
+・イベント演出SceneをLoadSceneMode.Additiveで追加し、Gameplayを残す。
+
+Singleロードを使用する場合は、以下を別途永続化する必要がある。
+
+・GameTimeSeconds
+・BGM再生位置
+・PoseFlowの現在Index
+・Score
+・Voltage
+・観客の好み
+・イベント終了後の復帰先Sceneと状態
+
+
+============================================================
+10. 動作確認項目
+============================================================
+
+□ 特殊ノード成功時だけイベントが開始される。
+□ イベント中もBGMが止まらない。
+□ イベント中もゲーム時間が進む。
+□ イベント専用ノードだけが表示される。
+□ 通常ノードはイベント中に表示されない。
+□ 通過した通常ノードが失敗扱いにならない。
+□ 通過した通常ノードでVoltageが下がらない。
+□ 通過した通常ノードでScoreが変化しない。
+□ イベント終了後に古い通常ノードが一瞬表示されない。
+□ イベント終了後、BGMの現在時刻と通常ノード位置が一致する。
+□ イベントを複数回開始しても二重再生されない。
+□ 最後の通常ノード付近でイベントを開始しても例外が発生しない。
+
+
+============================================================
+11. 競合を避けるための方針
+============================================================
+
+・InGameManagerの既存Success、Failure、Judge、Score、Voltage処理は変更しない。
+・追加するのはイベント開始・終了とUpdate内のイベント中分岐に限定する。
+・イベント用Camera、Canvas、Node再生はAssets/EffectSystem内で管理する。
+・InGameManagerからEffectSystem側の具象クラスを直接検索しない。
+・特殊ノード側またはScene上のDirectorからpublic関数を呼ぶ。
+・メイン担当者の更新を取り込んだ後に上記最小変更を適用する。
+
