@@ -8,7 +8,7 @@ using UnityEngine.SocialPlatforms.Impl;
 public class PoseJudgeController : MonoBehaviour
 {
     [Header("InGame")]
-    [SerializeField] private InGameManager m_InGameManager;
+    [SerializeField] private UIManager m_uiManager;
 
     [Header("UIの保存場所")]
     [SerializeField] private ExcelLoader m_excelLoader;
@@ -38,13 +38,13 @@ public class PoseJudgeController : MonoBehaviour
     //オブザーバー
     private void OnEnable()
     {
-        m_InGameManager.PoseJudgeFrame += PoseJudge;
+        m_uiManager.PoseJudgeFrame += PoseJudge;
     }
 
     //オブザーバー
     private void OnDisable()
     {
-        m_InGameManager.PoseJudgeFrame -= PoseJudge;
+        m_uiManager.PoseJudgeFrame -= PoseJudge;
     }
     public void PoseJudge(int poseID)
     {

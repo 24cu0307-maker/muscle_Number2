@@ -1,11 +1,11 @@
-/*â”â”â”â”â”â”â”â”â”*
+/*„ª„ª„ª„ª„ª„ª„ª„ª„ª*
 *@file EventSpecialNodePlayer.cs*
-*@brief ç‰¹æ®ŠEventä¸­ã«å°‚ç”¨Nodeä¸€è¦§ã‚’æ™‚é–“é †ã«è¡¨ç¤ºã™ã‚‹*
-*@author 24cu0312 ä¹…å ´æ´¸å¤ª*
+*@brief “ÁêEvent’†‚Éê—pNodeˆê——‚ğŠÔ‡‚É•\¦‚·‚é*
+*@author 24cu0312 ‹vêŸ©‘¾*
 *@date 2026/08/03*
-*æœ€çµ‚æ›´æ–°æ—¥ 2026/08/03*
-*@remarks é€šå¸¸InGameé€²è¡Œã‚’ä¸€æ™‚åœæ­¢ã—Event Nodeã‚’ç‹¬ç«‹å†ç”Ÿã™ã‚‹*
-*â”â”â”â”â”â”â”â”â”*/
+*ÅIXV“ú 2026/08/03*
+*@remarks ’ÊíInGameis‚ğˆê’â~‚µEvent Node‚ğ“Æ—§Ä¶‚·‚é*
+*„ª„ª„ª„ª„ª„ª„ª„ª„ª*/
 
 using System.Collections;
 using System.Collections.Generic;
@@ -13,51 +13,51 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Runtime Contextã¾ãŸã¯MusicNodeSequenceã®ç‰¹æ®ŠEvent Nodeã‚’é †ç•ªã«è¡¨ç¤ºã—ã¾ã™ã€‚
+/// Runtime Context‚Ü‚½‚ÍMusicNodeSequence‚Ì“ÁêEvent Node‚ğ‡”Ô‚É•\¦‚µ‚Ü‚·B
 /// </summary>
 public sealed class EventSpecialNodePlayer : MonoBehaviour
 {
-    public event Action EventNodesCompleted; //ç‰¹æ®ŠNodeå®Œäº†é€šçŸ¥
+    public event Action EventNodesCompleted; //“ÁêNodeŠ®—¹’Ê’m
 
-    private const float EMinimumNodeDuration = 0.25f; //Nodeæœ€ä½è¡¨ç¤ºæ™‚é–“
-    private const float EDefaultLastNodeDuration = 2.0f; //æœ€çµ‚Nodeè¡¨ç¤ºæ™‚é–“
+    private const float EMinimumNodeDuration = 0.25f; //NodeÅ’á•\¦ŠÔ
+    private const float EDefaultLastNodeDuration = 2.0f; //ÅINode•\¦ŠÔ
 
-    [SerializeField] private MusicNodeSequence m_sequence; //ç¢ºèªç”¨Eventè¨­å®š
-    [SerializeField] private int m_eventIndex; //ç¢ºèªã«ä½¿ã†Eventç•ªå·
-    [SerializeField] private UIController m_uiController; //æ—¢å­˜Nodeè¡¨ç¤ºåˆ¶å¾¡
-    [SerializeField] private InGameManager m_inGameManager; //é€šå¸¸é€²è¡Œåˆ¶å¾¡
-    [SerializeField] private float m_lastNodeDuration = EDefaultLastNodeDuration; //æœ€çµ‚Nodeè¡¨ç¤ºæ™‚é–“
-
-    private Coroutine m_playCoroutine; //Event Nodeå†ç”Ÿå‡¦ç†
-    private bool b_m_normalFlowSuspended; //é€šå¸¸é€²è¡Œã‚’ä¼‘æ­¢ä¸­ã‹
-    private bool b_m_wasInGameEnabled; //é–‹å§‹å‰ã®é€šå¸¸é€²è¡ŒçŠ¶æ…‹
-    private bool b_m_hasEventFrames; //ç‰¹æ®ŠNodeè¡¨ç¤ºä¸­ã‹
+    [SerializeField] private MusicNodeSequence m_sequence; //Šm”F—pEventİ’è
+    [SerializeField] private int m_eventIndex; //Šm”F‚Ég‚¤Event”Ô†
+    [SerializeField] private UIController m_uiController; //Šù‘¶Node•\¦§Œä
+    [SerializeField] private InGameManager m_inGameManager; //’Êíis§Œä
+    [SerializeField] private float m_lastNodeDuration = EDefaultLastNodeDuration; //ÅINode•\¦ŠÔ
+    CSVDataPoseFlow pose;
+    private Coroutine m_playCoroutine; //Event NodeÄ¶ˆ—
+    private bool b_m_normalFlowSuspended; //’Êíis‚ğ‹x~’†‚©
+    private bool b_m_wasInGameEnabled; //ŠJn‘O‚Ì’Êíisó‘Ô
+    private bool b_m_hasEventFrames; //“ÁêNode•\¦’†‚©
 
     /// <summary>
-    /// EventNodeRuntimeContextã‚’å„ªå…ˆã—ã¦ç‰¹æ®ŠNodeå†ç”Ÿã‚’é–‹å§‹ã—ã¾ã™ã€‚
+    /// EventNodeRuntimeContext‚ğ—Dæ‚µ‚Ä“ÁêNodeÄ¶‚ğŠJn‚µ‚Ü‚·B
     /// </summary>
     [ContextMenu("Play Special Event Nodes")]
     public void PlayEventNodes()
     {
         IReadOnlyList<SMusicNodeEvent> sourceNodesList =
-            GetEventNodes(); //å†ç”Ÿå…ƒNodeä¸€è¦§
+            GetEventNodes(); //Ä¶Œ³Nodeˆê——
         if (sourceNodesList == null || sourceNodesList.Count == 0)
         {
             Debug.LogWarning(
-                "ç‰¹æ®ŠEvent NodeãŒã‚ã‚Šã¾ã›ã‚“ã€‚Music Node Editorã®Event Scenesã¸Nodeã‚’è¨­å®šã—ã¦ãã ã•ã„ã€‚");
+                "“ÁêEvent Node‚ª‚ ‚è‚Ü‚¹‚ñBMusic Node Editor‚ÌEvent Scenes‚ÖNode‚ğİ’è‚µ‚Ä‚­‚¾‚³‚¢B");
             return;
         }
 
         FindReferences();
         if (m_uiController == null)
         {
-            Debug.LogError("ç‰¹æ®ŠEvent Nodeå†ç”Ÿã«UIControllerãŒå¿…è¦ã§ã™ã€‚");
+            Debug.LogError("“ÁêEvent NodeÄ¶‚ÉUIController‚ª•K—v‚Å‚·B");
             return;
         }
 
         StopEventNodes();
         List<SMusicNodeEvent> nodesList =
-            new List<SMusicNodeEvent>(sourceNodesList); //æ™‚é–“é †ã«ä¸¦ã¹ã‚‹è¤‡è£½
+            new List<SMusicNodeEvent>(sourceNodesList); //ŠÔ‡‚É•À‚×‚é•¡»
         nodesList.Sort(
             (_left, _right) => _left.m_time.CompareTo(_right.m_time));
         if (m_inGameManager != null)
@@ -71,7 +71,7 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠNodeã‚’åœæ­¢ã—ã¦é€šå¸¸InGameé€²è¡Œã‚’å¾©å¸°ã—ã¾ã™ã€‚
+    /// “ÁêNode‚ğ’â~‚µ‚Ä’ÊíInGameis‚ğ•œ‹A‚µ‚Ü‚·B
     /// </summary>
     [ContextMenu("Stop Special Event Nodes")]
     public void StopEventNodes()
@@ -91,39 +91,39 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// Event Nodeã‚’æ™‚é–“å·®ã«åˆã‚ã›ã¦ä¸€ã¤ãšã¤è¡¨ç¤ºã—ã¾ã™ã€‚
+    /// Event Node‚ğŠÔ·‚É‡‚í‚¹‚Äˆê‚Â‚¸‚Â•\¦‚µ‚Ü‚·B
     /// </summary>
     private IEnumerator PlayNodesRoutine(
         List<SMusicNodeEvent> _nodesList)
     {
-        float firstTime = _nodesList[0].m_time; //Eventå†…åŸºæº–æ™‚é–“
-        float startedTime = Time.unscaledTime; //Eventé–‹å§‹æ™‚åˆ»
+        float firstTime = _nodesList[0].m_time; //Event“àŠî€ŠÔ
+        float startedTime = Time.unscaledTime; //EventŠJn
         for (int i = 0; i < _nodesList.Count; ++i)
         {
-            SMusicNodeEvent node = _nodesList[i]; //ä»Šå›Node
-            float targetTime = Mathf.Max(0.0f, node.m_time - firstTime); //è¡¨ç¤ºæ™‚åˆ»
+            SMusicNodeEvent node = _nodesList[i]; //¡‰ñNode
+            float targetTime = Mathf.Max(0.0f, node.m_time - firstTime); //•\¦
             while (Time.unscaledTime - startedTime < targetTime)
             {
                 yield return null;
             }
 
             ClearCurrentFrames();
-            float duration = GetNodeDuration(_nodesList, i); //ä»Šå›è¡¨ç¤ºæ™‚é–“
-            CSVDataPoseFlow pose = new CSVDataPoseFlow
+            float duration = GetNodeDuration(_nodesList, i); //¡‰ñ•\¦ŠÔ
+            pose = new CSVDataPoseFlow
             {
                 FlowNumber = node.m_nodeNumber,
                 PoseID = node.m_poseId,
                 PoseName = node.m_eventName,
                 time = duration
-            }; //æ—¢å­˜UIã¸æ¸¡ã™Node Data
+            }; //Šù‘¶UI‚Ö“n‚·Node Data
             m_uiController.UISet_normal(pose);
             b_m_hasEventFrames = true;
 
-            float elapsedSeconds = 0.0f; //Nodeè¡¨ç¤ºçµŒéæ™‚é–“
+            float elapsedSeconds = 0.0f; //Node•\¦Œo‰ßŠÔ
             while (elapsedSeconds < duration)
             {
                 elapsedSeconds += Time.unscaledDeltaTime;
-                m_uiController.UIMove_normal();
+                m_uiController.UIMove_normal(pose);
                 yield return null;
             }
         }
@@ -135,7 +135,7 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// æ¬¡Nodeã¾ã§ã®é–“éš”ã‹ã‚‰ç¾åœ¨Nodeè¡¨ç¤ºæ™‚é–“ã‚’æ±‚ã‚ã¾ã™ã€‚
+    /// ŸNode‚Ü‚Å‚ÌŠÔŠu‚©‚çŒ»İNode•\¦ŠÔ‚ğ‹‚ß‚Ü‚·B
     /// </summary>
     private float GetNodeDuration(
         List<SMusicNodeEvent> _nodesList,
@@ -152,12 +152,12 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// é·ç§»æ™‚Contextã‚’å„ªå…ˆã—ã€ãªã‘ã‚Œã°ç¢ºèªç”¨Sequenceã‹ã‚‰Event Nodeã‚’å–å¾—ã—ã¾ã™ã€‚
+    /// ‘JˆÚContext‚ğ—Dæ‚µA‚È‚¯‚ê‚ÎŠm”F—pSequence‚©‚çEvent Node‚ğæ“¾‚µ‚Ü‚·B
     /// </summary>
     private IReadOnlyList<SMusicNodeEvent> GetEventNodes()
     {
         IReadOnlyList<SMusicNodeEvent> runtimeNodesList =
-            EventNodeRuntimeContext.EventNodesList; //é·ç§»å…ƒã‹ã‚‰æ¸¡ã•ã‚ŒãŸNode
+            EventNodeRuntimeContext.EventNodesList; //‘JˆÚŒ³‚©‚ç“n‚³‚ê‚½Node
         if (runtimeNodesList != null && runtimeNodesList.Count > 0)
         {
             return runtimeNodesList;
@@ -168,12 +168,12 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
             || m_eventIndex >= m_sequence.EventScenesList.Count)return null;
 
         MusicEventSceneData eventData =
-            m_sequence.EventScenesList[m_eventIndex]; //ç¢ºèªå¯¾è±¡Event
+            m_sequence.EventScenesList[m_eventIndex]; //Šm”F‘ÎÛEvent
         return eventData?.m_eventNodesList;
     }
 
     /// <summary>
-    /// æœªè¨­å®šã®æ—¢å­˜Nodeè¡¨ç¤ºå‚ç…§ã‚’Sceneã‹ã‚‰å–å¾—ã—ã¾ã™ã€‚
+    /// –¢İ’è‚ÌŠù‘¶Node•\¦QÆ‚ğScene‚©‚çæ“¾‚µ‚Ü‚·B
     /// </summary>
     private void FindReferences()
     {
@@ -189,25 +189,26 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// æ—¢å­˜UIControllerã«è¡¨ç¤ºä¸­FrameãŒã‚ã‚‹å ´åˆã ã‘å®‰å…¨ã«å‰Šé™¤ã—ã¾ã™ã€‚
+    /// Šù‘¶UIController‚É•\¦’†Frame‚ª‚ ‚éê‡‚¾‚¯ˆÀ‘S‚Éíœ‚µ‚Ü‚·B
     /// </summary>
     private void ClearCurrentFrames()
     {
         if (m_uiController == null)return;
 
-        GameObject[] currentFrames = m_uiController.GetCurrentFrame(); //è¡¨ç¤ºä¸­Frame
+
+        List<GameObject> currentFrames = m_uiController.GetCurrentFrame(); //•\¦’†Frame
         if (currentFrames == null)
         {
             b_m_hasEventFrames = false;
             return;
         }
 
-        m_uiController.UIForcedQuit();
+        m_uiController.UIForcedQuit(pose);
         b_m_hasEventFrames = false;
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠEventä¸­ã‚‚é€²ã‚“ã ç¾åœ¨æ™‚åˆ»ã¸é€šå¸¸Nodeé€²è¡Œã‚’å¾©å¸°ã—ã¾ã™ã€‚
+    /// “ÁêEvent’†‚ài‚ñ‚¾Œ»İ‚Ö’ÊíNodeis‚ğ•œ‹A‚µ‚Ü‚·B
     /// </summary>
     private void ResumeNormalFlow()
     {

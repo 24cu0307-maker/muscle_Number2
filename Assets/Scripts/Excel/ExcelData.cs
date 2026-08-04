@@ -14,6 +14,7 @@ public struct CSVPoseData
     public Vector3 LeftelbowRotation;
     public Vector3 RightShoulderRotation;
     public Vector3 LeftShoulderRotation;
+    public int PoseMax;
 
 }
 

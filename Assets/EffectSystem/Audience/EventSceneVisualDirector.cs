@@ -1,41 +1,41 @@
-/*â”â”â”â”â”â”â”â”â”*
+/*„ª„ª„ª„ª„ª„ª„ª„ª„ª*
 *@file EventSceneVisualDirector.cs*
-*@brief å¤–éƒ¨ã®ç‰¹æ®ŠNodeã‹ã‚‰æ—¢å­˜CameraSequenceã¨Canvasã‚’ä¸€æ‹¬æ“ä½œã™ã‚‹*
-*@author 24cu0312 ä¹…å ´æ´¸å¤ª*
+*@brief ŠO•”‚Ì“ÁêNode‚©‚çŠù‘¶CameraSequence‚ÆCanvas‚ğˆêŠ‡‘€ì‚·‚é*
+*@author 24cu0312 ‹vêŸ©‘¾*
 *@date 2026/08/03*
-*æœ€çµ‚æ›´æ–°æ—¥ 2026/08/03*
-*@remarks ç‰¹æ®ŠNodeå®Ÿè£…ã¸ä¾å­˜ã—ãªã„å…¬é–‹é–¢æ•°ã‚’æ¥ç¶šå£ã¨ã—ã¦æä¾›ã™ã‚‹*
-*â”â”â”â”â”â”â”â”â”*/
+*ÅIXV“ú 2026/08/03*
+*@remarks “ÁêNodeÀ‘•‚ÖˆË‘¶‚µ‚È‚¢ŒöŠJŠÖ”‚ğÚ‘±Œû‚Æ‚µ‚Ä’ñ‹Ÿ‚·‚é*
+*„ª„ª„ª„ª„ª„ª„ª„ª„ª*/
 
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// ç‰¹æ®ŠNodeå´ã‹ã‚‰Eventæ¼”å‡ºã‚’é–‹å§‹ãƒ»çµ‚äº†ã™ã‚‹ãŸã‚ã®æ¥ç¶šå£ã§ã™ã€‚
+/// “ÁêNode‘¤‚©‚çEvent‰‰o‚ğŠJnEI—¹‚·‚é‚½‚ß‚ÌÚ‘±Œû‚Å‚·B
 /// </summary>
 public sealed class EventSceneVisualDirector : MonoBehaviour
 {
-    [SerializeField] private PoseCameraDirector m_cameraDirector; //æ—¢å­˜Cameraæ¼”å‡ºåˆ¶å¾¡
-    [SerializeField] private CameraSequence m_cameraSequence; //Eventç”¨æ—‹å›Sequence
-    [SerializeField] private MusicNodeSequence m_musicNodeSequence; //ç‰¹æ®ŠNodeã¨Triggerè¨­å®š
-    [SerializeField] private EventAudienceCanvasController m_canvasController; //è¦³å®¢Node Canvasåˆ¶å¾¡
-    [SerializeField] private EventSpecialNodePlayer m_specialNodePlayer; //ç‰¹æ®ŠEvent Nodeå†ç”Ÿ
+    [SerializeField] private PoseCameraDirector m_cameraDirector; //Šù‘¶Camera‰‰o§Œä
+    [SerializeField] private CameraSequence m_cameraSequence; //Event—pù‰ñSequence
+    [SerializeField] private MusicNodeSequence m_musicNodeSequence; //“ÁêNode‚ÆTriggerİ’è
+    [SerializeField] private EventAudienceCanvasController m_canvasController; //ŠÏ‹qNode Canvas§Œä
+    [SerializeField] private EventSpecialNodePlayer m_specialNodePlayer; //“ÁêEvent NodeÄ¶
     [SerializeField] private AudiencePreferenceSystem m_preferenceSystem;
     [SerializeField] private InGameManager m_inGameManager;
-    [SerializeField] private float m_canvasDelaySeconds = 0.2f; //Canvasè¡¨ç¤ºå¾…æ©Ÿæ™‚é–“
-    [SerializeField] private bool b_m_playOnStart = true; //Event Sceneå˜ä½“ç¢ºèªç”¨
-    [SerializeField] private UnityEvent m_onEventVisualStarted; //æ¼”å‡ºé–‹å§‹é€šçŸ¥
-    [SerializeField] private UnityEvent m_onEventVisualStopped; //æ¼”å‡ºçµ‚äº†é€šçŸ¥
+    [SerializeField] private float m_canvasDelaySeconds = 0.2f; //Canvas•\¦‘Ò‹@ŠÔ
+    [SerializeField] private bool b_m_playOnStart = true; //Event Scene’P‘ÌŠm”F—p
+    [SerializeField] private UnityEvent m_onEventVisualStarted; //‰‰oŠJn’Ê’m
+    [SerializeField] private UnityEvent m_onEventVisualStopped; //‰‰oI—¹’Ê’m
 
-    private Coroutine m_playCoroutine; //è¡¨ç¤ºå¾…æ©Ÿå‡¦ç†
-    private bool b_m_isPlaying; //Eventæ¼”å‡ºä¸­ã‹
+    private Coroutine m_playCoroutine; //•\¦‘Ò‹@ˆ—
+    private bool b_m_isPlaying; //Event‰‰o’†‚©
     private bool b_m_normalFlowSuspended;
     private bool b_m_wasInGameEnabled;
     private MusicEventSceneData m_currentEvent;
 
     /// <summary>
-    /// æˆåŠŸã—ãŸé€šå¸¸Nodeç•ªå·ã«å¯¾å¿œã™ã‚‹Eventã‚’æ¤œç´¢ã—ã¦é–‹å§‹ã—ã¾ã™ã€‚
+    /// ¬Œ÷‚µ‚½’ÊíNode”Ô†‚É‘Î‰‚·‚éEvent‚ğŒŸõ‚µ‚ÄŠJn‚µ‚Ü‚·B
     /// </summary>
     public bool TryPlayEvent(int _nodeNumber)
     {
@@ -44,7 +44,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         for (int i = 0; i < m_musicNodeSequence.EventScenesList.Count; ++i)
         {
             MusicEventSceneData eventData =
-                m_musicNodeSequence.EventScenesList[i]; //Eventå€™è£œ
+                m_musicNodeSequence.EventScenesList[i]; //EventŒó•â
             if (eventData == null || !eventData.b_m_enabled)continue;
             if (eventData.m_triggerNodeNumber != _nodeNumber)continue;
 
@@ -58,26 +58,30 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠNodeå®Œäº†é€šçŸ¥ã‚’ç™»éŒ²ã—ã¾ã™ã€‚
+    /// “ÁêNodeŠ®—¹’Ê’m‚ğ“o˜^‚µ‚Ü‚·B
     /// </summary>
     private void OnEnable()
     {
         FindReferences();
         if (m_specialNodePlayer != null)
         {
+            Debug.Log("StopEventVisual()--");
+
             m_specialNodePlayer.EventNodesCompleted -= OnEventNodesCompleted;
             m_specialNodePlayer.EventNodesCompleted += OnEventNodesCompleted;
         }
 
         if (m_preferenceSystem != null)
         {
+            Debug.Log("StopEventVisual()--");
+
             m_preferenceSystem.PreferenceEvaluated -= OnPreferenceEvaluated;
             m_preferenceSystem.PreferenceEvaluated += OnPreferenceEvaluated;
         }
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠNodeå®Œäº†é€šçŸ¥ã‚’è§£é™¤ã—ã¾ã™ã€‚
+    /// “ÁêNodeŠ®—¹’Ê’m‚ğ‰ğœ‚µ‚Ü‚·B
     /// </summary>
     private void OnDisable()
     {
@@ -87,12 +91,14 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
         if (m_preferenceSystem != null)
         {
+            Debug.Log("StopEventVisual()-11");
+
             m_preferenceSystem.PreferenceEvaluated -= OnPreferenceEvaluated;
         }
     }
 
     /// <summary>
-    /// Event Sceneå˜ä½“ã§ã‚‚ç¢ºèªã§ãã‚‹ã‚ˆã†å¿…è¦ã«å¿œã˜ã¦è‡ªå‹•å†ç”Ÿã—ã¾ã™ã€‚
+    /// Event Scene’P‘Ì‚Å‚àŠm”F‚Å‚«‚é‚æ‚¤•K—v‚É‰‚¶‚Ä©“®Ä¶‚µ‚Ü‚·B
     /// </summary>
     private void Start()
     {
@@ -104,17 +110,22 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠNodeæˆåŠŸå¾Œã«å‘¼ã³å‡ºã™Eventæ¼”å‡ºé–‹å§‹é–¢æ•°ã§ã™ã€‚
+    /// “ÁêNode¬Œ÷Œã‚ÉŒÄ‚Ño‚·Event‰‰oŠJnŠÖ”‚Å‚·B
     /// </summary>
     [ContextMenu("Play Event Visual")]
     public void PlayEventVisual()
     {
+        Debug.Log("StopEventVisual()");
+
+
         FindReferences();
         if (b_m_isPlaying)return;
+        Debug.Log("StopEventVisual()-1");
 
         b_m_isPlaying = true;
         if (m_cameraDirector != null && m_cameraSequence != null)
         {
+            Debug.Log("StopEventVisual()-2");
             m_cameraDirector.PlaySequence(m_cameraSequence);
         }
 
@@ -123,20 +134,25 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
                 == EMusicEventType.SpecialNodeBranch;
         if (m_playCoroutine != null)
         {
+            Debug.Log("StopEventVisual()-3");
             StopCoroutine(m_playCoroutine);
         }
 
         if (b_specialNodeBranch)
         {
+            Debug.Log("StopEventVisual()-4");
             if (m_specialNodePlayer != null)
             {
+                Debug.Log("StopEventVisual()-5");
                 m_specialNodePlayer.PlayEventNodes();
             }
         }
         else
         {
+            Debug.Log("StopEventVisual()-6");
             if (m_preferenceSystem != null)
             {
+                Debug.Log("StopEventVisual()-7");
                 m_preferenceSystem.InitializePreferences();
             }
 
@@ -148,7 +164,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// Eventçµ‚äº†æ™‚ã«Cameraã¨Canvasã‚’é€šå¸¸çŠ¶æ…‹ã¸æˆ»ã—ã¾ã™ã€‚
+    /// EventI—¹‚ÉCamera‚ÆCanvas‚ğ’Êíó‘Ô‚Ö–ß‚µ‚Ü‚·B
     /// </summary>
     [ContextMenu("Stop Event Visual")]
     public void StopEventVisual()
@@ -173,6 +189,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         {
             m_specialNodePlayer.StopEventNodes();
         }
+        Debug.Log("StopEventVisual()");
 
         b_m_isPlaying = false;
         ResumeNormalFlow();
@@ -182,11 +199,11 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// è¦³å®¢ç”Ÿæˆã¨Cameraåˆ‡æ›¿ã‚’å¾…ã£ã¦ã‹ã‚‰Canvas Nodeã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
+    /// ŠÏ‹q¶¬‚ÆCameraØ‘Ö‚ğ‘Ò‚Á‚Ä‚©‚çCanvas Node‚ğ•\¦‚µ‚Ü‚·B
     /// </summary>
     private IEnumerator ShowCanvasRoutine()
     {
-        float delaySeconds = Mathf.Max(0.0f, m_canvasDelaySeconds); //å®‰å…¨ãªå¾…æ©Ÿæ™‚é–“
+        float delaySeconds = Mathf.Max(0.0f, m_canvasDelaySeconds); //ˆÀ‘S‚È‘Ò‹@ŠÔ
         if (delaySeconds > 0.0f)
         {
             yield return new WaitForSeconds(delaySeconds);
@@ -205,13 +222,15 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// åŒã˜Sceneã«ã‚ã‚‹Cameraåˆ¶å¾¡ã¨Canvasåˆ¶å¾¡ã‚’è‡ªå‹•å–å¾—ã—ã¾ã™ã€‚
+    /// “¯‚¶Scene‚É‚ ‚éCamera§Œä‚ÆCanvas§Œä‚ğ©“®æ“¾‚µ‚Ü‚·B
     /// </summary>
     private void FindReferences()
     {
+
         if (m_cameraDirector == null)
         {
             m_cameraDirector = FindFirstObjectByType<PoseCameraDirector>();
+
         }
 
         if (m_canvasController == null)
@@ -238,10 +257,13 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// ç‰¹æ®ŠNodeçµ‚äº†ã«åˆã‚ã›ã¦Cameraã¨è¦³å®¢Canvasã‚’çµ‚äº†ã—ã¾ã™ã€‚
+    /// “ÁêNodeI—¹‚É‡‚í‚¹‚ÄCamera‚ÆŠÏ‹qCanvas‚ğI—¹‚µ‚Ü‚·B
     /// </summary>
     private void OnEventNodesCompleted()
     {
+        Debug.Log("StopEventVisual()");
+
+
         if (m_cameraDirector != null)
         {
             m_cameraDirector.StopSequence();
@@ -262,6 +284,8 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         int _preferenceindex,
         float _averagepreference)
     {
+        Debug.Log("StopEventVisual()");
+
         if (!b_m_isPlaying)return;
         if (m_currentEvent != null
             && m_currentEvent.m_eventType
@@ -280,18 +304,21 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
                 Mathf.Clamp01(_averagepreference)));
         if (m_inGameManager != null)
         {
-            m_inGameManager.AddEventScore(bonusScore);
+            //m_inGameManager.AddScore(bonusScore);
         }
 
         Debug.Log(
             $"Audience Choice {_preferenceindex + 1}: "
             + $"Preference {_averagepreference:P1}, "
             + $"Bonus {bonusScore}");
+
+        Debug.Log("StopEventVisual()");
         StopEventVisual();
     }
 
     private void SuspendNormalFlow()
     {
+        Debug.Log("StopEventVisual()-8");
         if (m_inGameManager == null || b_m_normalFlowSuspended)return;
 
         b_m_wasInGameEnabled = m_inGameManager.enabled;
@@ -301,6 +328,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
 
     private void ResumeNormalFlow()
     {
+        Debug.Log("StopEventVisual()-9");
         if (m_inGameManager == null || !b_m_normalFlowSuspended)return;
 
         m_inGameManager.enabled = b_m_wasInGameEnabled;

@@ -4147,7 +4147,8 @@ MonoBehaviour:
   m_effectSystem: {fileID: 4787423824797939427}
   poseCameraDirector: {fileID: 2075913570}
   m_venueVoltageSystem: {fileID: 910000000000000002}
-  m_endtimer: 180
+  m_eventSceneVisualDirector: {fileID: 0}
+  m_endtimer: 5
 --- !u!4 &813159518
 Transform:
   m_ObjectHideFlags: 0
@@ -17151,7 +17152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15baa2a1e1441ee449282d288191b250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VenueVoltageSystem
-  m_scoreManager: {fileID: 0}
   m_comboWindowSeconds: 8
   m_decayDelaySeconds: 5
   m_decayPerSecond: 1.25

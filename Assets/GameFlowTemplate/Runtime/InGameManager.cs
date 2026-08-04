@@ -1,13 +1,13 @@
 //
-//InGameã®æµã‚Œã‚’ã“ã“ã§è¡Œã†
+//InGame‚Ì—¬‚ê‚ğ‚±‚±‚Ås‚¤
 //
 //
-//æº–å‚™ã€€ã€€ã€€InGameå…¥ã£ã¦ä¸€åº¦é£²ã¿ä½¿ç”¨
-//å§‹ã‚ã€€ã€€ã€€UIã€ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ã‚»ãƒƒãƒˆã€€ã€€ã€€
-//å®Ÿè¡Œä¸­ã€€ã€€UIã®ç¸®å°ã€åˆ¤å®š
-//çµ‚ã‚ã‚Šã€€ã€€ãƒãƒ¼ã‚ºã”ã¨ã«çµ‚äº†æ™‚é–“ãŒããŸã‚‰ã€åˆã¯ã€æˆåŠŸ-å¤±æ•—
-//æˆåŠŸã€€ã€€ã€€ãƒãƒ¼ã‚ºã‚’æˆåŠŸã—ãŸå ´åˆã€ãã®å¾Œçµ‚ã‚ã‚Šã¸
-//å¤±æ•—ã€€ã€€ã€€ãƒãƒ¼ã‚ºã‚’å¤±æ•—ã—ãŸå ´åˆã€ãã®å¾Œçµ‚ã‚ã‚Šã¸
+//€”õ@@@InGame“ü‚Á‚Äˆê“xˆù‚İg—p
+//n‚ß@@@UIAƒGƒtƒFƒNƒg‚ÌƒZƒbƒg@@@
+//Às’†@@UI‚Ìk¬A”»’è
+//I‚í‚è@@ƒ|[ƒY‚²‚Æ‚ÉI—¹ŠÔ‚ª‚«‚½‚çA–”‚ÍA¬Œ÷-¸”s
+//¬Œ÷@@@ƒ|[ƒY‚ğ¬Œ÷‚µ‚½ê‡A‚»‚ÌŒãI‚í‚è‚Ö
+//¸”s@@@ƒ|[ƒY‚ğ¸”s‚µ‚½ê‡A‚»‚ÌŒãI‚í‚è‚Ö
 //
 
 
@@ -16,6 +16,7 @@ using GameFlowTemplate;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public sealed class InGameManager : MonoBehaviour
 {
@@ -23,293 +24,99 @@ public sealed class InGameManager : MonoBehaviour
     [Header("gameManager")]
     [SerializeField] private GameManager m_gameManager;
 
-    [Header("UIã®æ“ä½œ")]
-    [SerializeField] private UIController m_uiController;
+    [Header("po")]
+    [SerializeField] private PoseJudgeManager m_poseJudgeManager;
 
-    [Header("ãƒãƒ¼ã‚ºã®åˆ¤å®š")]
-    [SerializeField] private PoseJudgeController m_poseJudgeController;
-
-    [Header("ã‚¹ã‚³ã‚¢åˆ¤å®š")]
-    [SerializeField] private ScoreController m_scoreController;
-
-    [Header("UIã®ä¿å­˜å ´æ‰€")]
-    [SerializeField] private ExcelLoader m_excelLoader;
-
-    [Header("ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚·ã‚¹ãƒ†ãƒ ")]
-    [SerializeField] private EffectSystem m_effectSystem;
-
-    [Header("ã‚«ãƒ¡ãƒ©")]
-    [SerializeField] private PoseCameraDirector poseCameraDirector;
+    [Header("UI")]
+    [SerializeField] private UIManager m_uIManager;
 
 
-    [Header("ã‚«ãƒ¡ãƒ©")]
-    [SerializeField] private VenueVoltageSystem m_venueVoltageSystem;
+    private InGameState m_inGameState = InGameState.Start;
+    private float GameTimeSeconds;                  //Œ»İ‚ÌƒQ[ƒ€ŠÔ
+    public float GetCurrentTIme() { return GameTimeSeconds; }
 
-    [SerializeField] private EventSceneVisualDirector m_eventSceneVisualDirector;
+    public Action<InGameState> m_UIManagerAction;
+    public Action<InGameState> m_PoseJudgeManagerAction;
 
-    [Header("çµ‚äº†ã®æ™‚é–“")]
+    [Header("I—¹‚ÌŠÔ")]
     [SerializeField] private float m_endtimer;
 
+    /*
+    [Header("UI‚Ì‘€ì")]
+    [SerializeField] private UIController m_uiController;
+
+    [Header("ƒ|[ƒY‚Ì”»’è")]
+    [SerializeField] private PoseJudgeController m_poseJudgeController;
+
+    [Header("ƒXƒRƒA”»’è")]
+    [SerializeField] private ScoreController m_scoreController;
+
+    [Header("UI‚Ì•Û‘¶êŠ")]
+    [SerializeField] private ExcelLoader m_excelLoader;
+
+    [Header("ƒGƒtƒFƒNƒgƒVƒXƒeƒ€")]
+    [SerializeField] private EffectSystem m_effectSystem;
+
+    [Header("ƒJƒƒ‰")]
+    [SerializeField] private PoseCameraDirector poseCameraDirector;
+
+    [Header("ƒCƒxƒ“ƒgƒfƒBƒŒƒNƒ^[")]
+    [SerializeField]
+    private EventSceneVisualDirector m_eventSceneVisualDirector;
+
+    [Header("”M—Ê")]
+    [SerializeField] private VenueVoltageSystem m_venueVoltageSystem;
+    */
 
 
-    private UIState m_currentUIState = UIState.None;
+    //ƒIƒuƒU[ƒo[
+    private void OnEnable()
+    {
+        m_poseJudgeManager.setState += SetState;
+        m_uIManager.setState += SetState;
 
 
+    }
 
-    private float GameTimeSeconds;                  //ç¾åœ¨ã®ã‚²ãƒ¼ãƒ æ™‚é–“
-    private int PoseMaxCount = 20;            //ãƒãƒ¼ã‚ºæ•°ã‚’è¨­å®š
+    //ƒIƒuƒU[ƒo[
+    private void OnDisable()
+    {
+        m_poseJudgeManager.setState -= SetState;
+        m_uIManager.setState += SetState;
 
-    private PoseFlow poseFlow;  ã€€ã€€ã€€ã€€  //ãƒãƒ¼ã‚ºé †ã®ç®¡ç†
-
-    private CSVDataPoseFlow pose;
-
-    private int m_SpecialFrame = -1;
-
-    public Action<PoseFlow, CSVDataPoseFlow, float> PoseFrame;
-
-    public Action<int> PoseJudgeFrame;
-
-    bool one = true;
-
-    private InGameState m_state = InGameState.Start;
-
-
-    private float KeepGameTimeSeconds;
-
+    }
 
     public void Start()
     {
-
-        if (m_eventSceneVisualDirector == null)
-        {
-            m_eventSceneVisualDirector =
-                FindFirstObjectByType<EventSceneVisualDirector>();
-        }
-
-        //ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã™ã‚‹
-        //GameManagerã§ç®¡ç†ã—ã¦ã„ã‚‹
-        //Timerã¨ã‚¹ã‚³ã‚¢ã‚’ãƒªã‚»ãƒƒãƒˆ
-        //Timerã®é–‹å§‹ã¨çŠ¶æ…‹ã®åˆ‡ã‚Šæ›¿ãˆ
         m_gameManager.StartGame();
-
-        // CSVã®ãƒ‡ãƒ¼ã‚¿ã‚’PoseFlowã¸æ¸¡ã™
-        poseFlow = new PoseFlow(m_excelLoader.excelPoseTimeFlowLoader.GetCSVDatas());
-
     }
 
     private void Update()
     {
-        //ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
+        //ƒQ[ƒ€‚ğI—¹‚·‚é
         if (m_endtimer <= GameTimeSeconds) { m_gameManager.FinishGame(); }
 
-
-        //ç¾åœ¨ã®ã‚²ãƒ¼ãƒ æ™‚é–“ã®æ›´æ–°
+        //Œ»İ‚ÌƒQ[ƒ€ŠÔ‚ÌXV
         UpdateTime();
+        m_uIManager.UIManagerUpdate();
+        m_poseJudgeManager.PoseJudgeManagerUpdate();
 
-        Debug.Log("pose.PoseID" + pose.PoseID);
-
-        //ç¾åœ¨ã®ãƒãƒ¼ã‚ºã‚’å–å¾—
-        pose = poseFlow.CurrentPose();
-
-        Debug.Log("pose.PoseID" + pose.PoseID);
-        switch (m_state)
-        {
-            case InGameState.None:
-
-                if (one)
-                {
-                    poseCameraDirector.Play();
-                    one = false;
-                }
-
-                if (8 <= GameTimeSeconds)
-                {
-                    m_state = InGameState.Start;
-
-                }
-
-
-                break;
-
-            case InGameState.Start:
-                Set(pose, GameTimeSeconds);
-                break;
-
-            case InGameState.Active:
-
-                Active(pose, GameTimeSeconds);
-                Judge(pose);
-                flowend(pose);
-
-                break;
-
-            case InGameState.End:
-                /*
-                m_effectSystem.IsEffectPlay();
-                if (!m_effectSystem.IsPlayEffect())
-                {
-                   
-
-                }
-                */
-                ForcedQuit(poseFlow, pose, GameTimeSeconds);
-
-                break;
-            case InGameState.Success:
-                Success();
-
-                break;
-            case InGameState.Failure:
-                Failure();
-
-                break;
-        }
-
-
+        Debug.Log("m_inGameState" + m_inGameState);
     }
 
-
     /// <summary>
-    /// ç¾åœ¨ã®ã‚²ãƒ¼ãƒ æ™‚é–“ã®æ›´æ–°
+    /// Œ»İ‚ÌƒQ[ƒ€ŠÔ‚ÌXV
     /// </summary>
     private void UpdateTime()
     {
         GameTimeSeconds = m_gameManager.GetTimeManager().GameTimeSeconds;
     }
 
-
-
-
-    private void flowend(CSVDataPoseFlow _pose)
+    public void SetState(InGameState _state)
     {
-        Debug.Log("{END0}");
-        if ((KeepGameTimeSeconds + _pose.time) < GameTimeSeconds)
-        {
-            m_state = InGameState.End;
+        m_inGameState = _state;
+        m_UIManagerAction?.Invoke(_state);
+        m_PoseJudgeManagerAction?.Invoke(_state);
 
-        }
-    }
-
-    /// <summary>
-    /// ã‚²ãƒ¼ãƒ ã‚’ç¶™ç¶šã™ã‚‹ã‹
-    /// </summary>
-    private void ContinuingGame()
-    {
-        if (PoseMaxCount == 0)
-        {
-            m_gameManager.FinishGame();
-
-        }
-
-        PoseMaxCount--;
-    }
-
-    //ä»Šãƒ•ãƒ¬ãƒ¼ãƒ ã®è¨­å®šãƒ»è¡¨ç¤º
-    private void Set(CSVDataPoseFlow _pose, float _seconds)
-    {
-
-        KeepGameTimeSeconds = _seconds;
-        //UIè¨­å®šãƒ»è¡¨ç¤º
-        m_uiController.UISet_normal(_pose);
-
-
-        m_state = InGameState.Active;
-    }
-
-    //å®Ÿè¡Œ
-    private void Active(CSVDataPoseFlow _pose, float _seconds)
-    {
-
-        // ç¸®å°(é€šå¸¸ãƒ•ãƒ¬ãƒ¼ãƒ )
-        if (_seconds <= (_pose.time + KeepGameTimeSeconds))
-        {
-            m_uiController.UIMove_normal();
-
-            //ã‚¤ãƒ™ãƒ³ãƒˆå®Ÿè¡Œã€€å½“ãŸã‚Šåˆ¤å®š
-            PoseJudgeFrame?.Invoke(_pose.PoseID);
-        }
-    }
-
-    //åˆ¤å®š
-    private void Judge(CSVDataPoseFlow _pose)
-    {
-        //é€šå¸¸æˆåŠŸæ™‚
-        if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Normal(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
-        {
-            m_uiController.UIJudgeEnd_normal();
-            m_uiController.UIForcedQuit();
-            m_state = InGameState.Success;
-
-        }
-
-        //å®Œç’§æˆåŠŸæ™‚
-        if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Perfect(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
-        {
-            m_uiController.UIJudgeEnd_normal();
-            m_uiController.UIForcedQuit();
-            m_state = InGameState.Success;
-
-        }
-
-        //å¤±æ•—
-        if (m_poseJudgeController.PoseJudge_Failure(m_uiController.GetCurrentFrame()[1], m_uiController.GetCurrentFrame()[3]))
-        {
-            m_uiController.UIForcedQuit();
-            m_state = InGameState.Failure;
-
-        }
-
-
-
-    }
-
-    //ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’çµ‚äº†ã—ã¦Effectã®å†ç”ŸãŒçµ‚ã‚ã‚Šæ¬¡ç¬¬ã€æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¸
-    private void ForcedQuit(PoseFlow poseFlow, CSVDataPoseFlow pose, float seconds)
-    {
-        // å¼·åˆ¶çµ‚äº†æ™‚é–“
-        if (poseFlow.HasNextPose())
-        {
-            m_uiController.UIForcedQuit();
-
-            KeepGameTimeSeconds = 0;
-            poseFlow.NextPose();
-
-            m_state = InGameState.Start;
-        }
-    }
-
-    //æˆåŠŸæ™‚
-    private void Success()
-    {
-        m_gameManager.AddScore((int)m_scoreController.GetScore());
-        m_venueVoltageSystem.RegisterSuccess(30);
-        m_state = InGameState.End;
-
-        if (m_eventSceneVisualDirector != null
-            && m_eventSceneVisualDirector.TryPlayEvent(pose.FlowNumber))
-        {
-            return;
-        }
-
-        if (m_effectSystem != null)
-        {
-            m_effectSystem.PlayRandomEffect();
-        }
-    }
-
-    public void AddEventScore(int _score)
-    {
-        if (_score <= 0 || m_gameManager == null)return;
-
-        m_gameManager.AddScore(_score);
-    }
-
-    //çµ‚äº†æ™‚
-    private void Failure()
-    {
-        m_venueVoltageSystem.RegisterFailure();
-        m_state = InGameState.End;
     }
 }

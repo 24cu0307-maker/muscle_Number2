@@ -1,94 +1,94 @@
-/*â”â”â”â”â”â”â”â”â”*
+/*„ª„ª„ª„ª„ª„ª„ª„ª„ª*
 *@file VoltageBgmSystem.cs*
-*@brief Voltageã«å¿œã˜ã¦BGMã®éŸ³é‡ã€Layerã€ç©ºé–“Audio Effectã‚’é€£ç¶šåˆ¶å¾¡ã™ã‚‹*
-*@author 24cu0312 ä¹…å ´æ´¸å¤ª*
+*@brief Voltage‚É‰‚¶‚ÄBGM‚Ì‰¹—ÊALayerA‹óŠÔAudio Effect‚ğ˜A‘±§Œä‚·‚é*
+*@author 24cu0312 ‹vêŸ©‘¾*
 *@date 2026/07/29*
-*æœ€çµ‚æ›´æ–°æ—¥ 2026/07/29*
-*@remarks Pitchã‚’å¤‰ãˆãšè¤‡æ•°AudioClipã®åŒæœŸå†ç”Ÿã¨è»½ã„éŸ³éŸ¿å¤‰åŒ–ã‚’è¡Œã†*
-*â”â”â”â”â”â”â”â”â”*/
+*ÅIXV“ú 2026/07/29*
+*@remarks Pitch‚ğ•Ï‚¦‚¸•¡”AudioClip‚Ì“¯ŠúÄ¶‚ÆŒy‚¢‰¹‹¿•Ï‰»‚ğs‚¤*
+*„ª„ª„ª„ª„ª„ª„ª„ª„ª*/
 
 using System;
 using UnityEngine;
 
 /// <summary>
-/// Voltageåˆ¥ã«é‡ã­ã‚‹BGM Layerè¨­å®šã§ã™ã€‚
+/// Voltage•Ê‚Éd‚Ë‚éBGM Layerİ’è‚Å‚·B
 /// </summary>
 [Serializable]
 public struct SVoltageBgmLayer
 {
-    public AudioClip m_clip; //å†ç”ŸClip
-    [Range(0.0f, 1.0f)] public float m_startVoltage; //é³´ã‚Šå§‹ã‚ã‚‹æ­£è¦åŒ–Voltage
-    [Range(0.01f, 1.0f)] public float m_fadeWidth; //Fadeå¹…
-    [Range(0.0f, 1.0f)] public float m_maximumVolume; //æœ€å¤§éŸ³é‡
+    public AudioClip m_clip; //Ä¶Clip
+    [Range(0.0f, 1.0f)] public float m_startVoltage; //–Â‚èn‚ß‚é³‹K‰»Voltage
+    [Range(0.01f, 1.0f)] public float m_fadeWidth; //Fade•
+    [Range(0.0f, 1.0f)] public float m_maximumVolume; //Å‘å‰¹—Ê
 }
 
 /// <summary>
-/// VenueVoltageSystemã‚’å‚ç…§ã—ã¦BGMã‚’é€£ç¶šå¤‰åŒ–ã•ã›ã¾ã™ã€‚
+/// VenueVoltageSystem‚ğQÆ‚µ‚ÄBGM‚ğ˜A‘±•Ï‰»‚³‚¹‚Ü‚·B
 /// </summary>
 public sealed class VoltageBgmSystem : MonoBehaviour
 {
-    private const float EMinimumFadeWidth = 0.01f; //æœ€å°Fadeå¹…
-    private const float EDefaultPitch = 1.0f; //åŸºæº–Pitch
-    private const float EMinimumCutoffFrequency = 12000.0f; //æœ€ä½æ™‚Low Passå‘¨æ³¢æ•°
-    private const float EMaximumCutoffFrequency = 22000.0f; //æœ€é«˜æ™‚Low Passå‘¨æ³¢æ•°
-    private const float ELowPassResonance = 1.0f; //Low Passå…±æŒ¯å€¤
-    private const float EMinimumReverbLevel = -10000.0f; //æœ€ä½æ™‚Reverbé‡
-    private const float EMaximumReverbLevel = -3500.0f; //æœ€é«˜æ™‚Reverbé‡
-    private const float EMaximumEchoWetMix = 0.06f; //æœ€é«˜æ™‚Echoæ··åˆç‡
-    private const float EEchoDelayMilliseconds = 280.0f; //Echoé…å»¶
-    private const float EEchoDecayRatio = 0.12f; //Echoæ¸›è¡°ç‡
-    private const float EMaximumChorusWetMix = 0.025f; //æœ€é«˜æ™‚Chorusæ··åˆç‡
-    private const float EChorusRate = 0.35f; //Choruså¤‰èª¿é€Ÿåº¦
-    private const float EChorusDepth = 0.08f; //Choruså¤‰èª¿æ·±åº¦
-    private const int EHighestAudioPriority = 0; //BGM Voiceå„ªå…ˆåº¦
-    private const double EPlaybackStartDelay = 0.05d; //åŒæœŸå†ç”Ÿå¾…æ©Ÿç§’æ•°
-    private const double ERestartToleranceSeconds = 0.5d; //åœæ­¢åˆ¤å®šçŒ¶äºˆ
+    private const float EMinimumFadeWidth = 0.01f; //Å¬Fade•
+    private const float EDefaultPitch = 1.0f; //Šî€Pitch
+    private const float EMinimumCutoffFrequency = 12000.0f; //Å’áLow Passü”g”
+    private const float EMaximumCutoffFrequency = 22000.0f; //Å‚Low Passü”g”
+    private const float ELowPassResonance = 1.0f; //Low Pass‹¤U’l
+    private const float EMinimumReverbLevel = -10000.0f; //Å’áReverb—Ê
+    private const float EMaximumReverbLevel = -3500.0f; //Å‚Reverb—Ê
+    private const float EMaximumEchoWetMix = 0.06f; //Å‚Echo¬‡—¦
+    private const float EEchoDelayMilliseconds = 280.0f; //Echo’x‰„
+    private const float EEchoDecayRatio = 0.12f; //EchoŒ¸Š—¦
+    private const float EMaximumChorusWetMix = 0.025f; //Å‚Chorus¬‡—¦
+    private const float EChorusRate = 0.35f; //Chorus•Ï’²‘¬“x
+    private const float EChorusDepth = 0.08f; //Chorus•Ï’²[“x
+    private const int EHighestAudioPriority = 0; //BGM Voice—Dæ“x
+    private const double EPlaybackStartDelay = 0.05d; //“¯ŠúÄ¶‘Ò‹@•b”
+    private const double ERestartToleranceSeconds = 0.5d; //’â~”»’è—P—\
 
-    [SerializeField] private VenueVoltageSystem m_voltageSystem; //Voltageå‚ç…§å…ƒ
-    [SerializeField] private SVoltageBgmLayer[] m_layers; //åŒæœŸBGM Layerä¸€è¦§
+    [SerializeField] private VenueVoltageSystem m_voltageSystem; //VoltageQÆŒ³
+    [SerializeField] private SVoltageBgmLayer[] m_layers; //“¯ŠúBGM Layerˆê——
     [SerializeField] private AnimationCurve m_volumeCurve =
-        AnimationCurve.Linear(0.0f, 0.9f, 1.0f, 1.0f); //å…¨ä½“éŸ³é‡å¤‰åŒ–
+        AnimationCurve.Linear(0.0f, 0.9f, 1.0f, 1.0f); //‘S‘Ì‰¹—Ê•Ï‰»
     [Header("Subtle Audio Effects")]
     [SerializeField] private AnimationCurve m_lowPassCutoffCurve =
         AnimationCurve.Linear(
             0.0f,
             EMinimumCutoffFrequency,
             1.0f,
-            EMaximumCutoffFrequency); //Voltageåˆ¥Low Pass
+            EMaximumCutoffFrequency); //Voltage•ÊLow Pass
     [SerializeField] private AnimationCurve m_reverbLevelCurve =
         AnimationCurve.Linear(
             0.0f,
             EMinimumReverbLevel,
             1.0f,
-            EMaximumReverbLevel); //Voltageåˆ¥Reverb
+            EMaximumReverbLevel); //Voltage•ÊReverb
     [SerializeField] private AnimationCurve m_echoWetMixCurve =
         AnimationCurve.Linear(
             0.0f,
             0.0f,
             1.0f,
-            EMaximumEchoWetMix); //Voltageåˆ¥Echo
+            EMaximumEchoWetMix); //Voltage•ÊEcho
     [SerializeField] private AnimationCurve m_chorusWetMixCurve =
         AnimationCurve.Linear(
             0.0f,
             0.0f,
             1.0f,
-            EMaximumChorusWetMix); //Voltageåˆ¥Chorus
-    [SerializeField] private bool b_m_playOnStart = true; //é–‹å§‹æ™‚è‡ªå‹•å†ç”Ÿ
-    [SerializeField] private bool b_m_playAfterOpeningCamera = true; //æœ€åˆã®Cameraæ¼”å‡ºå¾Œã«å†ç”Ÿ
-    [SerializeField] private PoseCameraDirector m_cameraDirector; //é–‹å§‹å¾…æ©Ÿå¯¾è±¡Cameraæ¼”å‡º
+            EMaximumChorusWetMix); //Voltage•ÊChorus
+    [SerializeField] private bool b_m_playOnStart = true; //ŠJn©“®Ä¶
+    [SerializeField] private bool b_m_playAfterOpeningCamera = true; //Å‰‚ÌCamera‰‰oŒã‚ÉÄ¶
+    [SerializeField] private PoseCameraDirector m_cameraDirector; //ŠJn‘Ò‹@‘ÎÛCamera‰‰o
 
-    private AudioSource[] m_audioSources; //ç”Ÿæˆã—ãŸåŒæœŸéŸ³æºä¸€è¦§
-    private AudioLowPassFilter[] m_lowPassFilters; //Layeråˆ¥Low Passä¸€è¦§
-    private AudioReverbFilter[] m_reverbFilters; //Layeråˆ¥Reverbä¸€è¦§
-    private AudioEchoFilter[] m_echoFilters; //Layeråˆ¥Echoä¸€è¦§
-    private AudioChorusFilter[] m_chorusFilters; //Layeråˆ¥Chorusä¸€è¦§
-    private double m_scheduledStartTime; //ç›´è¿‘ã®å†ç”Ÿé–‹å§‹DSPæ™‚åˆ»
-    private bool b_m_shouldBePlaying; //BGMã‚’ç¶™ç¶šå†ç”Ÿã™ã‚‹ã‹
-    private bool b_m_observedCameraPlaying; //Cameraæ¼”å‡ºé–‹å§‹ã‚’ç¢ºèªã—ãŸã‹
-    private bool b_m_completedAutoStart; //è‡ªå‹•å†ç”Ÿå‡¦ç†ãŒå®Œäº†ã—ãŸã‹
+    private AudioSource[] m_audioSources; //¶¬‚µ‚½“¯Šú‰¹Œ¹ˆê——
+    private AudioLowPassFilter[] m_lowPassFilters; //Layer•ÊLow Passˆê——
+    private AudioReverbFilter[] m_reverbFilters; //Layer•ÊReverbˆê——
+    private AudioEchoFilter[] m_echoFilters; //Layer•ÊEchoˆê——
+    private AudioChorusFilter[] m_chorusFilters; //Layer•ÊChorusˆê——
+    private double m_scheduledStartTime; //’¼‹ß‚ÌÄ¶ŠJnDSP
+    private bool b_m_shouldBePlaying; //BGM‚ğŒp‘±Ä¶‚·‚é‚©
+    private bool b_m_observedCameraPlaying; //Camera‰‰oŠJn‚ğŠm”F‚µ‚½‚©
+    private bool b_m_completedAutoStart; //©“®Ä¶ˆ—‚ªŠ®—¹‚µ‚½‚©
 
     /// <summary>
-    /// AudioSourceã‚’ä½œæˆã—å¿…è¦ãªã‚‰BGMã‚’é–‹å§‹ã—ã¾ã™ã€‚
+    /// AudioSource‚ğì¬‚µ•K—v‚È‚çBGM‚ğŠJn‚µ‚Ü‚·B
     /// </summary>
     private void Start()
     {
@@ -111,7 +111,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Voltageã«å¿œã˜ã¦å„Layerã‚’æ»‘ã‚‰ã‹ã«èª¿æ•´ã—ã¾ã™ã€‚
+    /// Voltage‚É‰‚¶‚ÄŠeLayer‚ğŠŠ‚ç‚©‚É’²®‚µ‚Ü‚·B
     /// </summary>
     private void Update()
     {
@@ -121,19 +121,19 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         EnsurePlayback();
         float voltage = m_voltageSystem != null
             ? m_voltageSystem.NormalizedVoltage
-            : 0.0f; //æ­£è¦åŒ–Voltage
-        float masterVolume = Mathf.Clamp01(m_volumeCurve.Evaluate(voltage)); //å…¨ä½“éŸ³é‡
+            : 0.0f; //³‹K‰»Voltage
+        float masterVolume = Mathf.Clamp01(m_volumeCurve.Evaluate(voltage)); //‘S‘Ì‰¹—Ê
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
             float fadeWidth =
-                Mathf.Max(EMinimumFadeWidth, m_layers[i].m_fadeWidth); //å®‰å…¨ãªFadeå¹…
+                Mathf.Max(EMinimumFadeWidth, m_layers[i].m_fadeWidth); //ˆÀ‘S‚ÈFade•
             float layerWeight = Mathf.SmoothStep(
                 0.0f,
                 1.0f,
                 Mathf.InverseLerp(
                     m_layers[i].m_startVoltage - fadeWidth,
                     m_layers[i].m_startVoltage,
-                    voltage)); //Layeræ··åˆç‡
+                    voltage)); //Layer¬‡—¦
             m_audioSources[i].volume =
                 masterVolume * layerWeight * m_layers[i].m_maximumVolume;
             m_audioSources[i].pitch = EDefaultPitch;
@@ -143,7 +143,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// æœ€åˆã®Cameraæ¼”å‡ºé–‹å§‹ã¨çµ‚äº†ã‚’æ¤œå‡ºã—ã€çµ‚äº†æ™‚ã«BGMã‚’é–‹å§‹ã—ã¾ã™ã€‚
+    /// Å‰‚ÌCamera‰‰oŠJn‚ÆI—¹‚ğŒŸo‚µAI—¹‚ÉBGM‚ğŠJn‚µ‚Ü‚·B
     /// </summary>
     private void UpdateOpeningCameraWait()
     {
@@ -169,7 +169,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// å…¨Layerã‚’åŒã˜DSPæ™‚åˆ»ã‹ã‚‰å†ç”Ÿã—ã¾ã™ã€‚
+    /// ‘SLayer‚ğ“¯‚¶DSP‚©‚çÄ¶‚µ‚Ü‚·B
     /// </summary>
     public void Play()
     {
@@ -179,7 +179,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         }
 
         m_scheduledStartTime =
-            AudioSettings.dspTime + EPlaybackStartDelay; //åŒæœŸé–‹å§‹æ™‚åˆ»
+            AudioSettings.dspTime + EPlaybackStartDelay; //“¯ŠúŠJn
         b_m_shouldBePlaying = true;
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
@@ -192,7 +192,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// å…¨BGM Layerã‚’åœæ­¢ã—ã¾ã™ã€‚
+    /// ‘SBGM Layer‚ğ’â~‚µ‚Ü‚·B
     /// </summary>
     public void Stop()
     {
@@ -206,7 +206,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Layeræ•°ã«åˆã‚ã›ã¦AudioSourceã‚’ç”Ÿæˆã—ã¾ã™ã€‚
+    /// Layer”‚É‡‚í‚¹‚ÄAudioSource‚ğ¶¬‚µ‚Ü‚·B
     /// </summary>
     private void CreateAudioSources()
     {
@@ -222,10 +222,10 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         m_chorusFilters = new AudioChorusFilter[m_layers.Length];
         for (int i = 0; i < m_layers.Length; ++i)
         {
-            GameObject layerObject = new GameObject($"BGM_Layer_{i:00}"); //éŸ³æºObject
+            GameObject layerObject = new GameObject($"BGM_Layer_{i:00}"); //‰¹Œ¹Object
             layerObject.transform.SetParent(transform, false);
             AudioSource audioSource =
-                layerObject.AddComponent<AudioSource>(); //åŒæœŸéŸ³æº
+                layerObject.AddComponent<AudioSource>(); //“¯Šú‰¹Œ¹
             audioSource.clip = m_layers[i].m_clip;
             audioSource.loop = true;
             audioSource.playOnAwake = false;
@@ -240,26 +240,26 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// BGM Layerã¸åŸéŸ³ã‚’ä¿ã¤è»½ã„Audio Effectã‚’è¿½åŠ ã—ã¾ã™ã€‚
+    /// BGM Layer‚ÖŒ´‰¹‚ğ•Û‚ÂŒy‚¢Audio Effect‚ğ’Ç‰Á‚µ‚Ü‚·B
     /// </summary>
     private void CreateAudioEffects(
         GameObject _layerobject,
         int _layerindex)
     {
         AudioLowPassFilter lowPassFilter =
-            _layerobject.AddComponent<AudioLowPassFilter>(); //é«˜åŸŸåˆ¶å¾¡
+            _layerobject.AddComponent<AudioLowPassFilter>(); //‚ˆæ§Œä
         lowPassFilter.lowpassResonanceQ = ELowPassResonance;
         m_lowPassFilters[_layerindex] = lowPassFilter;
 
         AudioReverbFilter reverbFilter =
-            _layerobject.AddComponent<AudioReverbFilter>(); //ç©ºé–“è¡¨ç¾
+            _layerobject.AddComponent<AudioReverbFilter>(); //‹óŠÔ•\Œ»
         reverbFilter.reverbPreset = AudioReverbPreset.User;
         reverbFilter.dryLevel = 0.0f;
         reverbFilter.reverbLevel = EMinimumReverbLevel;
         m_reverbFilters[_layerindex] = reverbFilter;
 
         AudioEchoFilter echoFilter =
-            _layerobject.AddComponent<AudioEchoFilter>(); //è–„ã„åéŸ¿
+            _layerobject.AddComponent<AudioEchoFilter>(); //”–‚¢”½‹¿
         echoFilter.dryMix = 1.0f;
         echoFilter.wetMix = 0.0f;
         echoFilter.delay = EEchoDelayMilliseconds;
@@ -267,7 +267,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         m_echoFilters[_layerindex] = echoFilter;
 
         AudioChorusFilter chorusFilter =
-            _layerobject.AddComponent<AudioChorusFilter>(); //åºƒãŒã‚Šè¡¨ç¾
+            _layerobject.AddComponent<AudioChorusFilter>(); //L‚ª‚è•\Œ»
         chorusFilter.dryMix = 1.0f;
         chorusFilter.wetMix1 = 0.0f;
         chorusFilter.wetMix2 = 0.0f;
@@ -278,26 +278,26 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Voltageå€¤ã‚’å„Audio Effectã¸é€£ç¶šçš„ã«åæ˜ ã—ã¾ã™ã€‚
+    /// Voltage’l‚ğŠeAudio Effect‚Ö˜A‘±“I‚É”½‰f‚µ‚Ü‚·B
     /// </summary>
     private void ApplyAudioEffects(float _voltage)
     {
         float cutoffFrequency = Mathf.Clamp(
             m_lowPassCutoffCurve.Evaluate(_voltage),
             EMinimumCutoffFrequency,
-            EMaximumCutoffFrequency); //ç¾åœ¨Low Passå‘¨æ³¢æ•°
+            EMaximumCutoffFrequency); //Œ»İLow Passü”g”
         float reverbLevel = Mathf.Clamp(
             m_reverbLevelCurve.Evaluate(_voltage),
             EMinimumReverbLevel,
-            EMaximumReverbLevel); //ç¾åœ¨Reverbé‡
+            EMaximumReverbLevel); //Œ»İReverb—Ê
         float echoWetMix = Mathf.Clamp(
             m_echoWetMixCurve.Evaluate(_voltage),
             0.0f,
-            EMaximumEchoWetMix); //ç¾åœ¨Echoæ··åˆç‡
+            EMaximumEchoWetMix); //Œ»İEcho¬‡—¦
         float chorusWetMix = Mathf.Clamp(
             m_chorusWetMixCurve.Evaluate(_voltage),
             0.0f,
-            EMaximumChorusWetMix); //ç¾åœ¨Chorusæ··åˆç‡
+            EMaximumChorusWetMix); //Œ»İChorus¬‡—¦
 
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
@@ -309,7 +309,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// ã‚«ãƒ¡ãƒ©æ¼”å‡ºãªã©ã®å¾Œã«BGMãŒæ„å›³ã›ãšåœæ­¢ã—ãŸå ´åˆã¯å†é–‹ã—ã¾ã™ã€‚
+    /// ƒJƒƒ‰‰‰o‚È‚Ç‚ÌŒã‚ÉBGM‚ªˆÓ}‚¹‚¸’â~‚µ‚½ê‡‚ÍÄŠJ‚µ‚Ü‚·B
     /// </summary>
     private void EnsurePlayback()
     {
@@ -319,12 +319,18 @@ public sealed class VoltageBgmSystem : MonoBehaviour
 
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
-            AudioSource audioSource = m_audioSources[i]; //ç¢ºèªå¯¾è±¡Layer
+            AudioSource audioSource = m_audioSources[i]; //Šm”F‘ÎÛLayer
             if (audioSource == null
                 || audioSource.clip == null
                 || audioSource.isPlaying)continue;
 
             audioSource.Play();
         }
+    }
+
+    public float GetBGMTime(int index)
+    {
+
+        return m_audioSources[index].time;
     }
 }

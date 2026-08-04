@@ -20,11 +20,11 @@ MonoBehaviour:
     m_eventName: Event
   - m_nodeNumber: 2
     m_time: 15.45
-    m_poseId: 0
+    m_poseId: 2
     m_eventName: Event
   - m_nodeNumber: 3
     m_time: 17.601
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 4
     m_time: 19.557
@@ -36,15 +36,15 @@ MonoBehaviour:
     m_eventName: Event
   - m_nodeNumber: 7
     m_time: 29.727001
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 8
     m_time: 33.15
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 9
     m_time: 37.061
-    m_poseId: 0
+    m_poseId: 2
     m_eventName: Event
   - m_nodeNumber: 12
     m_time: 42.733
@@ -52,7 +52,7 @@ MonoBehaviour:
     m_eventName: Event
   - m_nodeNumber: 15
     m_time: 48.502003
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 16
     m_time: 51.436005
@@ -60,11 +60,11 @@ MonoBehaviour:
     m_eventName: Event
   - m_nodeNumber: 21
     m_time: 57.499004
-    m_poseId: 0
+    m_poseId: 2
     m_eventName: Event
   - m_nodeNumber: 24
     m_time: 61.410004
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 26
     m_time: 63.366005
@@ -72,11 +72,11 @@ MonoBehaviour:
     m_eventName: Event
   - m_nodeNumber: 27
     m_time: 78.33889
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 29
     m_time: 91.86319
-    m_poseId: 0
+    m_poseId: 2
     m_eventName: Event
   - m_nodeNumber: 28
     m_time: 97.22188
@@ -85,14 +85,42 @@ MonoBehaviour:
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
-    m_triggerNodeNumber: 1
+    m_triggerNodeNumber: 3
     m_eventType: 0
     m_minimumBonusScore: 100
     m_maximumBonusScore: 1200
-    m_eventNodesList: []
+    m_eventNodesList:
+    - m_nodeNumber: 1
+      m_time: 1.3451512
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 2
+      m_time: 2.7893639
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 3
+      m_time: 3.7486963
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 4
+      m_time: 5.333681
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 5
+      m_time: 30
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 6
+      m_time: 8.133472
+      m_poseId: 0
+      m_eventName: Event Node
+    - m_nodeNumber: 7
+      m_time: 9.191867
+      m_poseId: 0
+      m_eventName: Event Node
   - b_m_enabled: 1
     m_eventName: Special Node Branch
-    m_triggerNodeNumber: 2
+    m_triggerNodeNumber: 13
     m_eventType: 1
     m_minimumBonusScore: 0
     m_maximumBonusScore: 0
