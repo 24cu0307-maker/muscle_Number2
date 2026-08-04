@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file AudienceAreaSpawner.cs*
 *@brief 指定範囲へ観客を等間隔と誤差付きで生成する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks MeshまたはPrefabをInspectorから設定*

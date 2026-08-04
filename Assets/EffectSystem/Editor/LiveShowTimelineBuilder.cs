@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file LiveShowTimelineBuilder.cs*
 *@brief InGame配置済みエフェクトから複数のライブ演出Timelineを生成する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/28*
 *最終更新日 2026/07/28*
 *@remarks Editor専用*

@@ -84,10 +84,32 @@ MonoBehaviour:
     m_eventName: Event
   m_eventScenesList:
   - b_m_enabled: 1
-    m_eventName: SpecialEventTest
-    m_triggerNodeNumber: -1
+    m_eventName: Audience Choice
+    m_triggerNodeNumber: 1
+    m_eventType: 0
+    m_minimumBonusScore: 100
+    m_maximumBonusScore: 1200
     m_eventNodesList: []
   - b_m_enabled: 1
-    m_eventName: Event 2
-    m_triggerNodeNumber: 1
-    m_eventNodesList: []
+    m_eventName: Special Node Branch
+    m_triggerNodeNumber: 2
+    m_eventType: 1
+    m_minimumBonusScore: 0
+    m_maximumBonusScore: 0
+    m_eventNodesList:
+    - m_nodeNumber: 101
+      m_time: 0
+      m_poseId: 0
+      m_eventName: Special Pose A
+    - m_nodeNumber: 102
+      m_time: 1.5
+      m_poseId: 1
+      m_eventName: Special Pose B
+    - m_nodeNumber: 103
+      m_time: 3
+      m_poseId: 2
+      m_eventName: Special Pose C
+    - m_nodeNumber: 104
+      m_time: 4.5
+      m_poseId: 3
+      m_eventName: Special Finale

@@ -45,6 +45,8 @@ public sealed class InGameManager : MonoBehaviour
     [Header("カメラ")]
     [SerializeField] private VenueVoltageSystem m_venueVoltageSystem;
 
+    [SerializeField] private EventSceneVisualDirector m_eventSceneVisualDirector;
+
     [Header("終了の時間")]
     [SerializeField] private float m_endtimer;
 
@@ -78,6 +80,12 @@ public sealed class InGameManager : MonoBehaviour
     public void Start()
     {
 
+        if (m_eventSceneVisualDirector == null)
+        {
+            m_eventSceneVisualDirector =
+                FindFirstObjectByType<EventSceneVisualDirector>();
+        }
+
         //ゲームを開始する
         //GameManagerで管理している
         //Timerとスコアをリセット
@@ -86,9 +94,6 @@ public sealed class InGameManager : MonoBehaviour
 
         // CSVのデータをPoseFlowへ渡す
         poseFlow = new PoseFlow(m_excelLoader.excelPoseTimeFlowLoader.GetCSVDatas());
-
-        m_effectSystem.PlayEffect("Tesst");
-
 
     }
 
@@ -279,13 +284,26 @@ public sealed class InGameManager : MonoBehaviour
     private void Success()
     {
         m_gameManager.AddScore((int)m_scoreController.GetScore());
-        m_effectSystem.PlayRandomEffect();
-
-
         m_venueVoltageSystem.RegisterSuccess(30);
-
-
         m_state = InGameState.End;
+
+        if (m_eventSceneVisualDirector != null
+            && m_eventSceneVisualDirector.TryPlayEvent(pose.FlowNumber))
+        {
+            return;
+        }
+
+        if (m_effectSystem != null)
+        {
+            m_effectSystem.PlayRandomEffect();
+        }
+    }
+
+    public void AddEventScore(int _score)
+    {
+        if (_score <= 0 || m_gameManager == null)return;
+
+        m_gameManager.AddScore(_score);
     }
 
     //終了時

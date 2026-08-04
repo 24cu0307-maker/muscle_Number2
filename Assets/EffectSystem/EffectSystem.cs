@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EffectSystem.cs*
 *@brief 名前で管理された演出とTimelineを再生する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/28*
 *最終更新日 2026/07/28*
 *@remarks 既存のPlayEffect APIとの互換性を維持*

@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageAutoJudgeTester.cs*
 *@brief 設定した成功率で成功失敗を自動生成するDebug機能*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks VenueVoltageSystemと観客演出の動作確認専用*

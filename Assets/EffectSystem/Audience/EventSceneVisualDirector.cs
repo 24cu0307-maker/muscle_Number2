@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EventSceneVisualDirector.cs*
 *@brief 外部の特殊Nodeから既存CameraSequenceとCanvasを一括操作する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/08/03*
 *最終更新日 2026/08/03*
 *@remarks 特殊Node実装へ依存しない公開関数を接続口として提供する*
@@ -21,6 +21,8 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     [SerializeField] private MusicNodeSequence m_musicNodeSequence; //特殊NodeとTrigger設定
     [SerializeField] private EventAudienceCanvasController m_canvasController; //観客Node Canvas制御
     [SerializeField] private EventSpecialNodePlayer m_specialNodePlayer; //特殊Event Node再生
+    [SerializeField] private AudiencePreferenceSystem m_preferenceSystem;
+    [SerializeField] private InGameManager m_inGameManager;
     [SerializeField] private float m_canvasDelaySeconds = 0.2f; //Canvas表示待機時間
     [SerializeField] private bool b_m_playOnStart = true; //Event Scene単体確認用
     [SerializeField] private UnityEvent m_onEventVisualStarted; //演出開始通知
@@ -28,6 +30,9 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
 
     private Coroutine m_playCoroutine; //表示待機処理
     private bool b_m_isPlaying; //Event演出中か
+    private bool b_m_normalFlowSuspended;
+    private bool b_m_wasInGameEnabled;
+    private MusicEventSceneData m_currentEvent;
 
     /// <summary>
     /// 成功した通常Node番号に対応するEventを検索して開始します。
@@ -44,6 +49,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             if (eventData.m_triggerNodeNumber != _nodeNumber)continue;
 
             EventNodeRuntimeContext.Begin(eventData);
+            m_currentEvent = eventData;
             PlayEventVisual();
             return true;
         }
@@ -62,6 +68,12 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             m_specialNodePlayer.EventNodesCompleted -= OnEventNodesCompleted;
             m_specialNodePlayer.EventNodesCompleted += OnEventNodesCompleted;
         }
+
+        if (m_preferenceSystem != null)
+        {
+            m_preferenceSystem.PreferenceEvaluated -= OnPreferenceEvaluated;
+            m_preferenceSystem.PreferenceEvaluated += OnPreferenceEvaluated;
+        }
     }
 
     /// <summary>
@@ -69,9 +81,14 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        if (m_specialNodePlayer == null)return;
-
-        m_specialNodePlayer.EventNodesCompleted -= OnEventNodesCompleted;
+        if (m_specialNodePlayer != null)
+        {
+            m_specialNodePlayer.EventNodesCompleted -= OnEventNodesCompleted;
+        }
+        if (m_preferenceSystem != null)
+        {
+            m_preferenceSystem.PreferenceEvaluated -= OnPreferenceEvaluated;
+        }
     }
 
     /// <summary>
@@ -101,15 +118,30 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             m_cameraDirector.PlaySequence(m_cameraSequence);
         }
 
+        bool b_specialNodeBranch = m_currentEvent != null
+            && m_currentEvent.m_eventType
+                == EMusicEventType.SpecialNodeBranch;
         if (m_playCoroutine != null)
         {
             StopCoroutine(m_playCoroutine);
         }
 
-        m_playCoroutine = StartCoroutine(ShowCanvasRoutine());
-        if (m_specialNodePlayer != null)
+        if (b_specialNodeBranch)
         {
-            m_specialNodePlayer.PlayEventNodes();
+            if (m_specialNodePlayer != null)
+            {
+                m_specialNodePlayer.PlayEventNodes();
+            }
+        }
+        else
+        {
+            if (m_preferenceSystem != null)
+            {
+                m_preferenceSystem.InitializePreferences();
+            }
+
+            SuspendNormalFlow();
+            m_playCoroutine = StartCoroutine(ShowCanvasRoutine());
         }
 
         m_onEventVisualStarted?.Invoke();
@@ -143,6 +175,9 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
 
         b_m_isPlaying = false;
+        ResumeNormalFlow();
+        EventNodeRuntimeContext.Clear();
+        m_currentEvent = null;
         m_onEventVisualStopped?.Invoke();
     }
 
@@ -189,6 +224,17 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         {
             m_specialNodePlayer = FindFirstObjectByType<EventSpecialNodePlayer>();
         }
+
+        if (m_preferenceSystem == null)
+        {
+            m_preferenceSystem =
+                FindFirstObjectByType<AudiencePreferenceSystem>();
+        }
+
+        if (m_inGameManager == null)
+        {
+            m_inGameManager = FindFirstObjectByType<InGameManager>();
+        }
     }
 
     /// <summary>
@@ -207,6 +253,57 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
 
         b_m_isPlaying = false;
+        EventNodeRuntimeContext.Clear();
+        m_currentEvent = null;
         m_onEventVisualStopped?.Invoke();
+    }
+
+    private void OnPreferenceEvaluated(
+        int _preferenceindex,
+        float _averagepreference)
+    {
+        if (!b_m_isPlaying)return;
+        if (m_currentEvent != null
+            && m_currentEvent.m_eventType
+                == EMusicEventType.SpecialNodeBranch)return;
+
+        int minimumScore = m_currentEvent != null
+            ? m_currentEvent.m_minimumBonusScore
+            : 100;
+        int maximumScore = m_currentEvent != null
+            ? m_currentEvent.m_maximumBonusScore
+            : 1000;
+        int bonusScore = Mathf.RoundToInt(
+            Mathf.Lerp(
+                minimumScore,
+                maximumScore,
+                Mathf.Clamp01(_averagepreference)));
+        if (m_inGameManager != null)
+        {
+            m_inGameManager.AddEventScore(bonusScore);
+        }
+
+        Debug.Log(
+            $"Audience Choice {_preferenceindex + 1}: "
+            + $"Preference {_averagepreference:P1}, "
+            + $"Bonus {bonusScore}");
+        StopEventVisual();
+    }
+
+    private void SuspendNormalFlow()
+    {
+        if (m_inGameManager == null || b_m_normalFlowSuspended)return;
+
+        b_m_wasInGameEnabled = m_inGameManager.enabled;
+        m_inGameManager.enabled = false;
+        b_m_normalFlowSuspended = true;
+    }
+
+    private void ResumeNormalFlow()
+    {
+        if (m_inGameManager == null || !b_m_normalFlowSuspended)return;
+
+        m_inGameManager.enabled = b_m_wasInGameEnabled;
+        b_m_normalFlowSuspended = false;
     }
 }

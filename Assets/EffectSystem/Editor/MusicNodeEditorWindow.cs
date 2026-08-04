@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file MusicNodeEditorWindow.cs*
 *@brief BGM波形上でPose Nodeの時間とIDを視覚編集する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks PoseTimeFlow.csvへ書き出して既存Gameと接続*

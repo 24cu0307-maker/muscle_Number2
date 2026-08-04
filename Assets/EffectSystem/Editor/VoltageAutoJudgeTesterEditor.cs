@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageAutoJudgeTesterEditor.cs*
 *@brief Voltage自動判定Testerの配置と操作UIを提供する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Editor専用Debug補助*

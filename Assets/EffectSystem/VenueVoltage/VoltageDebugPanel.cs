@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageDebugPanel.cs*
 *@brief ボルテージ値の表示と手動操作を行うDebug UI*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks F8キーで表示を切り替える*

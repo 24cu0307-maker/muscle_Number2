@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file AudiencePreferenceSystem.cs*
 *@brief 観客へ三種類の好みを割り当てEvent評価へ反映する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/08/02*
 *最終更新日 2026/08/02*
 *@remarks 大人数向けに好みを管理側で保持する*
@@ -16,6 +16,7 @@ using UnityEngine;
 /// </summary>
 public sealed class AudiencePreferenceSystem : MonoBehaviour
 {
+    public event System.Action<int, float> PreferenceEvaluated;
     private const int EPreferenceCount = 3; //好み種類数
     private const float EMinimumPreferenceSeed = 0.05f; //抽選最低値
     private const float EMinimumReactionRatio = 0.08f; //最低反応率
@@ -87,11 +88,11 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
     /// <summary>
     /// 選択種類への好みに比例して反応人数と動作強度を増やします。
     /// </summary>
-    public void EvaluatePreference(int _preferenceIndex)
+    public float EvaluatePreference(int _preferenceIndex)
     {
-        if (b_m_evaluated)return;
+        if (b_m_evaluated)return 0.0f;
         if (_preferenceIndex < 0
-            || _preferenceIndex >= EPreferenceCount)return;
+            || _preferenceIndex >= EPreferenceCount)return 0.0f;
         if (!b_m_initialized)
         {
             InitializePreferences();
@@ -129,6 +130,12 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
             $"Event Node {_preferenceIndex + 1}: "
             + $"Audience Preference {averagePreference:P1}, "
             + $"Reactions {reactionCount}");
+        PreferenceEvaluated?.Invoke(
+            _preferenceIndex,
+            averagePreference);
+        return averagePreference;
+    }
+
     /// <summary>
     /// 好みVectorから指定番号の値を返します。
     /// </summary>
