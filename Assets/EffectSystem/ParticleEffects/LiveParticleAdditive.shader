@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file LiveParticleAdditive.shader*
 *@brief 火花やきらめき用の加算Particleを描画する*
-*@author 24CU0000 Name*
+*@author 24CU0312 久場洸太*
 *@date 2026/07/28*
 *最終更新日 2026/07/28*
 *@remarks Universal Render Pipeline用*

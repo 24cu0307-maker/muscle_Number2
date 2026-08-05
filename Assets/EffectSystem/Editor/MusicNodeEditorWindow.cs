@@ -40,6 +40,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     [SerializeField] private float m_restoreWindowHeight =
         EMinimumRestoreHeight; //通常表示時の高さ
     private int m_selectedIndex = -1; //選択Node番号
+    private Vector2 m_mainScrollPosition; //編集領域全体のScroll位置
     private Vector2 m_nodeListScrollPosition; //Node一覧Scroll位置
     private AudioClip m_cachedWaveformClip; //波形Cache対象
     private float[] m_waveformSamples; //WAVから取得した波形Cache
@@ -103,6 +104,11 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             return;
         }
 
+        m_mainScrollPosition = EditorGUILayout.BeginScrollView(
+            m_mainScrollPosition,
+            false,
+            true); //複数Event展開時も最下部まで操作できる全体Scroll
+
         AudioClip clip = EditorGUILayout.ObjectField(
             "BGM",
             m_sequence.BgmClip,
@@ -113,6 +119,24 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             Undo.RecordObject(m_sequence, "Change BGM");
             m_sequence.BgmClip = clip;
             EditorUtility.SetDirty(m_sequence);
+        }
+
+        if (m_sequence.BgmClip == null)
+        {
+            EditorGUI.BeginChangeCheck();
+            float manualDuration = EditorGUILayout.FloatField(
+                "Timeline Duration (Seconds)",
+                m_sequence.ManualTimelineDuration);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(m_sequence, "Change Manual Timeline Duration");
+                m_sequence.ManualTimelineDuration = manualDuration;
+                EditorUtility.SetDirty(m_sequence);
+            }
+
+            EditorGUILayout.HelpBox(
+                "No BGM is assigned. This duration is shared by the normal and event timelines.",
+                MessageType.Info);
         }
 
         DrawPreviewControls();
@@ -142,6 +166,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         }
 
         GUILayout.EndHorizontal();
+        EditorGUILayout.EndScrollView();
     }
 
     /// <summary>
@@ -339,7 +364,11 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             BindingFlags.Static
             | BindingFlags.Public
             | BindingFlags.NonPublic); //利用可能関数一覧
-        int argumentCount = _arguments != null ? _arguments.Length : 0; //引数数
+        int argumentCount = 0;
+        if (_arguments != null)
+        {
+            argumentCount = _arguments.Length;
+        }
         for (int i = 0; i < methods.Length; ++i)
         {
             if (methods[i].Name != _methodname)continue;
@@ -797,6 +826,12 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         eventData.m_triggerNodeNumber = EditorGUILayout.IntField(
             "Trigger Node Number",
             eventData.m_triggerNodeNumber);
+        if (eventData.m_eventType == EMusicEventType.AudienceChoice)
+        {
+            EditorGUILayout.HelpBox(
+                "Use Event Name 'Decision' for the selection start time and 'End' for the failure/end time. The first three nodes excluding these control nodes are pose candidates.",
+                MessageType.Info);
+        }
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(m_sequence, "Edit Event Settings");
@@ -828,6 +863,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         EditorGUI.DrawRect(_rect, new Color(0.08f, 0.07f, 0.12f));
         float duration = GetEventDuration(_eventData); //Event表示秒数
         DrawWaveform(_rect);
+        DrawEventTriggerMarker(_rect, _eventData, duration);
         for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
         {
             SMusicNodeEvent node = _eventData.m_eventNodesList[i]; //描画Node
@@ -846,7 +882,36 @@ public sealed class MusicNodeEditorWindow : EditorWindow
 
         GUI.Label(
             new Rect(_rect.x + 5.0f, _rect.yMax - 22.0f, 180.0f, 20.0f),
-            $"Event 0.00s - {duration:F2}s");
+            $"BGM 0.00s - {duration:F2}s");
+
+        float playheadX = _rect.x
+            + Mathf.Clamp01((float)m_previewPositionSeconds / duration)
+            * _rect.width;
+        EditorGUI.DrawRect(
+            new Rect(playheadX - 1.0f, _rect.y, 2.0f, _rect.height),
+            Color.white);
+    }
+
+    private void DrawEventTriggerMarker(
+        Rect _rect,
+        MusicEventSceneData _eventData,
+        float _duration)
+    {
+        for (int i = 0; i < m_sequence.EventsList.Count; ++i)
+        {
+            SMusicNodeEvent node = m_sequence.EventsList[i];
+            if (node.m_nodeNumber != _eventData.m_triggerNodeNumber)continue;
+
+            float x = _rect.x
+                + Mathf.Clamp01(node.m_time / _duration) * _rect.width;
+            EditorGUI.DrawRect(
+                new Rect(x - 2.0f, _rect.y, 4.0f, _rect.height),
+                new Color(1.0f, 0.45f, 0.05f));
+            GUI.Label(
+                new Rect(x + 5.0f, _rect.y + 24.0f, 180.0f, 20.0f),
+                $"TRIGGER {node.m_time:F2}s");
+            return;
+        }
     }
 
     /// <summary>
@@ -974,17 +1039,16 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     /// <summary>
     /// Event専用グラフの表示時間を返します。
     /// </summary>
-    private static float GetEventDuration(MusicEventSceneData _eventData)
+    private float GetEventDuration(MusicEventSceneData _eventData)
     {
-        float duration = 10.0f; //Event初期表示秒数
-        for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
+        if (m_sequence.BgmClip != null)
         {
-            duration = Mathf.Max(
-                duration,
-                _eventData.m_eventNodesList[i].m_time + 1.0f);
+            return Mathf.Max(EMinimumDuration, m_sequence.BgmClip.length);
         }
 
-        return duration;
+        return Mathf.Max(
+            EMinimumDuration,
+            m_sequence.ManualTimelineDuration);
     }
 
     /// <summary>
@@ -1060,6 +1124,13 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         if (m_sequence.BgmClip != null)
         {
             return Mathf.Max(EMinimumDuration, m_sequence.BgmClip.length);
+        }
+
+        if (m_sequence.ManualTimelineDuration > 0.0f)
+        {
+            return Mathf.Max(
+                EMinimumDuration,
+                m_sequence.ManualTimelineDuration);
         }
 
         float duration = EMinimumDuration; //Nodeのみの場合の表示秒数

@@ -127,7 +127,11 @@ public sealed class CollisionSpotlightController : MonoBehaviour
     {
         if (!b_m_drawRay)return;
 
-        Gizmos.color = b_m_hasHit ? Color.green : Color.yellow;
+        Gizmos.color = Color.yellow;
+        if (b_m_hasHit)
+        {
+            Gizmos.color = Color.green;
+        }
         Vector3 endPosition = b_m_hasHit
             ? m_lastHit.point
             : transform.position + transform.forward * GetMaximumDistance(); //判定線の終点

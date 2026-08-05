@@ -575,7 +575,11 @@ public static class LiveShowTimelineBuilder
         string _name)
     {
         Transform child = _root.transform.Find(_name); //既存配置
-        GameObject directorObject = child != null ? child.gameObject : null; //Director Object
+        GameObject directorObject = null;
+        if (child != null)
+        {
+            directorObject = child.gameObject;
+        }
         if (directorObject == null)
         {
             directorObject = new GameObject(_name);

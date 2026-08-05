@@ -5,9 +5,6 @@ using UnityEngine;
 public class PoseJudgeManager : MonoBehaviour
 {
 
-    [Header("InGame")]
-    [SerializeField] private InGameManager m_InGameManager;
-
     [Header("ポーズの判定")]
     [SerializeField] private PoseJudgeController m_poseJudgeController;
 
@@ -16,10 +13,6 @@ public class PoseJudgeManager : MonoBehaviour
 
     [Header("UIの操作")]
     [SerializeField] private UIController m_uiController;
-
-    [Header("ポーズデータの管理")]
-    [SerializeField] private PoseFlowDataManager m_poseFlowDataManager;
-
 
     [Header("熱量")]
     [SerializeField] private VenueVoltageSystem m_venueVoltageSystem;
@@ -34,8 +27,7 @@ public class PoseJudgeManager : MonoBehaviour
     [Header("gameManager")]
     [SerializeField] private GameManager m_gameManager;
 
-    private InGameState m_inGameState = InGameState.None;
-    public Action<InGameState> setState;
+    public Action<InGameState> setState; //判定結果に応じた次のInGame状態を管理側へ通知するCallback
 
 
     private void Awake()
@@ -44,9 +36,15 @@ public class PoseJudgeManager : MonoBehaviour
     }
 
 
-    public void PoseJudgeManagerUpdate()
+    /// <summary>
+    /// InGameManagerが保持する現在状態に応じて、判定・成功確定・失敗確定の処理を振り分けます。
+    /// 状態そのものは直接所有せず、setState通知で管理元に遷移を依頼します。
+    /// </summary>
+    public void PoseJudgeManagerUpdate(
+        InGameState _state,
+        CSVDataPoseFlow _pose)
     {
-        switch (m_inGameState)
+        switch (_state)
         {
             case InGameState.None:
 
@@ -57,7 +55,7 @@ public class PoseJudgeManager : MonoBehaviour
 
             case InGameState.Active:
 
-                Judge(m_poseFlowDataManager.GetPose());
+                Judge(_pose);
 
                 break;
 
@@ -66,7 +64,7 @@ public class PoseJudgeManager : MonoBehaviour
 
                 break;
             case InGameState.Success:
-                Success();
+                Success(_pose);
 
                 break;
             case InGameState.Failure:
@@ -79,23 +77,10 @@ public class PoseJudgeManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        m_InGameManager.m_PoseJudgeManagerAction += State;
-
-    }
-
-    //オブザーバー
-    private void OnDisable()
-    {
-        m_InGameManager.m_PoseJudgeManagerAction -= State;
-    }
-
-    public void State(InGameState _state)
-    {
-        m_inGameState = _state;
-    }
-
+    /// <summary>
+    /// 現在Poseの身体判定とUI枠の時間判定を組み合わせ、Perfect・Normal・Failureを決定します。
+    /// 成否確定時は対象UIを終了し、後続処理を行う状態へ遷移させます。
+    /// </summary>
     private void Judge(CSVDataPoseFlow _pose)
     {
         //通常成功時
@@ -134,22 +119,30 @@ public class PoseJudgeManager : MonoBehaviour
 
     }
 
-    //成功時
-    private void Success()
+    /// <summary>
+    /// 通常Node成功時のScore加算、ボルテージ更新、Effect再生、特殊Event起動をまとめて確定します。
+    /// </summary>
+    private void Success(CSVDataPoseFlow _pose)
     {
         m_gameManager.AddScore((int)m_scoreController.GetScore());
-        m_effectSystem.PlayRandomEffect();
+        int effectCount = m_venueVoltageSystem != null
+            ? m_venueVoltageSystem.GetSuccessEffectCount()
+            : 1;
+        for (int i = 0; i < effectCount; ++i)
+        {
+            m_effectSystem?.PlayRandomEffect();
+        }
 
 
         m_venueVoltageSystem.RegisterSuccess(30);
 
-        m_eventSceneVisualDirector.TryPlayEvent(m_poseFlowDataManager.GetPose().PoseID);
+        m_eventSceneVisualDirector.TryPlayEvent(_pose.FlowNumber);
 
         setState?.Invoke(InGameState.End);
         //m_state = InGameState.End;
     }
 
-    //終了時
+    /// <summary>失敗をボルテージへ通知し、現在Nodeの処理を終了状態へ進めます。</summary>
     private void Failure()
     {
         m_venueVoltageSystem.RegisterFailure();

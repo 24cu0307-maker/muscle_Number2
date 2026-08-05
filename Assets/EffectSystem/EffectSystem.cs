@@ -8,6 +8,7 @@
 *━━━━━━━━━*/
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Serialization;
@@ -135,9 +136,12 @@ public class EffectSystem : MonoBehaviour
     [SerializeField] private PlayableDirector m_effectDirector;      //Timeline演出用Director
 
     private bool b_m_isPlayEffect = true;                            //対象演出が再生を完了したか
-    private PlayableDirector m_playingDirector;                      //現在再生中のDirector
+    private readonly HashSet<PlayableDirector> m_playingDirectors =
+        new HashSet<PlayableDirector>(); //現在再生中のDirector一覧
 
-    private string m_nowplayEffectName = "";
+    private string m_nowplayEffectName = ""; //旧APIの再生状態確認で照合する、最後に要求されたEffect名
+    private readonly HashSet<int> m_reservedRandomEffectIndices =
+        new HashSet<int>(); //抽選済みで開始待機中または再生中のEffect番号
 
     /// <summary>
     /// 登録されている演出設定を取得します。
@@ -182,10 +186,52 @@ public class EffectSystem : MonoBehaviour
     {
         if (m_effectDatas == null || m_effectDatas.Length == EEmptyEffectCount)return;
 
-        int randomIndex = Random.Range(0, m_effectDatas.Length);     //ランダムに選択した演出番号
+        List<int> availableIndices = new List<int>();
+        for (int i = 0; i < m_effectDatas.Length; ++i)
+        {
+            if (m_reservedRandomEffectIndices.Contains(i))continue;
+            if (HasPlayingEffect(m_effectDatas[i]))continue;
+
+            availableIndices.Add(i);
+        }
+
+        if (availableIndices.Count == 0)
+        {
+            Debug.Log("再生可能な未使用Effectがないため、今回のランダム抽選を見送ります。", this);
+            return;
+        }
+
+        int randomIndex = availableIndices[
+            Random.Range(0, availableIndices.Count)]; //未再生候補から抽選
+        m_reservedRandomEffectIndices.Add(randomIndex);
         ScheduleEffect(m_effectDatas[randomIndex]);
+        StartCoroutine(ReleaseRandomReservation(
+            randomIndex,
+            m_effectDatas[randomIndex]));
 
         m_nowplayEffectName =  m_effectDatas[randomIndex].EffectName;
+    }
+
+    /// <summary>
+    /// 開始待機と再生が終わるまで抽選対象から除外します。
+    /// </summary>
+    private IEnumerator ReleaseRandomReservation(
+        int _effectindex,
+        SEffectData _effect)
+    {
+        float delay = _effect.PlayDelay;
+        if (delay > EMinimumDelaySeconds)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
+        yield return null; //再生Componentの状態が反映されるFrameを待つ
+        while (HasPlayingEffect(_effect))
+        {
+            yield return null;
+        }
+
+        m_reservedRandomEffectIndices.Remove(_effectindex);
     }
 
     /// <summary>
@@ -205,6 +251,10 @@ public class EffectSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 最後に再生要求したEffectの現在状態を確認し、互換用フラグへ反映します。
+    /// 引数付き関数と戻り値の意味が異なる既存仕様のため、呼び出し側との互換性を優先しています。
+    /// </summary>
     public void IsEffectPlay()
     {
         if (m_effectDatas == null) return;
@@ -242,16 +292,19 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     public void StopEffectTimeline()
     {
-        if (m_playingDirector != null)
+        foreach (PlayableDirector director in m_playingDirectors)
         {
-            m_playingDirector.Stop();
-            m_playingDirector = null;
-            return;
+            if (director != null)
+            {
+                director.Stop();
+            }
         }
+        m_playingDirectors.Clear();
 
-        if (m_effectDirector == null)return;
-
-        m_effectDirector.Stop();
+        if (m_effectDirector != null)
+        {
+            m_effectDirector.Stop();
+        }
     }
 
     /// <summary>
@@ -296,13 +349,17 @@ public class EffectSystem : MonoBehaviour
 
     /// <summary>
     /// 指定されたTimelineを先頭から再生します。
+    /// Effectごとの専用Directorを優先することで、異なるDirectorのTimelineは同時再生できます。
     /// </summary>
     private void PlayTimeline(
         PlayableAsset _timeline,
         PlayableDirector _director)
     {
-        PlayableDirector director =
-            _director != null ? _director : m_effectDirector; //今回使用するDirector
+        PlayableDirector director = m_effectDirector;
+        if (_director != null)
+        {
+            director = _director;
+        }
         if (director == null)
         {
             Debug.LogWarning(
@@ -311,16 +368,14 @@ public class EffectSystem : MonoBehaviour
             return;
         }
 
-        if (m_playingDirector != null && m_playingDirector != director)
-        {
-            m_playingDirector.Stop();
-        }
-
+        m_playingDirectors.RemoveWhere(
+            playingDirector => playingDirector == null
+                || playingDirector.state != PlayState.Playing);
         director.Stop();
         director.playableAsset = _timeline;
         director.time = ETimelineStartSeconds;
         director.Play();
-        m_playingDirector = director;
+        m_playingDirectors.Add(director);
     }
 
     /// <summary>
@@ -373,11 +428,15 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     private bool HasPlayingEffect(SEffectData _effects)
     {
-        PlayableDirector director =
-            _effects.Director != null
-                ? _effects.Director
-                : m_effectDirector; //確認対象Director
-        if (director != null && director.state == PlayState.Playing)return true;
+        if (_effects.Timeline != null)
+        {
+            PlayableDirector director = m_effectDirector;
+            if (_effects.Director != null)
+            {
+                director = _effects.Director;
+            }
+            if (director != null && director.state == PlayState.Playing)return true;
+        }
 
         if (_effects.Particles != null)
         {

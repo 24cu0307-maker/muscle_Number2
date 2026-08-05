@@ -7,6 +7,7 @@
 *@remarks MeshまたはPrefabをInspectorから設定*
 *━━━━━━━━━*/
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -45,6 +46,8 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private Vector2 m_positionError = new Vector2(0.25f, 0.25f); //位置誤差
     [SerializeField] private Vector2 m_scaleRange = new Vector2(0.9f, 1.1f); //Scale差
     [SerializeField] private float m_yawError = 8.0f; //Y回転誤差
+    [SerializeField] private Transform m_facingTarget; //観客が向くプレイヤー位置
+    [SerializeField] private float m_modelYawOffset; //Prefab正面方向の補正
     [SerializeField] private bool b_m_spawnOnStart = true; //開始時自動生成
     [SerializeField] private bool b_m_autoReaction = true; //自動Reaction
     [SerializeField] private Vector2 m_reactionIntervalRange =
@@ -69,10 +72,31 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private float m_failureReactionStrength =
         EFailureReactionStrength; //失敗時の動作強度
 
+    [Header("Audience Voices")]
+    [SerializeField] private AudioClip[] m_cheerVoiceClips;
+    [SerializeField] private AudioClip[] m_disappointedVoiceClips;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_minimumVoiceVolume = 0.2f;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_maximumVoiceVolume = 0.85f;
+    [SerializeField, Min(1)] private int m_minimumSimultaneousVoices = 1;
+    [SerializeField, Min(1)] private int m_maximumSimultaneousVoices = 5;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_preferenceVolumeBoost = 0.2f;
+    [SerializeField] private Vector2 m_voicePitchRange = new Vector2(0.92f, 1.08f);
+    [SerializeField, Range(0.0f, 0.5f)] private float m_voiceVolumeVariation = 0.08f;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_voiceStereoPanRange = 0.3f;
+    [SerializeField, Range(0.0f, 0.25f)] private float m_voiceStartOffsetSeconds = 0.04f;
+    [SerializeField] private Vector2 m_voiceLowPassRange = new Vector2(16000.0f, 22000.0f);
+    [SerializeField] private Vector2 m_voiceReverbMixRange = new Vector2(0.0f, 0.18f);
+
     private readonly List<AudienceReaction> m_audiences =
         new List<AudienceReaction>(); //生成済み観客一覧
     private readonly List<AudienceReaction> m_visibleAudiences =
         new List<AudienceReaction>(); //現在画面内の観客一覧
+    private readonly List<AudioSource> m_voiceSources =
+        new List<AudioSource>(); //歓声を重ねるため実行時に生成・再利用するAudioSource一覧
+    private readonly List<AudioLowPassFilter> m_voiceLowPassFilters =
+        new List<AudioLowPassFilter>(); //同じ声の聞こえ方へ個体差を付けるLowPass Filter一覧
+    private readonly List<AudioReverbFilter> m_voiceReverbFilters =
+        new List<AudioReverbFilter>(); //会場内の反響にランダム差を付けるReverb Filter一覧
 
     public IReadOnlyList<AudienceReaction> Audiences
     {
@@ -85,6 +109,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         new List<Bounds>(); //観客ごとの基準Bounds
     private float m_nextReactionTime; //次回Reaction時刻
     private float m_nextCullingTime; //次回可視判定時刻
+    private Coroutine m_sequentialCheerCoroutine; //Audience Choice成功中に歓声Clipを順番再生する処理
 
     /// <summary>
     /// 必要なら開始時に観客を生成します。
@@ -111,6 +136,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        StopSequentialSuccessVoices();
         UnsubscribeVoltageEvents();
     }
 
@@ -376,6 +402,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         audienceObject.transform.localScale *= scale;
         ApplyRandomMaterial(audienceObject);
         AlignAudienceFeet(audienceObject, _localposition);
+        FaceAudienceTowardTarget(audienceObject);
 
         AudienceReaction reaction =
             audienceObject.GetComponent<AudienceReaction>(); //Reaction制御
@@ -383,9 +410,28 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         {
             reaction = audienceObject.AddComponent<AudienceReaction>();
         }
+        reaction.CaptureCurrentTransform();
 
         m_audiences.Add(reaction);
         m_audienceBounds.Add(CreateAudienceBounds(audienceObject));
+    }
+
+    private void FaceAudienceTowardTarget(GameObject _audienceobject)
+    {
+        if (_audienceobject == null || m_facingTarget == null)return;
+
+        Vector3 direction =
+            m_facingTarget.position - _audienceobject.transform.position;
+        direction.y = 0.0f;
+        if (direction.sqrMagnitude <= 0.0001f)return;
+
+        float yawVariation = Random.Range(-m_yawError, m_yawError);
+        _audienceobject.transform.rotation = Quaternion.LookRotation(
+            direction.normalized,
+            Vector3.up) * Quaternion.Euler(
+            0.0f,
+            m_modelYawOffset + yawVariation,
+            0.0f);
     }
 
     /// <summary>
@@ -473,6 +519,22 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     /// </summary>
     public void PlaySuccessReaction(float _normalizedvoltage)
     {
+        PlaySuccessReactionVisual(_normalizedvoltage);
+        if (m_sequentialCheerCoroutine == null)
+        {
+            PlayAudienceVoices(
+                m_cheerVoiceClips,
+                Mathf.Clamp01(_normalizedvoltage),
+                0.0f);
+        }
+    }
+
+    /// <summary>
+    /// 音声を追加せず、成功時の観客Animationだけをボルテージ比例で再生します。
+    /// 連続歓声中に音声が多重発火しないよう、Event継続リアクションから使用します。
+    /// </summary>
+    public void PlaySuccessReactionVisual(float _normalizedvoltage)
+    {
         float voltage = Mathf.Clamp01(_normalizedvoltage); //安全なVoltage
         float reactionRatio = Mathf.Lerp(
             Mathf.Clamp01(m_minimumSuccessReactionRatio),
@@ -497,6 +559,239 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             false,
             Mathf.Clamp01(m_failureReactionRatio),
             Mathf.Max(0.0f, m_failureReactionStrength));
+        float voltage = 0.5f;
+        if (m_voltageSystem != null)
+        {
+            voltage = m_voltageSystem.NormalizedVoltage;
+        }
+        PlayAudienceVoices(m_disappointedVoiceClips, voltage, 0.0f);
+    }
+
+    /// <summary>
+    /// Audience Choiceの好みが高いほど少し大きな歓声を再生します。
+    /// </summary>
+    public void PlayPreferenceCheer(float _preference)
+    {
+        float voltage = 0.5f;
+        if (m_voltageSystem != null)
+        {
+            voltage = m_voltageSystem.NormalizedVoltage;
+        }
+        PlayAudienceVoices(
+            m_cheerVoiceClips,
+            voltage,
+            Mathf.Clamp01(_preference) * m_preferenceVolumeBoost);
+    }
+
+    /// <summary>
+    /// 登録順に歓声Clipを繋ぎ、Audience Choiceの成功から終了まで途切れにくく再生します。
+    /// 二つのAudioSourceを交互に使うことで、前のClip末尾と次の先頭をわずかに重ねます。
+    /// </summary>
+    public void StartSequentialSuccessVoices(float _preference)
+    {
+        StopSequentialSuccessVoices();
+        if (m_cheerVoiceClips == null || m_cheerVoiceClips.Length == 0)return;
+
+        float voltage = 0.5f;
+        if (m_voltageSystem != null)
+        {
+            voltage = m_voltageSystem.NormalizedVoltage;
+        }
+        m_sequentialCheerCoroutine = StartCoroutine(
+            PlaySequentialSuccessVoicesRoutine(
+                Mathf.Clamp01(voltage),
+                Mathf.Clamp01(_preference) * m_preferenceVolumeBoost));
+    }
+
+    /// <summary>
+    /// 連続歓声Coroutineと、その処理が使用している全AudioSourceを即座に停止します。
+    /// Event終了・中断のどちらから呼ばれても残響が次の通常状態へ残らないようにします。
+    /// </summary>
+    public void StopSequentialSuccessVoices()
+    {
+        if (m_sequentialCheerCoroutine != null)
+        {
+            StopCoroutine(m_sequentialCheerCoroutine);
+            m_sequentialCheerCoroutine = null;
+        }
+        for (int i = 0; i < m_voiceSources.Count; ++i)
+        {
+            if (m_voiceSources[i] != null)
+            {
+                m_voiceSources[i].Stop();
+            }
+        }
+    }
+
+    /// <summary>
+    /// DSP時計を基準にClipの長さとPitchから次の開始時刻を予約します。
+    /// Frame Rateの揺れに左右されにくい予約再生とし、末尾を少し重ねて音切れを目立たなくします。
+    /// </summary>
+    private IEnumerator PlaySequentialSuccessVoicesRoutine(
+        float _normalizedvoltage,
+        float _volumeboost)
+    {
+        const double overlapSeconds = 0.04;
+        EnsureVoiceSources(2);
+        int clipIndex = 0; //登録順を維持し、末尾到達後は先頭へ戻るClip番号
+        int sourceIndex = 0; //予約再生を交互に受け持つ二つのAudioSource番号
+        double nextStartTime = AudioSettings.dspTime + 0.05; //次Clipを開始するDSP基準の絶対時刻
+        while (true)
+        {
+            AudioClip clip = m_cheerVoiceClips[clipIndex];
+            clipIndex = (clipIndex + 1) % m_cheerVoiceClips.Length;
+            if (clip == null)
+            {
+                yield return null;
+                continue;
+            }
+
+            AudioSource source = m_voiceSources[sourceIndex];
+            int filterIndex = sourceIndex;
+            sourceIndex = (sourceIndex + 1) % 2;
+            ConfigureSequentialVoiceSource(
+                source,
+                filterIndex,
+                clip,
+                _normalizedvoltage,
+                _volumeboost);
+            source.PlayScheduled(nextStartTime);
+            double playbackDuration = clip.length
+                / Mathf.Max(0.01f, Mathf.Abs(source.pitch));
+            nextStartTime += Mathf.Max(
+                0.01f,
+                (float)(playbackDuration - overlapSeconds));
+            while (AudioSettings.dspTime < nextStartTime - 0.1)
+            {
+                yield return null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 連続再生する一つの声へ、ボルテージ・好み・ランダム差から音量と音質を設定します。
+    /// Clip順は固定しつつPitch、Pan、Filterだけを揺らし、同じ素材の反復感を弱めます。
+    /// </summary>
+    private void ConfigureSequentialVoiceSource(
+        AudioSource _source,
+        int _filterindex,
+        AudioClip _clip,
+        float _normalizedvoltage,
+        float _volumeboost)
+    {
+        float minimumPitch = Mathf.Min(m_voicePitchRange.x, m_voicePitchRange.y);
+        float maximumPitch = Mathf.Max(m_voicePitchRange.x, m_voicePitchRange.y);
+        _source.clip = _clip;
+        _source.time = 0.0f;
+        _source.pitch = Random.Range(minimumPitch, maximumPitch);
+        float baseVolume = Mathf.Lerp(
+            m_minimumVoiceVolume,
+            m_maximumVoiceVolume,
+            _normalizedvoltage) + _volumeboost;
+        _source.volume = Mathf.Clamp01(
+            baseVolume + Random.Range(
+                -m_voiceVolumeVariation,
+                m_voiceVolumeVariation));
+        _source.panStereo = Random.Range(
+            -m_voiceStereoPanRange,
+            m_voiceStereoPanRange);
+        AudioLowPassFilter lowPass = m_voiceLowPassFilters[_filterindex];
+        lowPass.cutoffFrequency = Random.Range(
+            Mathf.Min(m_voiceLowPassRange.x, m_voiceLowPassRange.y),
+            Mathf.Max(m_voiceLowPassRange.x, m_voiceLowPassRange.y));
+    }
+
+    private void PlayAudienceVoices(
+        AudioClip[] _clips,
+        float _normalizedvoltage,
+        float _volumeboost)
+    {
+        if (_clips == null || _clips.Length == 0)return;
+
+        float voltage = Mathf.Clamp01(_normalizedvoltage);
+        int minimumCount = Mathf.Max(1, m_minimumSimultaneousVoices);
+        int maximumCount = Mathf.Max(minimumCount, m_maximumSimultaneousVoices);
+        int voiceCount = Mathf.RoundToInt(
+            Mathf.Lerp(minimumCount, maximumCount, voltage));
+        EnsureVoiceSources(voiceCount);
+
+        float baseVolume = Mathf.Clamp01(
+            Mathf.Lerp(m_minimumVoiceVolume, m_maximumVoiceVolume, voltage)
+            + _volumeboost);
+        float minimumPitch = Mathf.Min(m_voicePitchRange.x, m_voicePitchRange.y);
+        float maximumPitch = Mathf.Max(m_voicePitchRange.x, m_voicePitchRange.y);
+        for (int i = 0; i < voiceCount; ++i)
+        {
+            AudioClip clip = GetRandomVoiceClip(_clips);
+            if (clip == null)continue;
+
+            AudioSource source = m_voiceSources[i];
+            source.pitch = Random.Range(minimumPitch, maximumPitch);
+            source.volume = Mathf.Clamp01(
+                baseVolume + Random.Range(
+                    -m_voiceVolumeVariation,
+                    m_voiceVolumeVariation));
+            source.panStereo = Random.Range(
+                -m_voiceStereoPanRange,
+                m_voiceStereoPanRange);
+            float reverbMix = Random.Range(
+                Mathf.Min(m_voiceReverbMixRange.x, m_voiceReverbMixRange.y),
+                Mathf.Max(m_voiceReverbMixRange.x, m_voiceReverbMixRange.y));
+            source.reverbZoneMix = reverbMix;
+            m_voiceReverbFilters[i].reverbLevel = Mathf.Lerp(
+                -10000.0f,
+                -3500.0f,
+                Mathf.Clamp01(reverbMix));
+            AudioLowPassFilter lowPass = m_voiceLowPassFilters[i];
+            lowPass.cutoffFrequency = Random.Range(
+                Mathf.Min(m_voiceLowPassRange.x, m_voiceLowPassRange.y),
+                Mathf.Max(m_voiceLowPassRange.x, m_voiceLowPassRange.y));
+            source.clip = clip;
+            source.time = Random.Range(
+                0.0f,
+                Mathf.Min(
+                    Mathf.Max(0.0f, m_voiceStartOffsetSeconds),
+                    Mathf.Max(0.0f, clip.length - 0.01f)));
+            source.Play();
+        }
+    }
+
+    private void EnsureVoiceSources(int _requiredcount)
+    {
+        while (m_voiceSources.Count < _requiredcount)
+        {
+            GameObject voiceObject = new GameObject(
+                $"AudienceVoice_{m_voiceSources.Count + 1:00}");
+            voiceObject.transform.SetParent(transform, false);
+            AudioSource source = voiceObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.loop = false;
+            source.spatialBlend = 0.0f;
+            m_voiceSources.Add(source);
+            AudioLowPassFilter lowPass =
+                voiceObject.AddComponent<AudioLowPassFilter>();
+            lowPass.lowpassResonanceQ = 1.0f;
+            m_voiceLowPassFilters.Add(lowPass);
+            AudioReverbFilter reverb =
+                voiceObject.AddComponent<AudioReverbFilter>();
+            reverb.reverbPreset = AudioReverbPreset.User;
+            reverb.dryLevel = 0.0f;
+            reverb.reverbLevel = -10000.0f;
+            m_voiceReverbFilters.Add(reverb);
+        }
+    }
+
+    private static AudioClip GetRandomVoiceClip(AudioClip[] _clips)
+    {
+        if (_clips == null || _clips.Length == 0)return null;
+
+        for (int i = 0; i < _clips.Length; ++i)
+        {
+            AudioClip clip = _clips[Random.Range(0, _clips.Length)];
+            if (clip != null)return clip;
+        }
+
+        return null;
     }
 
     /// <summary>

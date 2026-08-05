@@ -10,7 +10,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using GameFlowTemplate;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Runtime ContextまたはMusicNodeSequenceの特殊Event Nodeを順番に表示します。
@@ -25,13 +27,14 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     [SerializeField] private MusicNodeSequence m_sequence; //確認用Event設定
     [SerializeField] private int m_eventIndex; //確認に使うEvent番号
     [SerializeField] private UIController m_uiController; //既存Node表示制御
-    [SerializeField] private InGameManager m_inGameManager; //通常進行制御
+    [FormerlySerializedAs("m_inGameManager")]
+    [SerializeField] private GameManager m_gameManager; //ゲーム進行と演出停止制御
     [SerializeField] private float m_lastNodeDuration = EDefaultLastNodeDuration; //最終Node表示時間
     CSVDataPoseFlow pose;
     private Coroutine m_playCoroutine; //Event Node再生処理
     private bool b_m_normalFlowSuspended; //通常進行を休止中か
-    private bool b_m_wasInGameEnabled; //開始前の通常進行状態
-    private bool b_m_hasEventFrames; //特殊Node表示中か
+    private bool b_m_hasEventFrames;
+    private float m_manualClockOffset; //特殊Node表示中か
 
     /// <summary>
     /// EventNodeRuntimeContextを優先して特殊Node再生を開始します。
@@ -60,10 +63,16 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
             new List<SMusicNodeEvent>(sourceNodesList); //時間順に並べる複製
         nodesList.Sort(
             (_left, _right) => _left.m_time.CompareTo(_right.m_time));
-        if (m_inGameManager != null)
+        if (m_gameManager != null)
         {
-            b_m_wasInGameEnabled = m_inGameManager.enabled;
-            m_inGameManager.enabled = false;
+            TimeManager timeManager = m_gameManager.GetTimeManager();
+            float gameTime = 0.0f;
+            if (timeManager != null)
+            {
+                gameTime = timeManager.GameTimeSeconds;
+            }
+            m_manualClockOffset = Time.unscaledTime - gameTime;
+            m_gameManager.PauseForDirection();
             b_m_normalFlowSuspended = true;
         }
 
@@ -96,16 +105,19 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     private IEnumerator PlayNodesRoutine(
         List<SMusicNodeEvent> _nodesList)
     {
-        float firstTime = _nodesList[0].m_time; //Event内基準時間
-        float startedTime = Time.unscaledTime; //Event開始時刻
+        // Event Node times are absolute BGM times. //Event内基準時間
+        // Playback follows the shared BGM clock. //Event開始時刻
         for (int i = 0; i < _nodesList.Count; ++i)
         {
             SMusicNodeEvent node = _nodesList[i]; //今回Node
-            float targetTime = Mathf.Max(0.0f, node.m_time - firstTime); //表示時刻
-            while (Time.unscaledTime - startedTime < targetTime)
+            float targetTime = Mathf.Max(0.0f, node.m_time); //表示時刻
+            while (GetPlaybackTime() < targetTime)
             {
                 yield return null;
             }
+
+            float nodeEndTime = GetNodeEndTime(_nodesList, i);
+            if (GetPlaybackTime() >= nodeEndTime)continue;
 
             ClearCurrentFrames();
             float duration = GetNodeDuration(_nodesList, i); //今回表示時間
@@ -119,10 +131,9 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
             m_uiController.UISet_normal(pose);
             b_m_hasEventFrames = true;
 
-            float elapsedSeconds = 0.0f; //Node表示経過時間
-            while (elapsedSeconds < duration)
+            // Node表示経過時間
+            while (GetPlaybackTime() < nodeEndTime)
             {
-                elapsedSeconds += Time.unscaledDeltaTime;
                 m_uiController.UIMove_normal(pose);
                 yield return null;
             }
@@ -182,9 +193,9 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
             m_uiController = FindFirstObjectByType<UIController>();
         }
 
-        if (m_inGameManager == null)
+        if (m_gameManager == null)
         {
-            m_inGameManager = FindFirstObjectByType<InGameManager>();
+            m_gameManager = FindFirstObjectByType<GameManager>();
         }
     }
 
@@ -208,13 +219,32 @@ public sealed class EventSpecialNodePlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// 特殊Event中も進んだ現在時刻へ通常Node進行を復帰します。
+    /// 特殊Event終了後にManager経由で通常Node進行を復帰します。
     /// </summary>
     private void ResumeNormalFlow()
     {
-        if (m_inGameManager == null || !b_m_normalFlowSuspended)return;
+        if (m_gameManager == null || !b_m_normalFlowSuspended)return;
 
-        m_inGameManager.enabled = b_m_wasInGameEnabled;
+        m_gameManager.ResumeFromDirection();
         b_m_normalFlowSuspended = false;
     }
+    private float GetNodeEndTime(List<SMusicNodeEvent> _nodesList, int _index)
+    {
+        if (_index < _nodesList.Count - 1)
+        {
+            return Mathf.Max(_nodesList[_index].m_time, _nodesList[_index + 1].m_time);
+        }
+
+        return _nodesList[_index].m_time
+            + Mathf.Max(EMinimumNodeDuration, m_lastNodeDuration);
+    }
+
+    private float GetPlaybackTime()
+    {
+        VoltageBgmSystem bgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        return bgmSystem != null && bgmSystem.IsPlaybackReady
+            ? bgmSystem.CurrentTimeSeconds
+            : Mathf.Max(0.0f, Time.unscaledTime - m_manualClockOffset);
+    }
+
 }

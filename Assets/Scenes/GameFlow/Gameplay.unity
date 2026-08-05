@@ -170,7 +170,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -5188,7 +5188,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 1, a: 1}
   m_emissionIntensity: 8
@@ -5204,7 +5204,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 15
   m_radius: 0.04
@@ -5311,11 +5311,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.02, g: 1, b: 0.65, a: 1}
   m_emissionIntensity: 3
   m_opacity: 0.13
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &60482359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5326,12 +5328,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 5.5
   m_endRadius: 4
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &60482360
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5404,6 +5406,127 @@ Transform:
   m_Children: []
   m_Father: {fileID: 878058849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &75773006
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1352203419}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Name
+      value: SpotlightCone_01_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.266191
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.18141007
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70180696
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.38661954
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5240641
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.28870252
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 57.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -73.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Mesh
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_length
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_endRadius
+      value: 5.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_opacity
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.b
+      value: 0.8862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.g
+      value: 0.1686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.r
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Range
+      value: 31.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Intensity
+      value: 625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_SpotAngle
+      value: 30.14159
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 16.577875
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
 --- !u!1 &130277790
 GameObject:
   m_ObjectHideFlags: 0
@@ -5433,7 +5556,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74dc04df4efc7654f9ba0c6d2208886e, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
   m_liveEffectToggleKey: 288
   m_voltageToggleKey: 289
@@ -5444,10 +5567,10 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130277790}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2ae95cdb07c3244888a686034341dee, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
   m_effectSystem: {fileID: 130277793}
   b_m_showPanel: 1
@@ -5461,233 +5584,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d65b251efc42e84e83de5c88fa02ae7, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EffectSystem
   m_effectDatas:
-  - m_effectName: Live_01_Opening
+  - m_effectName: SpotLight_00
     m_playDelaySeconds: 0
     m_particles: []
     m_audioSources: []
     m_lightControllers: []
     m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 86f71fd96f2ee9d4ea18c1558632e86f, type: 2}
-    m_director: {fileID: 1607459922}
-  - m_effectName: Live_02_ColorWave
+    m_timeline: {fileID: 11400000, guid: 9eb8e8401579d1b4b9c5d3e2c9b8ddce, type: 2}
+    m_director: {fileID: 2040362423}
+  - m_effectName: SpotLight_01
     m_playDelaySeconds: 0
     m_particles: []
     m_audioSources: []
     m_lightControllers: []
     m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: b4e367710e27f1145a1776f6b5144a9c, type: 2}
-    m_director: {fileID: 1677070798}
-  - m_effectName: Live_03_LaserRush
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: ec693bf8d02cfbf478857b950b8693c6, type: 2}
-    m_director: {fileID: 41850333}
-  - m_effectName: Live_04_ParticleBurst
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 6b3a905c17236654790b95595d7b1ba7, type: 2}
-    m_director: {fileID: 2123481515}
-  - m_effectName: Live_05_Finale
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: ddb0eb81dfc43a04c81a277056d6d820, type: 2}
-    m_director: {fileID: 878779535}
-  - m_effectName: Tesst
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 86f71fd96f2ee9d4ea18c1558632e86f, type: 2}
-    m_director: {fileID: 1607459922}
-  - m_effectName: 1
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 11400000, guid: 96bf2a4a3ee7eb04589f2c8a0fe05491, type: 2}
-    m_timeline: {fileID: 11400000, guid: ddb0eb81dfc43a04c81a277056d6d820, type: 2}
-    m_director: {fileID: 878779535}
-  - m_effectName: VoltageTimeline
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 662f9f1182c85c24d8bb99ca0b6150db, type: 2}
-    m_director: {fileID: 1499088894}
-  - m_effectName: StageEffect_01
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: d56251b5776094e42a482a2aca0b0abf, type: 2}
-    m_director: {fileID: 143918723}
-  - m_effectName: StageEffect_02
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 86415e7729e75e247b6e00a36adb24fd, type: 2}
-    m_director: {fileID: 1963442068}
-  - m_effectName: StageEffect_03
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 71c7bcdcda8a0244e9b5d8c2412ee787, type: 2}
-    m_director: {fileID: 383698172}
-  - m_effectName: StageEffect_04
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 1138e32cbc5341a4389830c9dd2cfce7, type: 2}
-    m_director: {fileID: 1684207921}
-  - m_effectName: StageEffect_05
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: aa49be3eb355ff6439ca2b95c2281aef, type: 2}
-    m_director: {fileID: 1361414508}
-  - m_effectName: StageEffect_06
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 9235bbfafc06c9b428455c586d03f048, type: 2}
-    m_director: {fileID: 1772176242}
-  - m_effectName: StageEffect_07
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 24ed96c9d87f0a04e95b41c2f28187ca, type: 2}
-    m_director: {fileID: 1823723432}
-  - m_effectName: StageEffect_08
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 1137b21f6db25df4089d3aa68d2ee905, type: 2}
-    m_director: {fileID: 527782139}
-  - m_effectName: StageEffect_09
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 11e00f29502329d4cae4d0ff2d886a53, type: 2}
-    m_director: {fileID: 715281367}
-  - m_effectName: StageEffect_10
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 2b02665cfcd86304b9a0734134376119, type: 2}
-    m_director: {fileID: 740636232}
-  - m_effectName: StageVoltage_01
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 54a6e104e850da448b7e1a6d2e891067, type: 2}
-    m_director: {fileID: 410872090}
-  - m_effectName: StageVoltage_02
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 110aa1980ff637a4a83c0cd93ad313a8, type: 2}
-    m_director: {fileID: 633476110}
-  - m_effectName: StageVoltage_03
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: e457486a5669de04ba57c38b75cce17f, type: 2}
-    m_director: {fileID: 1888403944}
-  - m_effectName: StageVoltage_04
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: ac7b0d28bec8f0e4897e0359648ef73b, type: 2}
-    m_director: {fileID: 1764473059}
-  - m_effectName: StageVoltage_05
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 58f6b3b5914e4a74f981f00a7c053c89, type: 2}
-    m_director: {fileID: 1604080585}
-  - m_effectName: StageVoltage_06
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: abeeb7901045aa5459766e75b3af9d69, type: 2}
-    m_director: {fileID: 835488443}
-  - m_effectName: StageVoltage_07
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 407d8960731fb384eb1f6826bd4a77b8, type: 2}
-    m_director: {fileID: 1702856828}
-  - m_effectName: StageVoltage_08
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 094a88ace159c0a4d9daba9825c2cb3a, type: 2}
-    m_director: {fileID: 1946698038}
-  - m_effectName: StageVoltage_09
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: af15d7edb9257dc47b10f69f6415917f, type: 2}
-    m_director: {fileID: 1354219832}
-  - m_effectName: StageVoltage_10
-    m_playDelaySeconds: 0
-    m_particles: []
-    m_audioSources: []
-    m_lightControllers: []
-    m_cameraSequence: {fileID: 0}
-    m_timeline: {fileID: 11400000, guid: 1b9d684374ed91f4c9278bd37039d54d, type: 2}
-    m_director: {fileID: 1336353806}
+    m_timeline: {fileID: 11400000, guid: 106b8f86c398ddb4197ba53a17734102, type: 2}
+    m_director: {fileID: 1421681266}
   m_cameraDirector: {fileID: 0}
   m_effectDirector: {fileID: 0}
 --- !u!4 &130277794
@@ -5707,7 +5622,7 @@ Transform:
   - {fileID: 935859009}
   - {fileID: 1438253464}
   - {fileID: 799275658}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &131874073
 GameObject:
@@ -5756,7 +5671,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -10881,7 +10796,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.08, a: 1}
   m_emissionIntensity: 5.5
@@ -10897,7 +10812,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 10
   m_radius: 0.08
@@ -11002,11 +10917,11 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 100000
-  m_Range: 100
-  m_SpotAngle: 42.35824
-  m_InnerSpotAngle: 8.197933
+  m_Color: {r: 1, g: 0.72, b: 0.3, a: 1}
+  m_Intensity: 0.7
+  m_Range: 60
+  m_SpotAngle: 8.578307
+  m_InnerSpotAngle: 6.004815
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
@@ -11067,7 +10982,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
@@ -16031,7 +15946,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bde67f536ba91604aac7c99ca2a9416d, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ArmController
   _camera: {fileID: 2040577841}
   playerArm: {fileID: 1835766970}
@@ -16098,7 +16013,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &288632593
 GameObject:
@@ -16130,7 +16045,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.35, g: 0.01, b: 1, a: 1}
   m_emissionIntensity: 7
@@ -16146,7 +16061,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 11
   m_radius: 0.08
@@ -16250,7 +16165,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06b53cb34600d804b8d93b527a9b5995, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ScenesLoad
 --- !u!4 &288715770
 Transform:
@@ -16265,8 +16180,207 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &293115836
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 863614127}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Name
+      value: SpotlightCone_00_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 34.22294
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.266191
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.18141007
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.736877
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.14924972
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.6462237
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.13088848
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 22.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -82.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Mesh
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_length
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_endRadius
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_opacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_surfaceLight
+      value:
+      objectReference: {fileID: 293115844}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_emissionIntensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: b_m_illuminateSurfaces
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 293115844}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 293115843}
+  m_SourcePrefab: {fileID: 100100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+--- !u!1 &293115837 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 293115836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &293115838 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 293115836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &293115843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293115837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
+--- !u!108 &293115844
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293115837}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 0
+  m_Color: {r: 1, g: 0.72, b: 0.3, a: 1}
+  m_Intensity: 3600
+  m_Range: 75
+  m_SpotAngle: 9.865053
+  m_InnerSpotAngle: 5.4257793
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: 256
+    m_Strength: 0.65
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!1 &306950845
 GameObject:
   m_ObjectHideFlags: 0
@@ -16297,7 +16411,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 0.2, b: 1, a: 1}
   m_emissionIntensity: 8.5
@@ -16313,7 +16427,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 18
   m_radius: 0.07
@@ -16417,7 +16531,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62f9661a068d8fa419b7139a21e8272a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreController
   m_gameManager: {fileID: 1843740549}
   m_excelLoader: {fileID: 440262078}
@@ -16435,7 +16549,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &318798706
 GameObject:
@@ -16464,7 +16578,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ef87be53435c24419850e4994af1b0f, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::VoltageBgmSystem
   m_voltageSystem: {fileID: 1704557581}
   m_layers:
@@ -16608,7 +16722,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &347839485 stripped
 GameObject:
@@ -16642,7 +16756,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 546f0a1e664cd504dbec1d931c3314ac, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PoseJudgeController
   m_uiManager: {fileID: 1270453669}
   m_excelLoader: {fileID: 440262078}
@@ -16659,7 +16773,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &383698170
 GameObject:
@@ -16857,7 +16971,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 0
@@ -16903,7 +17017,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410872088
 GameObject:
@@ -17106,11 +17220,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &419224399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17121,12 +17237,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 8
   m_endRadius: 2.2
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &419224400
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -26977,11 +27093,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.16, b: 0.03, a: 1}
   m_emissionIntensity: 3.2
   m_opacity: 0.18
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &433568135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26992,12 +27110,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 7.5
   m_endRadius: 3
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &433568136
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -27097,7 +27215,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e06505dd73856824783bad475bee2ad0, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ExcelLoader
 --- !u!4 &440262079
 Transform:
@@ -27112,7 +27230,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &446969968
 GameObject:
@@ -31998,7 +32116,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -32015,7 +32133,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
@@ -32132,11 +32250,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.25, g: 1, b: 0.68, a: 1}
   m_emissionIntensity: 2.4
   m_opacity: 0.1
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &474190790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32147,12 +32267,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 5.5
   m_endRadius: 3.6
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &474190791
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32225,6 +32345,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1632748316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &489626250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 489626251}
+  m_Layer: 0
+  m_Name: Effect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &489626251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489626250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.83075, y: -0.9459, z: -3.98139}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &493258912
 GameObject:
   m_ObjectHideFlags: 0
@@ -32255,7 +32406,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.18, b: 0.01, a: 1}
   m_emissionIntensity: 6
@@ -32271,7 +32422,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 10
   m_radius: 0.09
@@ -32378,7 +32529,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.62, b: 0.02, a: 1}
   m_emissionIntensity: 7
@@ -32394,7 +32545,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 16
   m_radius: 0.07
@@ -32524,7 +32675,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -32539,7 +32690,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -32555,7 +32706,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -32795,7 +32946,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 987bf7001e23a8b4b8b404bbc3aa585b, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::UIData
 --- !u!1 &540561988
 GameObject:
@@ -32848,7 +32999,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -37770,7 +37921,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -37838,11 +37989,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.9, b: 0.01, a: 1}
   m_emissionIntensity: 5
   m_opacity: 0.18
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &596806965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37853,12 +38006,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 7.5
   m_endRadius: 2
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &596806966
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -37958,7 +38111,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 0
@@ -38004,7 +38157,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &633476108
 GameObject:
@@ -38205,7 +38358,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f1e538dcd1e4a53a965c189586cbb41, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EventSceneVisualDirector
   m_cameraDirector: {fileID: 2075913570}
   m_cameraSequence: {fileID: 11400000, guid: b5d8793aac4fda74d9a54ef35829c44b, type: 2}
@@ -38213,7 +38366,25 @@ MonoBehaviour:
   m_canvasController: {fileID: 1597754075}
   m_specialNodePlayer: {fileID: 641839877}
   m_preferenceSystem: {fileID: 0}
-  m_inGameManager: {fileID: 0}
+  m_audienceSpawner: {fileID: 0}
+  m_gameManager: {fileID: 0}
+  m_poseFlowDataManager: {fileID: 0}
+  m_uiController: {fileID: 0}
+  m_poseJudgeController: {fileID: 0}
+  m_venueVoltageSystem: {fileID: 0}
+  m_effectSystem: {fileID: 0}
+  m_choiceAudioSource: {fileID: 0}
+  m_choiceSound: {fileID: 0}
+  m_clearSound: {fileID: 0}
+  m_clearEffectName:
+  m_clearReactionIntervalSeconds: 0.75
+  m_clearFrameAnimationSeconds: 1
+  m_clearFrameScaleMultiplier: 1.65
+  m_clearFrameColor: {r: 1, g: 0.82, b: 0.05, a: 1}
+  b_m_enableDebugClearKey: 1
+  m_debugClearKey: 285
+  b_m_enablePoseDiagnostics: 0
+  m_poseDiagnosticIntervalSeconds: 0.5
   m_canvasDelaySeconds: 0.2
   b_m_playOnStart: 0
   m_onEventVisualStarted:
@@ -38235,7 +38406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &641839877
 MonoBehaviour:
@@ -38247,13 +38418,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0132b12791f4c48b2c552680d14497d, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EventSpecialNodePlayer
   m_sequence: {fileID: 11400000, guid: 2ef020d581829724fab8bfc34038fc4c, type: 2}
   m_eventIndex: 0
   m_uiController: {fileID: 1813448175}
-  m_inGameManager: {fileID: 813159517}
+  m_gameManager: {fileID: 0}
   m_lastNodeDuration: 2
+--- !u!1 &649494463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 1343253983}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &649494468 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 1343253983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &650097833
 GameObject:
   m_ObjectHideFlags: 0
@@ -43143,7 +43324,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -43158,7 +43339,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.92, b: 0.01, a: 1}
   m_emissionIntensity: 8
@@ -43174,7 +43355,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.035
@@ -43294,7 +43475,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -43309,7 +43490,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.92, b: 0.01, a: 1}
   m_emissionIntensity: 8
@@ -43325,7 +43506,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.035
@@ -43417,7 +43598,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.96, b: 0.88, a: 1}
   m_emissionIntensity: 10
@@ -43433,7 +43614,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 14
   m_radius: 0.1
@@ -43540,7 +43721,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 446969969}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &715281365
 GameObject:
@@ -43711,6 +43892,201 @@ PlayableDirector:
     value: {fileID: 1609309537}
   m_ExposedReferences:
     m_References: []
+--- !u!1001 &718474977
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 863614127}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Name
+      value: SpotlightCone_00_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -29.807188
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.66619
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.89141
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6934248
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.18904929
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.670803
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.18288188
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 30.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 88.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Mesh
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_length
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_endRadius
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_opacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_surfaceLight
+      value:
+      objectReference: {fileID: 718474986}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_emissionIntensity
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 718474986}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 718474985}
+  m_SourcePrefab: {fileID: 100100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+--- !u!1 &718474978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 718474977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &718474980 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 718474977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &718474985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718474978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
+--- !u!108 &718474986
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718474978}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 0
+  m_Color: {r: 1, g: 0.72, b: 0.3, a: 1}
+  m_Intensity: 3025
+  m_Range: 68.75
+  m_SpotAngle: 10.75806
+  m_InnerSpotAngle: 5.9169335
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 1
+    m_Resolution: -1
+    m_CustomResolution: 256
+    m_Strength: 0.65
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!1 &740636230
 GameObject:
   m_ObjectHideFlags: 0
@@ -48804,7 +49180,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.01, b: 0.01, a: 1}
   m_emissionIntensity: 5
@@ -48820,7 +49196,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 8
   m_radius: 0.08
@@ -48944,7 +49320,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.08, g: 0.12, b: 0.18, a: 0.96}
@@ -49002,11 +49378,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 2.5
   m_opacity: 0.16
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &779043079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49017,12 +49395,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 6
   m_endRadius: 3.2
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &779043080
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49133,7 +49511,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -49148,11 +49526,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &784510397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49163,12 +49543,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 50
   m_endRadius: 10
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &784510398
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49574,11 +49954,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0022a13b90c2bb74d955c2b528c1a744, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::InGameManager
   m_gameManager: {fileID: 1843740549}
   m_poseJudgeManager: {fileID: 1499480926}
   m_uIManager: {fileID: 1270453669}
+  m_poseFlowDataManager: {fileID: 0}
   m_endtimer: 2
 --- !u!4 &813159518
 Transform:
@@ -49593,7 +49974,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &818879992
 GameObject:
@@ -49625,11 +50006,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.18, g: 0.01, b: 1, a: 1}
   m_emissionIntensity: 5.5
   m_opacity: 0.19
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &818879994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49640,12 +50023,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 9
   m_endRadius: 1.4
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &818879995
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49771,7 +50154,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -49786,7 +50169,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -49802,7 +50185,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -54752,7 +55135,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -54767,7 +55150,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -64734,7 +65117,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 0.75, b: 1, a: 1}
   m_emissionIntensity: 4
@@ -64750,7 +65133,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 9
   m_radius: 0.12
@@ -69672,6 +70055,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 458608571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &863614126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 863614127}
+  m_Layer: 0
+  m_Name: SpotLight_00
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &863614127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863614126}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 293115838}
+  - {fileID: 718474980}
+  - {fileID: 2040362424}
+  m_Father: {fileID: 1356760023}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &874950517
 GameObject:
   m_ObjectHideFlags: 0
@@ -69725,7 +70142,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -69740,7 +70157,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -69756,7 +70173,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -69864,11 +70281,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.01, g: 1, b: 1, a: 1}
   m_emissionIntensity: 4
   m_opacity: 0.14
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &878058851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69879,12 +70298,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 6.5
   m_endRadius: 3
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &878058852
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -70109,11 +70528,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.38, g: 0.03, b: 1, a: 1}
   m_emissionIntensity: 3.5
   m_opacity: 0.15
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &880192414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70124,12 +70545,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 6
   m_endRadius: 3.8
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &880192415
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -70255,7 +70676,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -70270,7 +70691,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.82, g: 0.28, b: 1, a: 1}
   m_emissionIntensity: 7
@@ -70286,7 +70707,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.1
@@ -70401,7 +70822,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -70416,7 +70837,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.82, g: 0.28, b: 1, a: 1}
   m_emissionIntensity: 7
@@ -70432,7 +70853,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.1
@@ -70524,11 +70945,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.36, b: 0.2, a: 1}
   m_emissionIntensity: 2.8
   m_opacity: 0.14
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &902380390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70539,12 +70962,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 4
   m_endRadius: 2.8
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &902380391
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -70647,7 +71070,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.82, g: 0.28, b: 1, a: 1}
   m_emissionIntensity: 7
@@ -70663,7 +71086,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 13
   m_radius: 0.1
@@ -70769,7 +71192,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &931837712
 GameObject:
@@ -70948,11 +71371,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.01, g: 1, b: 0.2, a: 1}
   m_emissionIntensity: 4.2
   m_opacity: 0.16
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &941650439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70963,12 +71388,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 7
   m_endRadius: 2.4
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &941650440
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -71092,7 +71517,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -76109,7 +76534,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.7, g: 0.01, b: 1, a: 1}
   m_emissionIntensity: 6
@@ -76125,7 +76550,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 10
   m_radius: 0.09
@@ -76230,7 +76655,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
   m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
@@ -76261,7 +76686,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
@@ -76279,7 +76704,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &993361465 stripped
 GameObject:
@@ -76315,7 +76740,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -81231,7 +81656,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1128547765
 GameObject:
@@ -81286,7 +81711,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -81301,11 +81726,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1128547769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81316,12 +81743,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 30
   m_endRadius: 5
   m_segments: 64
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1128547770
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -81406,7 +81833,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 351782f649fa5c542bd2694b6250cad8, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::AudiencePreferenceSystem
   m_audienceSpawner: {fileID: 0}
   m_maximumReactionCount: 1200
@@ -81423,7 +81850,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1147868009
 GameObject:
@@ -81454,7 +81881,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1149239441
 GameObject:
@@ -81486,7 +81913,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.02, g: 0.08, b: 1, a: 1}
   m_emissionIntensity: 7.5
@@ -81502,7 +81929,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 12
   m_radius: 0.17
@@ -81612,7 +82039,7 @@ Transform:
   - {fileID: 1407588462}
   - {fileID: 458608571}
   - {fileID: 2068593982}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1158597543
 GameObject:
@@ -81667,7 +82094,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -81682,7 +82109,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 0.75, b: 1, a: 1}
   m_emissionIntensity: 4
@@ -81698,7 +82125,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.12
@@ -81790,7 +82217,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -81806,7 +82233,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 11
   m_radius: 0.14
@@ -86748,7 +87175,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -86765,7 +87192,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
@@ -86877,7 +87304,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -86892,11 +87319,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1261445470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86907,12 +87336,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 50
   m_endRadius: 10
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1261445471
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -86997,11 +87426,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7da1e176385cf64b9a6878ff1e5fc0c, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  m_InGameManager: {fileID: 813159517}
   m_uiController: {fileID: 1813448175}
-  m_poseFlowDataManager: {fileID: 1397185640}
 --- !u!4 &1270453670
 Transform:
   m_ObjectHideFlags: 0
@@ -87015,7 +87442,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1272133663 stripped
 GameObject:
@@ -87058,7 +87485,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -91975,7 +92402,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 695ea0b90a405254bbcc80aa0be5ede2, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::BodyController
   _Body:
   - {x: 0, y: 0, z: 0}
@@ -92042,7 +92469,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1304832083
 GameObject:
@@ -92097,7 +92524,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -92112,7 +92539,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 0.75, b: 1, a: 1}
   m_emissionIntensity: 4
@@ -92128,7 +92555,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 50
   m_radius: 0.12
@@ -92371,6 +92798,127 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4021965176182143442, guid: 8a76aabaafbb4d94bac199ea2e74fcc3, type: 3}
   m_PrefabInstance: {fileID: 1835766969}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1343253983
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1352203419}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Name
+      value: SpotlightCone_01_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.66619
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.89141
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6252019
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.33945683
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6176101
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.3353348
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 89.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Mesh
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_length
+      value: 24.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_endRadius
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_opacity
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.b
+      value: 0.8862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.g
+      value: 0.1686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_lightColor.r
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Range
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Intensity
+      value: 615.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_SpotAngle
+      value: 31.281248
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 17.204687
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
 --- !u!1 &1343503466
 GameObject:
   m_ObjectHideFlags: 0
@@ -92401,11 +92949,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.02, b: 0.32, a: 1}
   m_emissionIntensity: 4
   m_opacity: 0.17
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1343503468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92416,12 +92966,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 6.5
   m_endRadius: 2.8
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1343503469
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -92493,6 +93043,40 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1632748316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1352203418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1352203419}
+  m_Layer: 0
+  m_Name: SpotLight_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1352203419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352203418}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1973129256}
+  - {fileID: 649494468}
+  - {fileID: 1421681265}
+  m_Father: {fileID: 1356760023}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1354219830
 GameObject:
@@ -92665,6 +93249,39 @@ PlayableDirector:
     value: {fileID: 1609309537}
   m_ExposedReferences:
     m_References: []
+--- !u!1 &1356760022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1356760023}
+  m_Layer: 0
+  m_Name: SpotLightList
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1356760023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356760022}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.54706, y: 1.83381, z: -3.98141}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 863614127}
+  - {fileID: 1352203419}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1361414506
 GameObject:
   m_ObjectHideFlags: 0
@@ -92861,9 +93478,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48628ee06e53f647895a2727939d574, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PoseFlowDataManager
-  m_excelLoader: {fileID: 440262078}
+  m_sequence: {fileID: 11400000, guid: 2ef020d581829724fab8bfc34038fc4c, type: 2}
 --- !u!4 &1397185641
 Transform:
   m_ObjectHideFlags: 0
@@ -92877,7 +93494,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1404240761
 GameObject:
@@ -92931,7 +93548,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -92946,7 +93563,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -97847,7 +98464,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -102785,6 +103402,59 @@ Transform:
   - {fileID: 909103677}
   m_Father: {fileID: 1154082504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1421681264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1421681265}
+  - component: {fileID: 1421681266}
+  m_Layer: 0
+  m_Name: EffectDirector_SpotLight_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1421681265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421681264}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1352203419}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &1421681266
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421681264}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 106b8f86c398ddb4197ba53a17734102, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -3310131838860533379, guid: 106b8f86c398ddb4197ba53a17734102, type: 2}
+    value: {fileID: 1973129251}
+  - key: {fileID: -8431665377022306043, guid: 106b8f86c398ddb4197ba53a17734102, type: 2}
+    value: {fileID: 649494463}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &1422715028
 GameObject:
   m_ObjectHideFlags: 0
@@ -102812,7 +103482,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf2e08f9819bb7c4bbad5d4cdcec5f8a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::AudienceAreaSpawner
   m_spawnAreaScale: 1
   m_audiencePrefab: {fileID: 706969822493179116, guid: d822c19a2098a724883a98accf5e5b9f, type: 3}
@@ -102834,6 +103504,8 @@ MonoBehaviour:
   m_positionError: {x: 1, y: 1}
   m_scaleRange: {x: 0.9, y: 1.1}
   m_yawError: 8
+  m_facingTarget: {fileID: 1337665606}
+  m_modelYawOffset: 0
   b_m_spawnOnStart: 1
   b_m_autoReaction: 1
   m_reactionIntervalRange: {x: 1, y: 2.5}
@@ -102849,6 +103521,24 @@ MonoBehaviour:
   m_minimumSuccessStrength: 0.7
   m_maximumSuccessStrength: 10
   m_failureReactionStrength: 0.8
+  m_cheerVoiceClips:
+  - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  m_disappointedVoiceClips: []
+  m_minimumVoiceVolume: 0.2
+  m_maximumVoiceVolume: 0.85
+  m_minimumSimultaneousVoices: 1
+  m_maximumSimultaneousVoices: 5
+  m_preferenceVolumeBoost: 0.2
+  m_voicePitchRange: {x: 0.92, y: 1.08}
+  m_voiceVolumeVariation: 0.08
+  m_voiceStereoPanRange: 0.3
+  m_voiceStartOffsetSeconds: 0.04
+  m_voiceLowPassRange: {x: 16000, y: 22000}
+  m_voiceReverbMixRange: {x: 0, y: 0.18}
 --- !u!4 &1422715030
 Transform:
   m_ObjectHideFlags: 0
@@ -102866,7 +103556,7 @@ Transform:
   - {fileID: 957249335}
   - {fileID: 931837716}
   - {fileID: 1704192015}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1432549614
 GameObject:
@@ -102915,7 +103605,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -103143,7 +103833,9 @@ PlayableDirector:
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
-  m_SceneBindings: []
+  m_SceneBindings:
+  - key: {fileID: -8787529953967302591, guid: 662f9f1182c85c24d8bb99ca0b6150db, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &1499088895
@@ -103159,7 +103851,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1499480925
 GameObject:
@@ -103188,13 +103880,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d42c050c0e71dc4490f46dd9fae5783, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PoseJudgeManager
-  m_InGameManager: {fileID: 813159517}
   m_poseJudgeController: {fileID: 356124504}
   m_scoreController: {fileID: 308004256}
   m_uiController: {fileID: 1813448175}
-  m_poseFlowDataManager: {fileID: 1397185640}
   m_venueVoltageSystem: {fileID: 1704557581}
   m_eventSceneVisualDirector: {fileID: 641839875}
   m_effectSystem: {fileID: 130277793}
@@ -103212,7 +103902,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1499594651
 GameObject:
@@ -103244,7 +103934,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.01, b: 0.8, a: 1}
   m_emissionIntensity: 7.5
@@ -103260,7 +103950,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 16
   m_radius: 0.07
@@ -103364,7 +104054,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 766580be3b3f4a14cad5b2a8f8f19c15, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LightController
   m_light: {fileID: 179204199}
   m_stopTime: 1
@@ -103399,7 +104089,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 179204201}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1507057216
 GameObject:
@@ -103431,7 +104121,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.4, g: 1, b: 0.01, a: 1}
   m_emissionIntensity: 6
@@ -103447,7 +104137,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 9
   m_radius: 0.07
@@ -103554,7 +104244,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.01, b: 0.01, a: 1}
   m_emissionIntensity: 7
@@ -103570,7 +104260,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 12
   m_radius: 0.16
@@ -103714,7 +104404,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.92, b: 0.01, a: 1}
   m_emissionIntensity: 8
@@ -103730,7 +104420,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 14
   m_radius: 0.035
@@ -103837,7 +104527,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5e469cf80384b5681216912137d5f23, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::EventAudienceCanvasController
   m_canvas: {fileID: 1597754076}
   m_eventCamera: {fileID: 2040577845}
@@ -103897,7 +104587,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -103914,7 +104604,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
@@ -103977,11 +104667,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.95, b: 0.85, a: 1}
   m_emissionIntensity: 5.5
   m_opacity: 0.19
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1601998757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103992,12 +104684,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 8
   m_endRadius: 2.5
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1601998758
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104100,11 +104792,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.01, g: 0.42, b: 1, a: 1}
   m_emissionIntensity: 4.8
   m_opacity: 0.18
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1603483818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104115,12 +104809,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 7
   m_endRadius: 2.6
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1603483819
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104394,11 +105088,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.85, g: 0.92, b: 1, a: 1}
   m_emissionIntensity: 2.2
   m_opacity: 0.11
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1604446754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104409,12 +105105,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 5
   m_endRadius: 4.5
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1604446755
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104654,11 +105350,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.32, b: 0.05, a: 1}
   m_emissionIntensity: 1.8
   m_opacity: 0.12
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1609155072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104669,12 +105367,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 5
   m_endRadius: 2.5
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1609155073
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -109671,7 +110369,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.01, b: 0.28, a: 1}
   m_emissionIntensity: 7
@@ -109687,7 +110385,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 9
   m_radius: 0.15
@@ -114707,7 +115405,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -114882,11 +115580,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.03, g: 0.12, b: 1, a: 1}
   m_emissionIntensity: 4.2
   m_opacity: 0.17
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1679345927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114897,12 +115597,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 8
   m_endRadius: 2.3
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1679345928
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -115197,7 +115897,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -115212,7 +115912,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -115228,7 +115928,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -115601,21 +116301,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15baa2a1e1441ee449282d288191b250, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::VenueVoltageSystem
   m_comboWindowSeconds: 8
-  m_decayDelaySeconds: 5
-  m_decayPerSecond: 1.25
+  m_initialVoltage: 50
+  m_baseVoltageGain: 7
+  m_comboVoltageGain: 1.8
+  m_scoreGainUnit: 5000
+  m_maximumScoreBonus: 5
   m_failureVoltageLoss: 12
-  m_visualTransitionSpeed: 35
-  m_successSound: {fileID: 0}
+  m_successSound: {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
+  m_minimumSuccessSoundVolume: 0.2
+  m_maximumSuccessSoundVolume: 0.8
+  m_minimumSuccessSoundPitch: 0.9
+  m_maximumSuccessSoundPitch: 1.6
+  m_minimumSuccessEffectCount: 1
+  m_maximumSuccessEffectCount: 30
+  m_minimumLightIntensityMultiplier: 0.7
+  m_maximumLightIntensityMultiplier: 2
   m_blueColor: {r: 0.1, g: 0.35, b: 1, a: 0.025}
   m_greenColor: {r: 0.1, g: 1, b: 0.35, a: 0.05}
   m_yellowColor: {r: 1, g: 0.9, b: 0.1, a: 0.08}
   m_orangeColor: {r: 1, g: 0.42, b: 0.05, a: 0.11}
   m_redColor: {r: 1, g: 0.08, b: 0.04, a: 0.14}
   m_voltage: 50
-  m_presentedVoltage: 0
+  m_presentedVoltage: 50
 --- !u!114 &1704557582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115626,7 +116336,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95e7e373eed74b3439b29872f3ebfc55, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::VoltageAutoJudgeTester
   b_m_enableAutoJudge: 0
   m_successRatePercent: 70
@@ -115650,7 +116360,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1706050919
 GameObject:
@@ -115701,7 +116411,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
@@ -115741,10 +116451,10 @@ MonoBehaviour:
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName:
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument:
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1706050922
@@ -115757,7 +116467,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.08, g: 0.12, b: 0.2, a: 0.92}
@@ -120685,7 +121395,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: beb696a707d0f25439e5634d6b03c31a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameplayPlaceholder
   m_previewScore: 1250
   m_gameManager: {fileID: 1843740549}
@@ -120699,7 +121409,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
@@ -120739,10 +121449,10 @@ MonoBehaviour:
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName:
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1726886839}
@@ -120751,10 +121461,10 @@ MonoBehaviour:
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName:
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument:
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1726886841
@@ -120767,7 +121477,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.1, g: 0.78, b: 0.72, a: 1}
@@ -120825,11 +121535,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.45, g: 1, b: 0.01, a: 1}
   m_emissionIntensity: 3.7
   m_opacity: 0.15
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1753245153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120840,12 +121552,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 6
   m_endRadius: 2.7
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1753245154
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -121122,7 +121834,7 @@ Transform:
   - {fileID: 809032421}
   - {fileID: 795651988}
   - {fileID: 806362742}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000105}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1770589967
 GameObject:
@@ -126332,7 +127044,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af2b1311a94b8024897787b8d15c76c7, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::UIController
   m_uiData: {fileID: 534566612}
   m_excelLoader: {fileID: 440262078}
@@ -126351,7 +127063,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1815412155
 GameObject:
@@ -126383,11 +127095,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.42, g: 0.72, b: 1, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.15
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1815412157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126398,12 +127112,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 12
   m_endRadius: 2.2
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1815412158
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -126746,7 +127460,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb37ca2681e8595489afde322013f760, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::HumanoidSkeleton
 --- !u!1 &1835766971 stripped
 GameObject:
@@ -126763,7 +127477,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 828f55ad2a3faa946afc1beb31f011cf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PoseRotationStabilizer
   m_skeleton: {fileID: 1835766970}
   m_stabilizeSpine: 1
@@ -126808,7 +127522,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16adf73f476c5bb48a3bb076520dce08, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowResultBridge
 --- !u!114 &1843740547
 MonoBehaviour:
@@ -126820,7 +127534,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5606eef3e93e68e46bc7e182736db903, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::CrossProjectScoreRanking.ScoreRankingInputSystem
   m_sharedDirectoryOverride: ../RankingData
 --- !u!114 &1843740548
@@ -126833,10 +127547,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bc0d7a08c8df304584f6b36b1c24ee5, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::CrossProjectScoreRanking.ScoreCounter
   m_sharedDirectoryOverride: ../RankingData
-  m_defaultPlayerName: 
+  m_defaultPlayerName:
   m_bResetAfterSubmit: 1
 --- !u!114 &1843740549
 MonoBehaviour:
@@ -126848,14 +127562,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ec34722f447c254eb6cd7cab38526f2, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowTemplate.GameManager
   m_gameManager: {fileID: 813159517}
   m_scoreManager: {fileID: 0}
   m_timeManager: {fileID: 0}
+  m_voltageBgmSystem: {fileID: 0}
   m_sceneManager: {fileID: 0}
   m_scoreRankingInputSystem: {fileID: 0}
-  m_playerName: 
+  m_playerName:
   m_bSubmitRankingOnFinish: 1
 --- !u!114 &1843740550
 MonoBehaviour:
@@ -126867,7 +127582,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15802284b62a29c4ab399c93755600f1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowTemplate.SceneManager
   m_titleSceneName: Title
   m_gameSceneName: Gameplay
@@ -126884,7 +127599,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed01e213ff893ad4c8a10a3c7e073c67, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowTemplate.TimeManager
   m_timeText: {fileID: 0}
   m_bUseUnscaledDeltaTime: 0
@@ -126898,7 +127613,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99c916562e5f5be40ac4fe35b2e09a95, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowTemplate.ScoreManager
   m_scoreText: {fileID: 0}
   m_scoreFormat: '{0}'
@@ -126915,7 +127630,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1850032641 stripped
 Transform:
@@ -127111,51 +127826,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[0].m_currentFrameWating
-      value: 
+      value:
       objectReference: {fileID: 670760572}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[1].m_currentFrameWating
-      value: 
+      value:
       objectReference: {fileID: 993361465}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[2].m_currentFrameWating
-      value: 
+      value:
       objectReference: {fileID: 347839485}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[0].m_currentFrameFailure
-      value: 
+      value:
       objectReference: {fileID: 1900901693}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[0].m_currentFrameSuccess
-      value: 
+      value:
       objectReference: {fileID: 1493735684}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[1].m_currentFrameFailure
-      value: 
+      value:
       objectReference: {fileID: 1272133663}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[1].m_currentFrameSuccess
-      value: 
+      value:
       objectReference: {fileID: 1445869751}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[2].m_currentFrameFailure
-      value: 
+      value:
       objectReference: {fileID: 1323011132}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[2].m_currentFrameSuccess
-      value: 
+      value:
       objectReference: {fileID: 2113812135}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[0].m_currentFrameApproaching
-      value: 
+      value:
       objectReference: {fileID: 2097823421}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[1].m_currentFrameApproaching
-      value: 
+      value:
       objectReference: {fileID: 1963325417}
     - target: {fileID: 5810334572856535536, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: ui.Array.data[2].m_currentFrameApproaching
-      value: 
+      value:
       objectReference: {fileID: 1771564752}
     - target: {fileID: 6594088878991419371, guid: 3e9e85b7e7e93f047af2193603608202, type: 3}
       propertyPath: m_LocalPosition.x
@@ -127255,7 +127970,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -127270,7 +127985,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -127286,7 +128001,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -132277,11 +132992,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.9, g: 0.01, b: 1, a: 1}
   m_emissionIntensity: 4.8
   m_opacity: 0.16
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &1919325124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132292,12 +133009,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 7
   m_endRadius: 2.4
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &1919325125
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -132753,7 +133470,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -132768,7 +133485,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 0.38, a: 1}
   m_emissionIntensity: 6.5
@@ -132784,7 +133501,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 70
   m_radius: 0.14
@@ -132861,6 +133578,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1438253464}
   m_LocalEulerAnglesHint: {x: 152.6, y: 0, z: 0}
+--- !u!1 &1973129251 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 75773006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1973129256 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
+  m_PrefabInstance: {fileID: 75773006}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2026932328
 GameObject:
   m_ObjectHideFlags: 0
@@ -132914,7 +133641,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -132929,11 +133656,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &2026932332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132944,12 +133673,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 30
   m_endRadius: 5
   m_segments: 64
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &2026932333
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -133036,7 +133765,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -137895,7 +138624,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 1, g: 0.32, b: 0.18, a: 1}
   m_emissionIntensity: 4
@@ -137911,7 +138640,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 7
   m_radius: 0.13
@@ -137988,6 +138717,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1407588462}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2040362422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2040362424}
+  - component: {fileID: 2040362423}
+  m_Layer: 0
+  m_Name: EffectDirector_SpotLight_00
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &2040362423
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040362422}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 9eb8e8401579d1b4b9c5d3e2c9b8ddce, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -3310131838860533379, guid: 9eb8e8401579d1b4b9c5d3e2c9b8ddce, type: 2}
+    value: {fileID: 293115837}
+  - key: {fileID: -8431665377022306043, guid: 9eb8e8401579d1b4b9c5d3e2c9b8ddce, type: 2}
+    value: {fileID: 718474978}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &2040362424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040362422}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 863614127}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2040577841
 GameObject:
   m_ObjectHideFlags: 0
@@ -138018,7 +138800,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
   ShowDebugText: 0
   ShowCameraFrustum: 1
@@ -138050,7 +138832,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
@@ -138156,7 +138938,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2051786221
 PrefabInstance:
@@ -138344,7 +139126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3584682861348988439, guid: 31db4facf86a4a1448a0513a1b5c4e3b, type: 3}
       propertyPath: m_Camera
-      value: 
+      value:
       objectReference: {fileID: 0}
     - target: {fileID: 3584682861348988439, guid: 31db4facf86a4a1448a0513a1b5c4e3b, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
@@ -138733,7 +139515,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -143716,11 +144498,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 0.25, g: 1, b: 0.68, a: 1}
   m_emissionIntensity: 2.4
   m_opacity: 0.1
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!114 &2070854817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143731,12 +144515,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 5.5
   m_endRadius: 3.6
   m_segments: 32
-  b_m_capEnd: 1
+  b_m_capEnd: 0
 --- !u!23 &2070854818
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -143821,7 +144605,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f96dfc55dd66be4190238e054011ca1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PoseCameraDirector
   m_gameplayCamera: {fileID: 621584383}
   m_poseCamera: {fileID: 386594123}
@@ -143855,7 +144639,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130000103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2082708529
 GameObject:
@@ -143887,7 +144671,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.72, g: 0.88, b: 1, a: 1}
   m_emissionIntensity: 9
@@ -143903,7 +144687,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9275a19eed543b794d3d9823bb3e3ef, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamMesh
   m_length: 18
   m_radius: 0.035
@@ -144187,7 +144971,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55b520a5342c4fcb82d717c22726c662, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RandomParticleColor
   m_colors:
   - {r: 1, g: 0.05, b: 0.08, a: 1}
@@ -149074,45 +149858,207 @@ Transform:
   m_Children: []
   m_Father: {fileID: 458608571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2130000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130000101}
+  m_Layer: 0
+  m_Name: _Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &2130000002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130000102}
+  m_Layer: 0
+  m_Name: _Effects_Audience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &2130000003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130000103}
+  m_Layer: 0
+  m_Name: _Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &2130000004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130000104}
+  m_Layer: 0
+  m_Name: _UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &2130000005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130000105}
+  m_Layer: 0
+  m_Name: _Stage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2130000101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 282473875}
+  - {fileID: 288715770}
+  - {fileID: 308004257}
+  - {fileID: 356124505}
+  - {fileID: 440262079}
+  - {fileID: 813159518}
+  - {fileID: 1270453670}
+  - {fileID: 1304474926}
+  - {fileID: 1397185641}
+  - {fileID: 1499480927}
+  - {fileID: 1843740553}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2130000102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130000002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 130277794}
+  - {fileID: 318798708}
+  - {fileID: 641839876}
+  - {fileID: 711194632}
+  - {fileID: 1137925157}
+  - {fileID: 1154082504}
+  - {fileID: 1422715030}
+  - {fileID: 1499088895}
+  - {fileID: 1501917933}
+  - {fileID: 1704557583}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2130000103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130000003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 386594124}
+  - {fileID: 621584384}
+  - {fileID: 2040577846}
+  - {fileID: 2075913571}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2130000104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130000004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 928797993}
+  - {fileID: 971756039}
+  - {fileID: 1066613136}
+  - {fileID: 1147868010}
+  - {fileID: 1813448176}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2130000105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130000005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1769345992}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 971756039}
   - {fileID: 1243474679}
-  - {fileID: 1843740553}
-  - {fileID: 813159518}
   - {fileID: 1896464456}
-  - {fileID: 1813448176}
-  - {fileID: 440262079}
   - {fileID: 2051786221}
   - {fileID: 449639885}
   - {fileID: 1835766969}
-  - {fileID: 282473875}
-  - {fileID: 1304474926}
-  - {fileID: 308004257}
-  - {fileID: 356124505}
-  - {fileID: 2075913571}
-  - {fileID: 621584384}
-  - {fileID: 386594124}
-  - {fileID: 2040577846}
-  - {fileID: 288715770}
-  - {fileID: 1137925157}
   - {fileID: 1597754079}
-  - {fileID: 641839876}
-  - {fileID: 711194632}
-  - {fileID: 1501917933}
-  - {fileID: 130277794}
-  - {fileID: 1422715030}
-  - {fileID: 1154082504}
-  - {fileID: 1704557583}
-  - {fileID: 318798708}
-  - {fileID: 1499088895}
-  - {fileID: 1769345992}
-  - {fileID: 1147868010}
-  - {fileID: 928797993}
-  - {fileID: 1066613136}
   - {fileID: 2120181743}
-  - {fileID: 1270453670}
-  - {fileID: 1499480927}
-  - {fileID: 1397185641}
+  - {fileID: 2130000101}
+  - {fileID: 2130000102}
+  - {fileID: 2130000103}
+  - {fileID: 2130000104}
+  - {fileID: 2130000105}
+  - {fileID: 489626251}
+  - {fileID: 1356760023}

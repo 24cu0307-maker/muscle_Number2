@@ -14,9 +14,7 @@
 
 using GameFlowTemplate;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public sealed class InGameManager : MonoBehaviour
 {
@@ -30,13 +28,13 @@ public sealed class InGameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private UIManager m_uIManager;
 
+    [Header("ポーズデータ")]
+    [SerializeField] private PoseFlowDataManager m_poseFlowDataManager;
+
 
     private InGameState m_inGameState = InGameState.Start;
     private float GameTimeSeconds;                  //現在のゲーム時間
     public float GetCurrentTIme() { return GameTimeSeconds; }
-
-    public Action<InGameState> m_UIManagerAction;
-    public Action<InGameState> m_PoseJudgeManagerAction;
 
     [Header("終了の時間")]
     [SerializeField] private float m_endtimer;
@@ -69,54 +67,152 @@ public sealed class InGameManager : MonoBehaviour
     */
 
 
-    //オブザーバー
-    private void OnEnable()
+    private void Awake()
     {
-        m_poseJudgeManager.setState += SetState;
-        m_uIManager.setState += SetState;
-
-
+        if (m_poseJudgeManager == null)
+        {
+            m_poseJudgeManager = FindFirstObjectByType<PoseJudgeManager>();
+        }
+        if (m_uIManager == null)
+        {
+            m_uIManager = FindFirstObjectByType<UIManager>();
+        }
+        if (m_poseFlowDataManager == null)
+        {
+            m_poseFlowDataManager =
+                FindFirstObjectByType<PoseFlowDataManager>();
+        }
     }
 
-    //オブザーバー
+    private void OnEnable()
+    {
+        if (m_poseJudgeManager != null)
+        {
+            m_poseJudgeManager.setState += SetState;
+        }
+        if (m_uIManager != null)
+        {
+            m_uIManager.setState += SetState;
+        }
+    }
+
     private void OnDisable()
     {
-        m_poseJudgeManager.setState -= SetState;
-        m_uIManager.setState += SetState;
-
+        if (m_poseJudgeManager != null)
+        {
+            m_poseJudgeManager.setState -= SetState;
+        }
+        if (m_uIManager != null)
+        {
+            m_uIManager.setState -= SetState;
+        }
     }
 
     public void Start()
     {
-        m_gameManager.StartGame();
+        m_gameManager?.StartGame();
     }
 
     private void Update()
     {
-        //ゲームを終了する
-        if (m_endtimer <= GameTimeSeconds) { m_gameManager.FinishGame(); }
-
-        //現在のゲーム時間の更新
         UpdateTime();
-        m_uIManager.UIManagerUpdate();
-        m_poseJudgeManager.PoseJudgeManagerUpdate();
 
-        Debug.Log("m_inGameState" + m_inGameState);
+        VoltageBgmSystem bgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        float bgmDuration = 0.0f;
+        if (bgmSystem != null)
+        {
+            bgmDuration = bgmSystem.DurationSeconds;
+        }
+        float manualDuration = 0.0f;
+        if (m_poseFlowDataManager != null)
+        {
+            manualDuration = m_poseFlowDataManager.TimelineDuration;
+        }
+        float finishTime = m_endtimer;
+        if (manualDuration > 0.0f)
+        {
+            finishTime = manualDuration;
+        }
+        if (bgmDuration > 0.0f)
+        {
+            finishTime = Mathf.Max(0.0f, bgmDuration - 0.1f);
+        }
+        if (finishTime > 0.0f && GameTimeSeconds >= finishTime)
+        {
+            m_gameManager?.FinishGame();
+            return;
+        }
+
+        if (m_gameManager != null
+            && m_gameManager.CurrentState == GameState.DirectionPause)return;
+        if (m_poseFlowDataManager == null
+            || !m_poseFlowDataManager.IsInitialized)return;
+
+        bool hadActivePose = m_poseFlowDataManager.HasActivePose;
+        CSVDataPoseFlow previousPose = hadActivePose
+            ? m_poseFlowDataManager.GetPose()
+            : default;
+        bool nodeChanged =
+            m_poseFlowDataManager.SynchronizeToBgmTime(GameTimeSeconds);
+        if (nodeChanged)
+        {
+            if (hadActivePose)
+            {
+                m_uIManager?.FinishCurrentPose(previousPose);
+            }
+
+            SetState(m_poseFlowDataManager.HasActivePose
+                ? InGameState.Start
+                : InGameState.None);
+        }
+
+        if (!m_poseFlowDataManager.HasActivePose)return;
+
+        CSVDataPoseFlow currentPose = m_poseFlowDataManager.GetPose();
+        if (m_inGameState == InGameState.End)
+        {
+            FinishCurrentPose(currentPose);
+            return;
+        }
+
+        m_uIManager?.UIManagerUpdate(
+            m_inGameState,
+            currentPose,
+            GameTimeSeconds);
+        m_poseJudgeManager?.PoseJudgeManagerUpdate(
+            m_inGameState,
+            currentPose);
     }
 
-    /// <summary>
-    /// 現在のゲーム時間の更新
-    /// </summary>
     private void UpdateTime()
     {
-        GameTimeSeconds = m_gameManager.GetTimeManager().GameTimeSeconds;
+        TimeManager timeManager = m_gameManager?.GetTimeManager();
+        VoltageBgmSystem bgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        if (bgmSystem != null && bgmSystem.IsPlaybackReady)
+        {
+            GameTimeSeconds = bgmSystem.CurrentTimeSeconds;
+            timeManager?.SynchronizeExternalClock(GameTimeSeconds);
+            return;
+        }
+
+        if (timeManager != null)
+        {
+            GameTimeSeconds = timeManager.GameTimeSeconds;
+        }
     }
 
     public void SetState(InGameState _state)
     {
         m_inGameState = _state;
-        m_UIManagerAction?.Invoke(_state);
-        m_PoseJudgeManagerAction?.Invoke(_state);
-
     }
+
+    /// <summary>
+    /// 各Managerへ終了処理を依頼し、次のポーズへ進行します。
+    /// </summary>
+    private void FinishCurrentPose(CSVDataPoseFlow _pose)
+    {
+        m_uIManager?.FinishCurrentPose(_pose);
+        SetState(InGameState.None);
+    }
+
 }

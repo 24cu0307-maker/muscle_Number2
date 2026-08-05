@@ -39,7 +39,7 @@ public sealed class SpotlightConeMesh : MonoBehaviour
     [FormerlySerializedAs("m_segments")]
     [SerializeField] private int m_segments = EDefaultSegments; //円周方向の分割数
     [FormerlySerializedAs("m_capEnd")]
-    [SerializeField] private bool b_m_capEnd = true;      //コーン終端を閉じるか
+    [SerializeField] private bool b_m_capEnd = false;     //終端面は白飛びの原因になるため、通常は生成しない
 
     private Mesh m_mesh;                                  //実行時に生成するメッシュ
     private float m_runtimeLength = -1.0f;                 //衝突対応ライト用の一時的な長さ
@@ -101,6 +101,10 @@ public sealed class SpotlightConeMesh : MonoBehaviour
     [ContextMenu("Rebuild Cone")]
     public void Rebuild()
     {
+        //光線の終端を面で閉じると、Cameraへ正対した際に大きな発光板として見えてしまいます。
+        //旧Prefabにtrueが保存されていても、光線用途では必ず開いたコーンとして再構築します。
+        b_m_capEnd = false;
+
         MeshFilter meshFilter = GetComponent<MeshFilter>();              //生成メッシュの設定先
         if (meshFilter == null)return;
 
@@ -111,10 +115,18 @@ public sealed class SpotlightConeMesh : MonoBehaviour
             EMinimumSegments,
             EMaximumSegments);                                          //実際に使用する分割数
         int sideVertexCount = (segmentCount + 1) * ESideVerticesPerSegment; //側面の頂点数
-        int capVertexCount = b_m_capEnd ? segmentCount + 2 : 0;          //終端面の頂点数
+        int capVertexCount = 0;
+        if (b_m_capEnd)
+        {
+            capVertexCount = segmentCount + 2;
+        }
         int sideIndexCount =
             segmentCount * ESideTrianglesPerSegment * ETriangleIndices;  //側面の頂点番号数
-        int capIndexCount = b_m_capEnd ? segmentCount * ETriangleIndices : 0; //終端面の頂点番号数
+        int capIndexCount = 0;
+        if (b_m_capEnd)
+        {
+            capIndexCount = segmentCount * ETriangleIndices;
+        }
 
         Vector3[] vertices = new Vector3[sideVertexCount + capVertexCount]; //頂点座標群
         Vector2[] uvs = new Vector2[vertices.Length];                       //UV座標群

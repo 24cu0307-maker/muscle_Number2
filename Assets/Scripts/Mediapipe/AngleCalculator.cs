@@ -93,8 +93,13 @@ public class AngleCalculator : MonoBehaviour
 
         float magnitude = BA_Magnitude * BC_Magnitude;
 
+        if (magnitude <= Mathf.Epsilon)
+        {
+            return float.NaN;
+        }
+
         //cosƒÆ
-        float cosTheta = dotProduct / magnitude;
+        float cosTheta = Mathf.Clamp(dotProduct / magnitude, -1.0f, 1.0f);
 
         //Œë·‘Îô
 
@@ -126,8 +131,13 @@ public class AngleCalculator : MonoBehaviour
 
         float magnitude = BA_Magnitude * BC_Magnitude;
 
+        if (magnitude <= Mathf.Epsilon)
+        {
+            return float.NaN;
+        }
+
         //cosƒÆ
-        float cosTheta = dotProduct / magnitude;
+        float cosTheta = Mathf.Clamp(dotProduct / magnitude, -1.0f, 1.0f);
 
         //Œë·‘Îô
 
