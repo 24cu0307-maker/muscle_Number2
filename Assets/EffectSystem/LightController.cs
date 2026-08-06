@@ -122,7 +122,11 @@ public class LightController : MonoBehaviour
         m_targetRotation = m_startRotation * Quaternion.Euler(m_rotationRange);
         m_startPosition = GetCurrentPosition();
         m_targetPosition = m_startPosition + m_positionRange;
-        m_startColor = m_light == null ? Color.white : m_light.color;
+        m_startColor = Color.white;
+        if (m_light != null)
+        {
+            m_startColor = m_light.color;
+        }
         m_stopTimer = ProgressMin;
         m_rotationTimer = ProgressMin;
         m_positionTimer = ProgressMin;
@@ -285,7 +289,8 @@ public class LightController : MonoBehaviour
     private Quaternion GetCurrentRotation()
     {
         //設定に応じてローカル角度またはワールド角度を取得する。
-        return m_bUseLocalRotation ? transform.localRotation : transform.rotation;
+        if (m_bUseLocalRotation)return transform.localRotation;
+        return transform.rotation;
     }
 
     private void SetCurrentRotation(Quaternion _rotation)
@@ -304,7 +309,8 @@ public class LightController : MonoBehaviour
     private Vector3 GetCurrentPosition()
     {
         //設定に応じてローカル位置またはワールド位置を取得する。
-        return m_bUseLocalPosition ? transform.localPosition : transform.position;
+        if (m_bUseLocalPosition)return transform.localPosition;
+        return transform.position;
     }
 
     private void SetCurrentPosition(Vector3 _position)

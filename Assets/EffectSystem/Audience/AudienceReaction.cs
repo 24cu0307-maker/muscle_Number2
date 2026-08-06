@@ -45,6 +45,11 @@ public sealed class AudienceReaction : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        CaptureCurrentTransform();
+    }
+
+    public void CaptureCurrentTransform()
+    {
         m_baseLocalPosition = transform.localPosition;
         m_baseLocalRotation = transform.localRotation;
         m_baseLocalScale = transform.localScale;

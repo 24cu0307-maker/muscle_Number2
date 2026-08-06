@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: NumbMusicNodeSequence
   m_EditorClassIdentifier: Assembly-CSharp::MusicNodeSequence
   m_bgmClip: {fileID: 8300000, guid: 39d057a2df50b164c9bda88f6a89bb06, type: 3}
+  m_manualTimelineDuration: 120
   m_eventsList:
   - m_nodeNumber: 1
-    m_time: 12.894
-    m_poseId: 0
+    m_time: 13.025695
+    m_poseId: 1
     m_eventName: Event
   - m_nodeNumber: 2
     m_time: 15.45
@@ -47,7 +48,7 @@ MonoBehaviour:
     m_poseId: 2
     m_eventName: Event
   - m_nodeNumber: 12
-    m_time: 42.733
+    m_time: 39.746033
     m_poseId: 0
     m_eventName: Event
   - m_nodeNumber: 15
@@ -85,59 +86,51 @@ MonoBehaviour:
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
-    m_triggerNodeNumber: 3
+    m_triggerNodeNumber: 1
     m_eventType: 0
     m_minimumBonusScore: 100
     m_maximumBonusScore: 1200
     m_eventNodesList:
     - m_nodeNumber: 1
-      m_time: 1.3451512
+      m_time: 14.284216
       m_poseId: 0
-      m_eventName: Event Node
+      m_eventName: Front Double Biceps
     - m_nodeNumber: 2
-      m_time: 2.7893639
-      m_poseId: 0
-      m_eventName: Event Node
+      m_time: 14.850551
+      m_poseId: 1
+      m_eventName: Most Muscular
     - m_nodeNumber: 3
-      m_time: 3.7486963
+      m_time: 15.416885
+      m_poseId: 2
+      m_eventName: Side Pose
+    - m_nodeNumber: 8
+      m_time: 20.825397
       m_poseId: 0
-      m_eventName: Event Node
-    - m_nodeNumber: 4
-      m_time: 5.333681
+      m_eventName: Decision
+    - m_nodeNumber: 9
+      m_time: 25.777777
       m_poseId: 0
-      m_eventName: Event Node
-    - m_nodeNumber: 5
-      m_time: 30
-      m_poseId: 0
-      m_eventName: Event Node
-    - m_nodeNumber: 6
-      m_time: 8.133472
-      m_poseId: 0
-      m_eventName: Event Node
-    - m_nodeNumber: 7
-      m_time: 9.191867
-      m_poseId: 0
-      m_eventName: Event Node
+      m_eventName: End
   - b_m_enabled: 1
     m_eventName: Special Node Branch
-    m_triggerNodeNumber: 13
+    m_triggerNodeNumber: 12
     m_eventType: 1
     m_minimumBonusScore: 0
     m_maximumBonusScore: 0
     m_eventNodesList:
     - m_nodeNumber: 101
-      m_time: 0
+      m_time: 42.733
       m_poseId: 0
       m_eventName: Special Pose A
     - m_nodeNumber: 102
-      m_time: 1.5
+      m_time: 44.233
       m_poseId: 1
       m_eventName: Special Pose B
     - m_nodeNumber: 103
-      m_time: 3
+      m_time: 45.733
       m_poseId: 2
       m_eventName: Special Pose C
     - m_nodeNumber: 104
-      m_time: 4.5
-      m_poseId: 3
+      m_time: 47.233
+      m_poseId: 0
       m_eventName: Special Finale

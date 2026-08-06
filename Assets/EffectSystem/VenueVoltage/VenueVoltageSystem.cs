@@ -9,7 +9,6 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// 会場ボルテージの色段階です。
@@ -28,37 +27,50 @@ public enum EVoltageLevel
 /// </summary>
 public sealed class VenueVoltageSystem : MonoBehaviour
 {
-    private const string EOverlayObjectName = "VoltageColorOverlay"; //色演出Object名
     private const float EMinimumVoltage = 0.0f; //ボルテージ最小値
     private const float EMaximumVoltage = 100.0f; //ボルテージ最大値
+    private const float EDefaultVoltage = 50.0f; //ゲーム開始時の基準値
     private const float ELevelRange = 20.0f; //五段階の各Voltage範囲
     private const float EBaseVoltageGain = 7.0f; //成功一回の基本上昇量
     private const float EComboVoltageGain = 1.8f; //連続成功一回ごとの追加量
     private const float EScoreGainUnit = 5000.0f; //スコアによる追加上昇の基準
     private const float EMaximumScoreBonus = 5.0f; //スコアによる最大追加量
     private const float EDefaultComboWindowSeconds = 8.0f; //連続成功として扱う時間
-    private const float EDefaultDecayDelaySeconds = 5.0f; //自然減少開始までの時間
-    private const float EDefaultDecayPerSecond = 1.25f; //一秒あたりの自然減少量
     private const float EDefaultFailureVoltageLoss = 12.0f; //失敗時の低下量
-    private const float EDefaultVisualTransitionSpeed = 35.0f; //表示値の追従速度
+    private const float EMaximumLightIntensityMultiplier = 3.0f; //重なったSpotlightが白飛びしないための倍率上限
     private const float EMinimumSoundPitch = 0.9f; //最低音程
     private const float EMaximumSoundPitch = 1.6f; //最高音程
     private const float ESuccessToneFrequency = 440.0f; //生成する成功音の基準周波数
     private const float ESuccessToneDuration = 0.16f; //成功音の長さ
-    private const float ESuccessToneVolume = 0.3f; //成功音の音量
     private const int EAudioSampleRate = 44100; //生成音のサンプルレート
     private const int EFirstComboCount = 1; //連続成功の初期回数
     private const int EFirstSampleIndex = 0; //音声サンプルの先頭番号
-    private const int EOverlaySortingOrder = 32000; //画面色演出の描画順
 
     [SerializeField] private float m_comboWindowSeconds = EDefaultComboWindowSeconds; //連続成功受付時間
-    [SerializeField] private float m_decayDelaySeconds = EDefaultDecayDelaySeconds; //自然減少開始時間
-    [SerializeField] private float m_decayPerSecond = EDefaultDecayPerSecond; //自然減少速度
+    [Header("Voltage Change")]
+    [SerializeField] private float m_initialVoltage = EDefaultVoltage;
+    [SerializeField] private float m_baseVoltageGain = EBaseVoltageGain;
+    [SerializeField] private float m_comboVoltageGain = EComboVoltageGain;
+    [SerializeField] private float m_scoreGainUnit = EScoreGainUnit;
+    [SerializeField] private float m_maximumScoreBonus = EMaximumScoreBonus;
     [SerializeField] private float m_failureVoltageLoss =
         EDefaultFailureVoltageLoss; //失敗時の低下量
-    [SerializeField] private float m_visualTransitionSpeed =
-        EDefaultVisualTransitionSpeed; //色変化の追従速度
+    [Header("Success Sound")]
     [SerializeField] private AudioClip m_successSound; //任意の差し替え成功音
+    [SerializeField, Range(0.0f, 1.0f)] private float m_minimumSuccessSoundVolume = 0.2f;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_maximumSuccessSoundVolume = 0.8f;
+    [SerializeField] private float m_minimumSuccessSoundPitch = EMinimumSoundPitch;
+    [SerializeField] private float m_maximumSuccessSoundPitch = EMaximumSoundPitch;
+
+    [Header("Success Effect Amount")]
+    [SerializeField, Min(0)] private int m_minimumSuccessEffectCount = 1;
+    [SerializeField, Min(0)] private int m_maximumSuccessEffectCount = 4;
+
+    [Header("Effect Light Intensity")]
+    [SerializeField, Range(0.0f, EMaximumLightIntensityMultiplier)]
+    private float m_minimumLightIntensityMultiplier = 0.7f;
+    [SerializeField, Range(0.0f, EMaximumLightIntensityMultiplier)]
+    private float m_maximumLightIntensityMultiplier = 2.0f;
 
     [Header("Voltage Colors")]
     [SerializeField] private Color m_blueColor =
@@ -73,10 +85,9 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         new Color(1.0f, 0.08f, 0.04f, 0.14f); //赤段階の色と濃さ
 
     [Header("Runtime State")]
-    [SerializeField] private float m_voltage; //現在のボルテージ
+    [SerializeField] private float m_voltage = EDefaultVoltage; //現在のボルテージ
     [SerializeField] private float m_presentedVoltage; //画面へ表示中のボルテージ
 
-    private RawImage m_colorOverlay; //画面全体の薄い色
     private AudioSource m_audioSource; //成功音再生元
     private int m_comboCount; //現在の連続成功回数
     private float m_lastSuccessTime; //最後に成功した時刻
@@ -134,12 +145,11 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        CreateOverlay();
         CreateAudioSource();
         ConnectEffectTargets();
         EnsureDebugPanel();
+        m_voltage = Mathf.Clamp(m_initialVoltage, EMinimumVoltage, EMaximumVoltage);
         m_presentedVoltage = m_voltage;
-        ApplyVoltagePresentation();
     }
 
     /// <summary>
@@ -148,47 +158,32 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     private void OnValidate()
     {
         m_comboWindowSeconds = Mathf.Max(0.0f, m_comboWindowSeconds);
-        m_decayDelaySeconds = Mathf.Max(0.0f, m_decayDelaySeconds);
-        m_decayPerSecond = Mathf.Max(0.0f, m_decayPerSecond);
+        m_initialVoltage = Mathf.Clamp(m_initialVoltage, EMinimumVoltage, EMaximumVoltage);
+        m_baseVoltageGain = Mathf.Max(0.0f, m_baseVoltageGain);
+        m_comboVoltageGain = Mathf.Max(0.0f, m_comboVoltageGain);
+        m_scoreGainUnit = Mathf.Max(1.0f, m_scoreGainUnit);
+        m_maximumScoreBonus = Mathf.Max(0.0f, m_maximumScoreBonus);
         m_failureVoltageLoss = Mathf.Max(0.0f, m_failureVoltageLoss);
-        m_visualTransitionSpeed = Mathf.Max(0.0f, m_visualTransitionSpeed);
+        m_minimumSuccessEffectCount = Mathf.Max(0, m_minimumSuccessEffectCount);
+        m_maximumSuccessEffectCount = Mathf.Max(m_minimumSuccessEffectCount, m_maximumSuccessEffectCount);
+        m_minimumLightIntensityMultiplier = Mathf.Clamp(
+            m_minimumLightIntensityMultiplier,
+            0.0f,
+            EMaximumLightIntensityMultiplier);
+        m_maximumLightIntensityMultiplier = Mathf.Clamp(
+            m_maximumLightIntensityMultiplier,
+            m_minimumLightIntensityMultiplier,
+            EMaximumLightIntensityMultiplier);
         m_voltage = Mathf.Clamp(
             m_voltage,
             EMinimumVoltage,
             EMaximumVoltage);
 
-        if (Application.isPlaying)
-        {
-            ApplyVoltagePresentation();
-        }
     }
 
     /// <summary>
-    /// 成功が途切れた後、会場ボルテージをゆっくり下げます。
-    /// </summary>
-    private void Update()
-    {
-        if (m_voltage > EMinimumVoltage
-            && Time.unscaledTime - m_lastSuccessTime >= m_decayDelaySeconds)
-        {
-            m_voltage = Mathf.Max(
-                EMinimumVoltage,
-                m_voltage - m_decayPerSecond * Time.unscaledDeltaTime);
-        }
-
-        float previousPresentedVoltage = m_presentedVoltage; //直前の表示値
-        m_presentedVoltage = Mathf.MoveTowards(
-            m_presentedVoltage,
-            m_voltage,
-            m_visualTransitionSpeed * Time.unscaledDeltaTime);
-        if (!Mathf.Approximately(previousPresentedVoltage, m_presentedVoltage))
-        {
-            ApplyVoltagePresentation();
-        }
-    }
-
-    /// <summary>
-    /// 成功を登録し、コンボに応じて上昇量を増やします。
+    /// 成功を登録し、基本値・連続成功数・獲得Scoreからボルテージ上昇量を決定します。
+    /// 更新後は成功音を再生し、観客側へ正規化済みボルテージを通知します。
     /// </summary>
     public void RegisterSuccess(int _scoregain)
     {
@@ -200,13 +195,13 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         m_lastSuccessTime = Time.unscaledTime;
 
         float scoreBonus = Mathf.Min(
-            EMaximumScoreBonus,
-            Mathf.Max(0, _scoregain) / EScoreGainUnit); //獲得スコアによる追加量
+            m_maximumScoreBonus,
+            Mathf.Max(0, _scoregain) / m_scoreGainUnit); //獲得スコアによる追加量
         float comboBonus =
             Mathf.Max(0, m_comboCount - EFirstComboCount)
-            * EComboVoltageGain; //連続成功による追加量
+            * m_comboVoltageGain; //連続成功による追加量
         m_voltage = Mathf.Clamp(
-            m_voltage + EBaseVoltageGain + comboBonus + scoreBonus,
+            m_voltage + m_baseVoltageGain + comboBonus + scoreBonus,
             EMinimumVoltage,
             EMaximumVoltage);
 
@@ -223,6 +218,7 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         m_voltage = Mathf.Max(
             EMinimumVoltage,
             m_voltage - m_failureVoltageLoss);
+        m_presentedVoltage = m_voltage;
         m_audienceFailure?.Invoke();
     }
 
@@ -258,21 +254,38 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     /// </summary>
     private void ResetVoltage()
     {
-        m_voltage = EMinimumVoltage;
-        m_presentedVoltage = EMinimumVoltage;
+        m_voltage = Mathf.Clamp(m_initialVoltage, EMinimumVoltage, EMaximumVoltage);
+        m_presentedVoltage = m_voltage;
         m_comboCount = 0;
         m_lastSuccessTime = Time.unscaledTime;
-        ApplyVoltagePresentation();
     }
 
     /// <summary>
-    /// 現在値に対応する画面色と透明度を適用します。
+    /// 現在のボルテージを、成功時に同時再生するEffect数へ変換します。
+    /// Inspectorで設定した最小・最大数の間を0～1の正規化値で補間します。
     /// </summary>
-    private void ApplyVoltagePresentation()
+    public int GetSuccessEffectCount()
     {
-        if (m_colorOverlay == null)return;
+        return Mathf.RoundToInt(Mathf.Lerp(
+            m_minimumSuccessEffectCount,
+            m_maximumSuccessEffectCount,
+            NormalizedVoltage));
+    }
 
-        m_colorOverlay.color = EvaluateVoltageColor(m_presentedVoltage);
+    /// <summary>
+    /// LightおよびSpotlightConeへ適用する明るさ倍率を返します。
+    /// 元のTimeline強度は変更せず、この倍率を後段で掛ける設計です。
+    /// </summary>
+    public float GetLightIntensityMultiplier()
+    {
+        float maximumMultiplier = Mathf.Clamp(
+            m_maximumLightIntensityMultiplier,
+            m_minimumLightIntensityMultiplier,
+            EMaximumLightIntensityMultiplier);
+        return Mathf.Lerp(
+            m_minimumLightIntensityMultiplier,
+            maximumMultiplier,
+            NormalizedVoltage);
     }
 
     /// <summary>
@@ -328,39 +341,15 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         float normalizedVoltage =
             Mathf.InverseLerp(EMinimumVoltage, EMaximumVoltage, m_voltage); //音程の進行率
         m_audioSource.pitch = Mathf.Lerp(
-            EMinimumSoundPitch,
-            EMaximumSoundPitch,
+            m_minimumSuccessSoundPitch,
+            m_maximumSuccessSoundPitch,
             normalizedVoltage);
-        m_audioSource.PlayOneShot(m_successSound, ESuccessToneVolume);
-    }
-
-    /// <summary>
-    /// ほかのUI操作を妨げない全画面色レイヤーを生成します。
-    /// </summary>
-    private void CreateOverlay()
-    {
-        GameObject overlayObject = new GameObject(
-            EOverlayObjectName,
-            typeof(RectTransform),
-            typeof(Canvas),
-            typeof(CanvasScaler),
-            typeof(RawImage)); //画面全体の色レイヤー
-        overlayObject.transform.SetParent(transform, false);
-
-        Canvas canvas = overlayObject.GetComponent<Canvas>(); //色演出Canvas
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = EOverlaySortingOrder;
-
-        m_colorOverlay = overlayObject.GetComponent<RawImage>();
-        m_colorOverlay.texture = Texture2D.whiteTexture;
-        m_colorOverlay.raycastTarget = false;
-
-        RectTransform overlayTransform =
-            overlayObject.GetComponent<RectTransform>(); //全画面領域
-        overlayTransform.anchorMin = Vector2.zero;
-        overlayTransform.anchorMax = Vector2.one;
-        overlayTransform.offsetMin = Vector2.zero;
-        overlayTransform.offsetMax = Vector2.zero;
+        m_audioSource.PlayOneShot(
+            m_successSound,
+            Mathf.Lerp(
+                m_minimumSuccessSoundVolume,
+                m_maximumSuccessSoundVolume,
+                normalizedVoltage));
     }
 
     /// <summary>
@@ -390,7 +379,8 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// EffectSystemが使用するAudioSourceとLightへVoltage連携を追加します。
+    /// EffectSystem配下のAudioSourceとLight、およびシーン内のSpotlightConeへVoltage連携を追加します。
+    /// 既に連携Componentが存在する対象は除外するため、複数回呼ばれても重複追加されません。
     /// </summary>
     private void ConnectEffectTargets()
     {
@@ -406,6 +396,15 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         for (int i = 0; i < lights.Length; ++i)
         {
             AddVoltageLight(lights[i]);
+        }
+
+        SpotlightConeController[] spotlightCones =
+            FindObjectsByType<SpotlightConeController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+        for (int i = 0; i < spotlightCones.Length; ++i)
+        {
+            AddVoltageSpotlightCone(spotlightCones[i]);
         }
     }
 
@@ -435,6 +434,22 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         if (_light.GetComponent<VoltageLightEffect>() != null)return;
 
         _light.gameObject.AddComponent<VoltageLightEffect>();
+    }
+
+    /// <summary>
+    /// SpotlightConeへボルテージ発光補正が未登録の場合だけComponentを追加します。
+    /// 非アクティブなTimeline用Objectも起動前に接続できるよう、呼び出し側でシーン全体を検索します。
+    /// </summary>
+    private static void AddVoltageSpotlightCone(
+        SpotlightConeController _spotlightcone)
+    {
+        if (_spotlightcone == null)return;
+        if (_spotlightcone.GetComponent<VoltageSpotlightConeEffect>() != null)
+        {
+            return;
+        }
+
+        _spotlightcone.gameObject.AddComponent<VoltageSpotlightConeEffect>();
     }
 
     /// <summary>

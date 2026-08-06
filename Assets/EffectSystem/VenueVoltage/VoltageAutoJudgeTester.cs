@@ -115,8 +115,13 @@ public sealed class VoltageAutoJudgeTester : MonoBehaviour
 
         if (b_m_logResults)
         {
+            string judgeResult = "Failure";
+            if (b_success)
+            {
+                judgeResult = "Success";
+            }
             Debug.Log(
-                $"Auto Judge: {(b_success ? "Success" : "Failure")}"
+                $"Auto Judge: {judgeResult}"
                 + $" / Success Rate {m_successRatePercent:F1}%"
                 + $" / Total {m_totalCount}",
                 this);

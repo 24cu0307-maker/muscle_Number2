@@ -32,6 +32,7 @@ namespace GameFlowTemplate
         public bool IsTimerRunning { get; private set; }     //ゲーム時間を計測中か
         public bool IsDirectionPaused { get; private set; }  //演出などでゲーム時間を止めているか
         public event Action<float> TimeChanged;              //ゲーム時間が変化した時に通知するイベント
+        private bool b_m_usesExternalClock;                  //BGM時刻を正としており、Update内で自己加算しない状態か
 
         private void Start()
         {
@@ -41,9 +42,13 @@ namespace GameFlowTemplate
         private void Update()
         {
             //ゲーム時間が動いていない、または演出停止中なら加算しない。
-            if (!IsTimerRunning || IsDirectionPaused) { return; }
+            if (!IsTimerRunning || IsDirectionPaused || b_m_usesExternalClock) { return; }
 
-            float deltaTime = m_bUseUnscaledDeltaTime ? Time.unscaledDeltaTime : Time.deltaTime; //今回加算する時間
+            float deltaTime = Time.deltaTime;
+            if (m_bUseUnscaledDeltaTime)
+            {
+                deltaTime = Time.unscaledDeltaTime;
+            }
             GameTimeSeconds += deltaTime;
             UpdateTimeText();
             TimeChanged?.Invoke(GameTimeSeconds);
@@ -64,6 +69,18 @@ namespace GameFlowTemplate
             //インゲーム時間の計測を開始する。
             IsTimerRunning = true;
             IsDirectionPaused = false;
+        }
+
+        /// <summary>
+        /// BGM等の外部時計をゲーム時間へ反映し、Node・Event・時間表示の基準を一致させます。
+        /// 一度外部同期を開始した後はUpdateによる加算を止め、二重に時間が進むことを防ぎます。
+        /// </summary>
+        public void SynchronizeExternalClock(float _seconds)
+        {
+            b_m_usesExternalClock = true;
+            GameTimeSeconds = Mathf.Max(InitialTimeSeconds, _seconds);
+            UpdateTimeText();
+            TimeChanged?.Invoke(GameTimeSeconds);
         }
 
         public void PauseForDirection()

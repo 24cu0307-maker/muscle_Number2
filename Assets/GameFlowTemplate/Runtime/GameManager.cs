@@ -34,6 +34,7 @@ namespace GameFlowTemplate
         [SerializeField] private ScoreManager m_scoreManager;                         //スコア管理担当
         [Header("時間管理担当")]
         [SerializeField] private TimeManager m_timeManager;                           //時間管理担当
+        [SerializeField] private VoltageBgmSystem m_voltageBgmSystem;                 //BGM時刻管理担当
         [Header("シーン管理担当")]
         [SerializeField] private SceneManager m_sceneManager;                         //シーン管理担当
         [Header("スコアランキング保存担当。未設定ならランキング保存しない")]
@@ -48,7 +49,11 @@ namespace GameFlowTemplate
         public event Action<GameState> StateChanged;                                  //状態が変わった時に通知するイベント
         public event Action<GameResultContainer> GameFinished;                        //ゲーム終了結果が作られた時に通知するイベント
 
-        public TimeManager GetTimeManager() { return m_timeManager; }                 //
+        /// <summary>ゲーム時間の参照・演出停止を担当するTimeManagerを返します。</summary>
+        public TimeManager GetTimeManager() { return m_timeManager; }
+
+        /// <summary>BGM再生位置をNode全体の基準時計として提供するSystemを返します。</summary>
+        public VoltageBgmSystem GetVoltageBgmSystem() { return m_voltageBgmSystem; }
 
         //[SerializeField] private ScenesLoad m_scenesLoad;
 
@@ -72,6 +77,11 @@ namespace GameFlowTemplate
             if (m_timeManager == null)
             {
                 m_timeManager = GetComponent<TimeManager>();
+            }
+
+            if (m_voltageBgmSystem == null)
+            {
+                m_voltageBgmSystem = FindFirstObjectByType<VoltageBgmSystem>();
             }
 
             if (m_sceneManager == null)
@@ -125,8 +135,13 @@ namespace GameFlowTemplate
         public GameResultContainer FinishGame()
         {
             //ゲーム終了時に時間を止め、スコアと時間を結果コンテナへまとめる。
-            float playTimeSeconds = m_timeManager == null ? EmptyPlayTimeSeconds : m_timeManager.StopGameTimer(); //最終プレイ時間
-            string playTimeText = m_timeManager == null ? string.Empty : m_timeManager.GetTimeText(); //表示用時間
+            float playTimeSeconds = EmptyPlayTimeSeconds;
+            string playTimeText = string.Empty;
+            if (m_timeManager != null)
+            {
+                playTimeSeconds = m_timeManager.StopGameTimer();
+                playTimeText = m_timeManager.GetTimeText();
+            }
 
             LastResult = m_scoreManager == null
                 ? new GameResultContainer()

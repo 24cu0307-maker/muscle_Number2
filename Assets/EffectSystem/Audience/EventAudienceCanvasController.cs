@@ -58,6 +58,13 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
 
     private readonly List<SDisplayedAudienceNodes> m_displayedNodesList =
         new List<SDisplayedAudienceNodes>(); //表示中Node群
+    private readonly List<Button> m_candidateButtons =
+        new List<Button>(); //Audience Choice候補Button
+    private readonly List<Vector3> m_candidateBaseScales =
+        new List<Vector3>();
+    private readonly List<GameObject> m_decisionCues =
+        new List<GameObject>();
+    private bool b_m_selectionEnabled;
 
     /// <summary>
     /// 一人分の観客参照とCanvas表示を保持します。
@@ -105,6 +112,20 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
 
             displayed.m_root.rotation = m_eventCamera.transform.rotation;
         }
+
+        float pulse = 1.0f + Mathf.Sin(Time.unscaledTime * 8.0f) * 0.08f;
+        for (int i = 0; i < m_candidateButtons.Count; ++i)
+        {
+            Button button = m_candidateButtons[i];
+            if (button == null || i >= m_candidateBaseScales.Count)continue;
+            float scaleMultiplier = 1.0f;
+            if (b_m_selectionEnabled)
+            {
+                scaleMultiplier = pulse;
+            }
+            button.transform.localScale =
+                m_candidateBaseScales[i] * scaleMultiplier;
+        }
     }
 
     /// <summary>
@@ -150,7 +171,9 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
                 audience,
                 i,
                 GetPreference(preferences, i),
-                GetNodeAnchor(i));
+                GetNodeAnchor(i),
+                GetCandidatePoseId(i),
+                GetCandidatePoseName(i));
         }
     }
 
@@ -169,6 +192,52 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         }
 
         m_displayedNodesList.Clear();
+        m_candidateButtons.Clear();
+        m_candidateBaseScales.Clear();
+        m_decisionCues.Clear();
+        b_m_selectionEnabled = false;
+    }
+
+    /// <summary>
+    /// 候補を強調表示しますが、クリック入力は受け付けません。
+    /// 実際のプレイヤーポーズで候補を決定する場合に使用します。
+    /// </summary>
+    public void SetPoseDetectionEnabled(bool _enabled)
+    {
+        b_m_selectionEnabled = _enabled;
+        for (int i = 0; i < m_candidateButtons.Count; ++i)
+        {
+            Button button = m_candidateButtons[i];
+            if (button == null)continue;
+
+            button.interactable = false;
+            Image image = button.GetComponent<Image>();
+            if (image != null)
+            {
+                image.color = _enabled
+                    ? Color.white
+                    : new Color(0.35f, 0.35f, 0.35f, 0.8f);
+            }
+
+            Outline outline = button.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = _enabled
+                    ? new Color(0.15f, 1.0f, 0.35f, 1.0f)
+                    : m_nodeOutlineColor;
+                outline.effectDistance = _enabled
+                    ? new Vector2(14.0f, -14.0f)
+                    : m_nodeOutlineDistance;
+            }
+        }
+
+        for (int i = 0; i < m_decisionCues.Count; ++i)
+        {
+            if (m_decisionCues[i] != null)
+            {
+                m_decisionCues[i].SetActive(_enabled);
+            }
+        }
     }
 
     /// <summary>
@@ -178,7 +247,9 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         AudienceReaction _audience,
         int _preferenceIndex,
         float _preference,
-        Transform _anchor)
+        Transform _anchor,
+        int _poseId,
+        string _poseName)
     {
         GameObject rootObject = new GameObject(
             $"{ENodeRootName}_{_preferenceIndex + 1}",
@@ -205,7 +276,12 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         worldCanvas.worldCamera = m_eventCamera;
         worldCanvas.overrideSorting = true;
         worldCanvas.sortingOrder = 50;
-        CreateNode(root, _preferenceIndex, _preference);
+        CreateNode(
+            root,
+            _preferenceIndex,
+            _preference,
+            _poseId,
+            _poseName);
 
         m_displayedNodesList.Add(new SDisplayedAudienceNodes
         {
@@ -232,7 +308,9 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     private void CreateNode(
         RectTransform _parent,
         int _index,
-        float _preference)
+        float _preference,
+        int _poseId,
+        string _poseName)
     {
         GameObject nodeObject = new GameObject(
             $"EventNode_{_index + 1}",
@@ -253,8 +331,10 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         nodeRect.localScale = Vector3.one * scale;
 
         Image image = nodeObject.GetComponent<Image>(); //Node画像
-        image.sprite = m_nodeSprites != null && _index < m_nodeSprites.Length
-            ? m_nodeSprites[_index]
+        image.sprite = m_nodeSprites != null
+            && _poseId >= 0
+            && _poseId < m_nodeSprites.Length
+            ? m_nodeSprites[_poseId]
             : null;
         image.color = image.sprite != null
             ? Color.white
@@ -268,13 +348,95 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         outline.useGraphicAlpha = true;
 
         Button button = nodeObject.GetComponent<Button>(); //選択Button
-        int preferenceIndex = _index; //Callback固定番号
-        button.onClick.AddListener(
-            () => m_preferenceSystem.EvaluatePreference(preferenceIndex));
+        m_candidateButtons.Add(button);
+        m_candidateBaseScales.Add(nodeRect.localScale);
+        CreatePoseNameText(nodeRect, _poseName);
+        m_decisionCues.Add(CreateDecisionCueText(nodeRect));
         if (b_m_showPercentage)
         {
             CreatePercentageText(nodeRect, _preference);
         }
+    }
+
+    private static GameObject CreateDecisionCueText(RectTransform _parent)
+    {
+        GameObject textObject = new GameObject(
+            "DecisionCue",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Text));
+        RectTransform textRect = textObject.GetComponent<RectTransform>();
+        textRect.SetParent(_parent, false);
+        textRect.anchorMin = new Vector2(0.0f, 1.0f);
+        textRect.anchorMax = new Vector2(1.0f, 1.0f);
+        textRect.pivot = new Vector2(0.5f, 0.0f);
+        textRect.anchoredPosition = new Vector2(0.0f, 24.0f);
+        textRect.sizeDelta = new Vector2(0.0f, 90.0f);
+
+        Text text = textObject.GetComponent<Text>();
+        text.text = "POSE NOW!";
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = 42;
+        text.fontStyle = FontStyle.Bold;
+        text.color = new Color(0.2f, 1.0f, 0.35f, 1.0f);
+        text.raycastTarget = false;
+        textObject.SetActive(false);
+        return textObject;
+    }
+
+    private static int GetCandidatePoseId(int _index)
+    {
+        MusicEventSceneData eventData = EventNodeRuntimeContext.CurrentEvent;
+        if (eventData == null
+            || !eventData.TryGetAudienceChoiceCandidate(
+                _index,
+                out SMusicNodeEvent candidate))return _index;
+
+        return candidate.m_poseId;
+    }
+
+    private static string GetCandidatePoseName(int _index)
+    {
+        MusicEventSceneData eventData = EventNodeRuntimeContext.CurrentEvent;
+        if (eventData == null
+            || !eventData.TryGetAudienceChoiceCandidate(
+                _index,
+                out SMusicNodeEvent candidate))
+        {
+            return $"Pose {_index + 1}";
+        }
+
+        string poseName = candidate.m_eventName;
+        return string.IsNullOrWhiteSpace(poseName)
+            ? $"Pose {_index + 1}"
+            : poseName;
+    }
+
+    private static void CreatePoseNameText(
+        RectTransform _parent,
+        string _poseName)
+    {
+        GameObject textObject = new GameObject(
+            "PoseName",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Text));
+        RectTransform textRect = textObject.GetComponent<RectTransform>();
+        textRect.SetParent(_parent, false);
+        textRect.anchorMin = new Vector2(0.0f, 0.0f);
+        textRect.anchorMax = new Vector2(1.0f, 0.0f);
+        textRect.pivot = new Vector2(0.5f, 1.0f);
+        textRect.anchoredPosition = new Vector2(0.0f, -18.0f);
+        textRect.sizeDelta = new Vector2(0.0f, 70.0f);
+
+        Text text = textObject.GetComponent<Text>();
+        text.text = _poseName;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = 30;
+        text.color = Color.white;
+        text.raycastTarget = false;
     }
 
     /// <summary>

@@ -106,12 +106,13 @@ public sealed class VoltageLightEffect : MonoBehaviour
             m_baseColor,
             voltageColor,
             colorBlend);
-        m_appliedIntensity =
-            m_baseIntensity
-            * Mathf.Lerp(
+        float intensityMultiplier = m_voltageSystem != null
+            ? m_voltageSystem.GetLightIntensityMultiplier()
+            : Mathf.Lerp(
                 m_minimumIntensityMultiplier,
                 m_maximumIntensityMultiplier,
                 voltage);
+        m_appliedIntensity = m_baseIntensity * intensityMultiplier;
     }
 
     /// <summary>

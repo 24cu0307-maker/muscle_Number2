@@ -138,11 +138,16 @@ public static class StageEffectShowBuilder
         AssetDatabase.SaveAssets();
         EditorSceneManager.SaveScene(generatedRoot.scene);
         Selection.activeGameObject = generatedRoot;
+        string placementType = "手動生成";
+        if (_bautomatic)
+        {
+            placementType = "自動再配置";
+        }
         Debug.Log(
             $"ステージEffect {ETotalEffectCount}個、"
             + $"Effect Timeline {ETimelineCount}本、"
             + $"Voltage Timeline {ETimelineCount}本を"
-            + $"{(_bautomatic ? "自動再配置" : "手動生成")}しました。"
+            + $"{placementType}しました。"
             + $" 照射対象: {playableStage.name}"
             + $" / Center: {stageBounds.center}"
             + $" / Size: {stageBounds.size}");
@@ -442,8 +447,11 @@ public static class StageEffectShowBuilder
                 _group,
                 "Voltage Value"); //Voltage Track
         int clipCount = 2 + _patternindex % 4; //Pattern別Clip数
-        float previousVoltage =
-            _patternindex % 2 == 0 ? 0.0f : 80.0f; //開始Voltage
+        float previousVoltage = 80.0f;
+        if (_patternindex % 2 == 0)
+        {
+            previousVoltage = 0.0f;
+        }
         for (int i = 0; i < clipCount; ++i)
         {
             float nextVoltage = Mathf.Repeat(
