@@ -14,9 +14,14 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
         [HDR] _Color ("Color", Color) = (1.0, 0.85, 0.45, 1.0)
         _Intensity ("Emission Intensity", Range(0, 10)) = 2.0
         _Opacity ("Opacity", Range(0, 1)) = 0.18
+        _VolumeFill ("Volume Fill", Range(0, 1)) = 0.35
         _EdgeSoftness ("Edge Softness", Range(0.1, 8)) = 2.0
         _StartFade ("Start Fade", Range(0.01, 1)) = 0.12
         _EndFade ("End Fade", Range(0.01, 1)) = 0.3
+        _OuterStreakIntensity ("Outer Streak Intensity", Range(0, 2)) = 0
+        _OuterStreakCount ("Outer Streak Count", Range(2, 24)) = 8
+        _OuterStreakSharpness ("Outer Streak Sharpness", Range(1, 16)) = 5
+        _OuterStreakEndFadeStart ("Outer Streak End Fade Start", Range(0.1, 0.95)) = 0.48
     }
 
     SubShader
@@ -39,6 +44,14 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
             //表裏を同時描画すると同じCone自身が二重に合成されるため、Camera側の表面だけを描画します。
             Cull Back
 
+            Stencil
+            {
+                Ref 1
+                ReadMask 1
+                Comp NotEqual
+                Pass Keep
+            }
+
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment Frag
@@ -48,9 +61,14 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                 half4 _Color;
                 half _Intensity;
                 half _Opacity;
+                half _VolumeFill;
                 half _EdgeSoftness;
                 half _StartFade;
                 half _EndFade;
+                half _OuterStreakIntensity;
+                half _OuterStreakCount;
+                half _OuterStreakSharpness;
+                half _OuterStreakEndFadeStart;
             CBUFFER_END
 
             struct Attributes
@@ -86,7 +104,11 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                 half3 normal = normalize(input.normalWS)
                     * (isFrontFace ? 1.0h : -1.0h);
                 half facing = abs(dot(normal, normalize(input.viewDirWS)));
-                half volumeShading = lerp(0.35h, 1.0h, facing);
+                // コーン輪郭の接線部分ではAlphaを0まで落とし、背景との硬い境界を防ぎます。
+                half volumeShading = lerp(
+                    saturate(_VolumeFill),
+                    1.0h,
+                    smoothstep(0.0h, 0.72h, facing));
 
                 //実Spot Lightを受けない軽量な透明Shader内で、照明器具の反射光だけを再現します。
                 //固定方向との内積一回で円周方向に明暗を作り、Lit Shaderの追加Light計算を避けます。
@@ -111,12 +133,34 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                     1.0h,
                     0.35h,
                     saturate(input.uv.y));
+
+                //円周UVへ周期Patternを作り、コーンの外周面に沿う長手方向の光条を描きます。
+                //光源近傍では筋を弱め、円錐が広がる中間以降で見えるようにします。
+                half primaryStreaks = pow(
+                    saturate(0.5h + 0.5h * cos(
+                        input.uv.x * 6.2831853h * _OuterStreakCount)),
+                    _OuterStreakSharpness);
+                half secondaryStreaks = pow(
+                    saturate(0.5h + 0.5h * cos(
+                        input.uv.x * 6.2831853h * (_OuterStreakCount + 3.0h)
+                        + 1.35h)),
+                    _OuterStreakSharpness * 1.3h);
+                half streakStartFade = smoothstep(0.12h, 0.34h, input.uv.y);
+                half streakEndFade = 1.0h - smoothstep(
+                    _OuterStreakEndFadeStart,
+                    1.0h,
+                    input.uv.y);
+                half streakLengthFade = streakStartFade * streakEndFade;
+                half outerStreak = (primaryStreaks * 0.7h + secondaryStreaks * 0.3h)
+                    * streakLengthFade
+                    * _OuterStreakIntensity;
                 half alpha = _Opacity
                     * startFade
                     * endFade
                     * volumeShading
                     * reflectorShading
                     * distanceAttenuation;
+                alpha += _Opacity * outerStreak * 0.75h;
 
                 //HDR値を単純に乗算すると、強い部分のRGBがすべて飽和して白く見えます。
                 //指数圧縮で明るさを1未満へ収め、Color本来の各成分比率を維持します。
@@ -126,7 +170,11 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                 half3 huePreservedColor = _Color.rgb / maximumColorChannel;
                 half compressedBrightness = 1.0h
                     - exp(-max(_Intensity, 0.0h) * 0.45h);
-                half3 finalColor = huePreservedColor * compressedBrightness;
+                half3 streakColor = lerp(
+                    huePreservedColor,
+                    half3(1.0h, 0.94h, 0.78h),
+                    saturate(outerStreak * 0.7h));
+                half3 finalColor = streakColor * compressedBrightness;
                 return half4(finalColor, alpha * _Color.a);
             }
             ENDHLSL

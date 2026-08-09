@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7865419094975627906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8944782196284476663}
+  - component: {fileID: 5447010520339115031}
+  m_Layer: 0
+  m_Name: 00_Effect_Halo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8944782196284476663
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865419094975627906}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5447010520339115031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865419094975627906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93672bdca024d059bbb5b3e7b33f242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BacklightSourceGlow
+  m_glowColor: {r: 1, g: 0.3663523, b: 0.2688679, a: 1}
+  m_glowSize: 20.24
+  m_glowAspect: {x: 1, y: 1}
+  m_glowIntensity: 0.19
+  m_glowOpacity: 0.8
+  m_coreWhiteness: 0.89
+  m_coreIntensityMultiplier: 5.75
+  m_ringIntensity: 1.721
+  m_ringRadius: 0.777
+  m_ringWidth: 0.334
+  m_offAxisTiltStrength: 0.5
+  m_maximumTiltAngle: 0
+  m_cameraDepthOffset: 0.35
+  b_m_renderThroughGeometry: 0
+  m_localOffset: {x: 0, y: 0, z: 0.08}
+  m_sourceLight: {fileID: 0}
+  b_m_haloOnly: 0

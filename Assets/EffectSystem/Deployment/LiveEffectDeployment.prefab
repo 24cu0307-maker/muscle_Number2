@@ -703,6 +703,9 @@ MonoBehaviour:
   m_endRadius: 5
   m_segments: 64
   b_m_capEnd: 0
+  m_crossSectionShape: 0
+  m_endWidth: 4
+  m_endHeight: 2.5
 --- !u!114 &7504177658776697475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -718,6 +721,12 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  m_outerStreakIntensity: 0
+  m_outerStreakCount: 8
+  m_outerStreakSharpness: 5
+  m_outerStreakEndFadeStart: 0.48
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!95 &9110881451063969995
 Animator:
   serializedVersion: 7
@@ -6359,6 +6368,9 @@ MonoBehaviour:
   m_endRadius: 10
   m_segments: 32
   b_m_capEnd: 0
+  m_crossSectionShape: 0
+  m_endWidth: 4
+  m_endHeight: 2.5
 --- !u!114 &5749486698402710399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6374,6 +6386,12 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  m_outerStreakIntensity: 0
+  m_outerStreakCount: 8
+  m_outerStreakSharpness: 5
+  m_outerStreakEndFadeStart: 0.48
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!95 &1234115132291712979
 Animator:
   serializedVersion: 7
@@ -11973,6 +11991,9 @@ MonoBehaviour:
   m_endRadius: 5
   m_segments: 64
   b_m_capEnd: 0
+  m_crossSectionShape: 0
+  m_endWidth: 4
+  m_endHeight: 2.5
 --- !u!114 &3078249686409696064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11988,6 +12009,12 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  m_outerStreakIntensity: 0
+  m_outerStreakCount: 8
+  m_outerStreakSharpness: 5
+  m_outerStreakEndFadeStart: 0.48
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!95 &1466066859488082150
 Animator:
   serializedVersion: 7
@@ -27314,6 +27341,9 @@ MonoBehaviour:
   m_endRadius: 10
   m_segments: 32
   b_m_capEnd: 0
+  m_crossSectionShape: 0
+  m_endWidth: 4
+  m_endHeight: 2.5
 --- !u!114 &381206385972135517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27329,6 +27359,12 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  m_outerStreakIntensity: 0
+  m_outerStreakCount: 8
+  m_outerStreakSharpness: 5
+  m_outerStreakEndFadeStart: 0.48
+  b_m_illuminateSurfaces: 1
+  m_surfaceLight: {fileID: 0}
 --- !u!95 &6935764906552076556
 Animator:
   serializedVersion: 7

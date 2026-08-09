@@ -14,6 +14,19 @@ namespace Mediapipe.Unity.Sample.Holistic
 {
     public class HolisticTrackingSolution : LegacySolutionRunner<HolisticTrackingGraph>
     {
+        /// <summary>
+        /// Webカメラ、MediaPipeグラフ、出力コールバックの準備がすべて完了し、
+        /// フレームを受け取れる状態になったかを示します。
+        /// Gameplayはこの値がtrueになるまで開始を待機します。
+        /// </summary>
+        public bool IsInitializationComplete { get; private set; }
+
+        /// <summary>
+        /// カメラまたはMediaPipeグラフの初期化に失敗したかを示します。
+        /// 失敗時にゲームが永久に待ち続けないため、待機管理側から参照します。
+        /// </summary>
+        public bool HasInitializationFailed { get; private set; }
+
         [SerializeField] private RectTransform _worldAnnotationArea;
         [SerializeField] private DetectionAnnotationController _poseDetectionAnnotationController;
         [SerializeField] private HolisticLandmarkListAnnotationController _holisticAnnotationController;
@@ -87,6 +100,8 @@ namespace Mediapipe.Unity.Sample.Holistic
 
         protected override IEnumerator Run()
         {
+            IsInitializationComplete = false;
+            HasInitializationFailed = false;
             var graphInitRequest = graphRunner.WaitForInit(runningMode);
             var imageSource = ImageSourceProvider.ImageSource;
 
@@ -95,6 +110,7 @@ namespace Mediapipe.Unity.Sample.Holistic
             if (!imageSource.isPrepared)
             {
                 Debug.LogError("Failed to start ImageSource, exiting...");
+                HasInitializationFailed = true;
                 yield break;
             }
 
@@ -111,6 +127,7 @@ namespace Mediapipe.Unity.Sample.Holistic
             if (graphInitRequest.isError)
             {
                 Debug.LogError(graphInitRequest.error);
+                HasInitializationFailed = true;
                 yield break;
             }
 
@@ -134,6 +151,7 @@ namespace Mediapipe.Unity.Sample.Holistic
             SetupAnnotationController(_poseRoiAnnotationController, imageSource);
 
             graphRunner.StartRun(imageSource);
+            IsInitializationComplete = true;
 
             AsyncGPUReadbackRequest req = default;
             var waitUntilReqDone = new WaitUntil(() => req.done);

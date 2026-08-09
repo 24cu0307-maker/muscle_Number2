@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 400000}
+  - component: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: LightingPatternRig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b5f8781ad74bb1aadf62df4772ff61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LiveLightingPatternRig
+  m_pattern: 0
+  m_spotlightPrefab: {fileID: 6555747910929139060, guid: a3c29d94debffb446b73e7d17eb561f6, type: 3}
+  m_backlightPrefab: {fileID: 6517294038162360845, guid: 7d94a6d874d34c1fb3e73ee58336e521, type: 3}
+  m_laserPrefab: {fileID: 886897569315729135, guid: c255dec6a86ced54c83f165262238ff1, type: 3}
+  m_intensityScale: 1
+  m_positionScale: 1
+  m_rangeScale: 1
+  m_spotAngleScale: 1
+  m_colorTint: {r: 1, g: 1, b: 1, a: 1}
+  m_shadowStrength: 0.55
+  b_m_animate: 1
+  m_animationSpeed: 6

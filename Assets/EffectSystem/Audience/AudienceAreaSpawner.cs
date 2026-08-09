@@ -17,6 +17,7 @@ using Random = UnityEngine.Random;
 /// </summary>
 public sealed class AudienceAreaSpawner : MonoBehaviour
 {
+    public event System.Action AudienceSpawnCompleted;
     private const string EAudienceName = "Audience"; //生成Object名
     private const int EMinimumAudienceCount = 1; //最小人数
     private const float EMinimumIntervalSeconds = 0.1f; //最短Reaction間隔
@@ -31,6 +32,14 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
 
     [SerializeField,Range(0.1f,1.0f)] private float m_spawnAreaScale; 
+
+    [Header("Audience Density Focus")]
+    [Tooltip("観客を集中させたい地点です。未設定なら従来の均等配置になります。")]
+    [SerializeField] private Transform m_densityFocusPoint;
+    [Tooltip("全観客のうち密集範囲へ配置する割合です。")]
+    [SerializeField, Range(0.0f, 1.0f)] private float m_densityFocusRatio = 0.55f;
+    [Tooltip("密集させる範囲のWorld寸法です。Xが横幅、Yが奥行です。")]
+    [SerializeField] private Vector2 m_densityFocusSize = new Vector2(12.0f, 8.0f);
 
     [SerializeField] private GameObject m_audiencePrefab; //任意の観客Prefab
     [SerializeField] private Mesh m_audienceMesh; //Prefab未使用時のMesh
@@ -49,6 +58,9 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private Transform m_facingTarget; //観客が向くプレイヤー位置
     [SerializeField] private float m_modelYawOffset; //Prefab正面方向の補正
     [SerializeField] private bool b_m_spawnOnStart = true; //開始時自動生成
+    [Header("Startup Performance")]
+    [SerializeField] private bool b_m_spreadStartupSpawnAcrossFrames = true;
+    [SerializeField, Min(1)] private int m_startupSpawnBatchSize = 20;
     [SerializeField] private bool b_m_autoReaction = true; //自動Reaction
     [SerializeField] private Vector2 m_reactionIntervalRange =
         new Vector2(1.0f, 2.5f); //Reaction間隔
@@ -71,6 +83,11 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         EMaximumSuccessStrength; //Voltage最高時の成功動作強度
     [SerializeField] private float m_failureReactionStrength =
         EFailureReactionStrength; //失敗時の動作強度
+
+    [Header("Audience Penlights")]
+    [SerializeField] private bool b_m_enablePenlights = true;
+    [SerializeField, Min(0.0f)] private float m_minimumPenlightIntensity = 1.5f;
+    [SerializeField, Min(0.0f)] private float m_maximumPenlightIntensity = 8.0f;
 
     [Header("Audience Voices")]
     [SerializeField] private AudioClip[] m_cheerVoiceClips;
@@ -110,6 +127,9 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     private float m_nextReactionTime; //次回Reaction時刻
     private float m_nextCullingTime; //次回可視判定時刻
     private Coroutine m_sequentialCheerCoroutine; //Audience Choice成功中に歓声Clipを順番再生する処理
+    private Coroutine m_spawnCoroutine;
+
+    public bool IsSpawnComplete { get; private set; }
 
     /// <summary>
     /// 必要なら開始時に観客を生成します。
@@ -118,7 +138,18 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     {
         if (b_m_spawnOnStart)
         {
-            SpawnAudience();
+            if (b_m_spreadStartupSpawnAcrossFrames && Application.isPlaying)
+            {
+                m_spawnCoroutine = StartCoroutine(SpawnAudienceOverFrames());
+            }
+            else
+            {
+                SpawnAudience();
+            }
+        }
+        else
+        {
+            IsSpawnComplete = true;
         }
     }
 
@@ -170,6 +201,12 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [ContextMenu("Spawn Audience")]
     public void SpawnAudience()
     {
+        if (m_spawnCoroutine != null)
+        {
+            StopCoroutine(m_spawnCoroutine);
+            m_spawnCoroutine = null;
+        }
+        IsSpawnComplete = false;
         ClearAudience();
         int audienceCount =
             Mathf.Max(EMinimumAudienceCount, m_audienceCount); //安全な人数
@@ -202,6 +239,50 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
                 + $"{audienceCount}人中{spawnCount}人を生成しました。",
                 this);
         }
+
+        CompleteAudienceSpawn();
+    }
+
+    private IEnumerator SpawnAudienceOverFrames()
+    {
+        IsSpawnComplete = false;
+        ClearAudience();
+        int audienceCount = Mathf.Max(EMinimumAudienceCount, m_audienceCount);
+        Vector2 horizontalSize = GetHorizontalAreaSize();
+        int columns = Mathf.CeilToInt(Mathf.Sqrt(
+            audienceCount * horizontalSize.x / Mathf.Max(0.01f, horizontalSize.y)));
+        int rows = Mathf.CeilToInt((float)audienceCount / columns);
+        List<Vector3> candidatePositions = CreateCandidatePositions(columns, rows);
+        int spawnCount = Mathf.Min(audienceCount, candidatePositions.Count);
+        int batchSize = Mathf.Max(1, m_startupSpawnBatchSize);
+
+        for (int i = 0; i < spawnCount; ++i)
+        {
+            int candidateIndex = Mathf.Min(
+                candidatePositions.Count - 1,
+                Mathf.FloorToInt((float)i * candidatePositions.Count / spawnCount));
+            CreateAudience(i, candidatePositions[candidateIndex]);
+            if ((i + 1) % batchSize == 0)
+            {
+                yield return null;
+            }
+        }
+
+        if (spawnCount < audienceCount)
+        {
+            Debug.LogWarning(
+                $"生成可能な範囲が不足しているため、{audienceCount}人中{spawnCount}人を生成しました。",
+                this);
+        }
+
+        m_spawnCoroutine = null;
+        CompleteAudienceSpawn();
+    }
+
+    private void CompleteAudienceSpawn()
+    {
+        IsSpawnComplete = true;
+        AudienceSpawnCompleted?.Invoke();
     }
 
     /// <summary>
@@ -226,6 +307,11 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
                 float normalizedZ = _baserows <= 1
                     ? 0.5f
                     : offset + (float)i / (_baserows - 1) * areaScale; //正規化奥行位置
+
+                // 指定割合の候補だけを密集地点周辺へ再配置します。
+                // 元のGrid座標を狭い範囲へ縮小するため、完全な同一点には重ならず
+                // 密度だけを高くできます。
+                ApplyDensityFocus(ref normalizedX, ref normalizedZ);
                 if (!TryGetGroundPosition(
                     normalizedX,
                     normalizedZ,
@@ -237,6 +323,55 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         }
 
         return candidatePositions;
+    }
+
+    /// <summary>
+    /// 正規化した生成座標を、指定された密集範囲へ確率的に縮小します。
+    /// Generation Volumeの回転・Scaleが変わっても、Focus PointのWorld位置から
+    /// 正しい0～1座標を求めます。
+    /// </summary>
+    private void ApplyDensityFocus(
+        ref float _normalizedX,
+        ref float _normalizedZ)
+    {
+        if (m_densityFocusPoint == null
+            || Random.value > Mathf.Clamp01(m_densityFocusRatio))return;
+
+        Vector2 horizontalSize = GetHorizontalAreaSize();
+        Vector2 focusNormalized = GetDensityFocusNormalizedPosition();
+        Vector2 focusNormalizedSize = new Vector2(
+            Mathf.Clamp01(
+                Mathf.Max(0.01f, m_densityFocusSize.x)
+                / Mathf.Max(0.01f, horizontalSize.x)),
+            Mathf.Clamp01(
+                Mathf.Max(0.01f, m_densityFocusSize.y)
+                / Mathf.Max(0.01f, horizontalSize.y)));
+
+        _normalizedX = Mathf.Clamp01(
+            focusNormalized.x
+            + (_normalizedX - 0.5f) * focusNormalizedSize.x);
+        _normalizedZ = Mathf.Clamp01(
+            focusNormalized.y
+            + (_normalizedZ - 0.5f) * focusNormalizedSize.y);
+    }
+
+    /// <summary>Focus PointのWorld位置を生成範囲基準の0～1座標へ変換します。</summary>
+    private Vector2 GetDensityFocusNormalizedPosition()
+    {
+        if (m_generationVolumeObject != null)
+        {
+            Vector3 volumeLocal =
+                m_generationVolumeObject.transform.InverseTransformPoint(
+                    m_densityFocusPoint.position);
+            return new Vector2(
+                Mathf.Clamp01(volumeLocal.x + 0.5f),
+                Mathf.Clamp01(volumeLocal.z + 0.5f));
+        }
+
+        Vector3 local = transform.InverseTransformPoint(m_densityFocusPoint.position);
+        return new Vector2(
+            Mathf.InverseLerp(-m_areaSize.x * 0.5f, m_areaSize.x * 0.5f, local.x),
+            Mathf.InverseLerp(-m_areaSize.y * 0.5f, m_areaSize.y * 0.5f, local.z));
     }
 
     /// <summary>
@@ -401,6 +536,9 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         float scale = Random.Range(m_scaleRange.x, m_scaleRange.y); //個体Scale
         audienceObject.transform.localScale *= scale;
         ApplyRandomMaterial(audienceObject);
+        // FBX内蔵Materialの透明設定を補正し、胴体の後ろにある手が
+        // Depthを無視して透けて見えないようにします。
+        AudienceOpaqueMaterialUtility.Apply(audienceObject);
         AlignAudienceFeet(audienceObject, _localposition);
         FaceAudienceTowardTarget(audienceObject);
 
@@ -411,6 +549,22 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             reaction = audienceObject.AddComponent<AudienceReaction>();
         }
         reaction.CaptureCurrentTransform();
+
+        // 観客モデル生成後にBoundsが確定してから、手元へペンライトを装着します。
+        // PrefabとMesh直接生成のどちらを選んでも同じ処理を共有できます。
+        if (b_m_enablePenlights)
+        {
+            AudiencePenlight penlight =
+                audienceObject.GetComponent<AudiencePenlight>();
+            if (penlight == null)
+            {
+                penlight = audienceObject.AddComponent<AudiencePenlight>();
+            }
+            penlight.Initialize(
+                m_voltageSystem,
+                m_minimumPenlightIntensity,
+                m_maximumPenlightIntensity);
+        }
 
         m_audiences.Add(reaction);
         m_audienceBounds.Add(CreateAudienceBounds(audienceObject));
@@ -1047,6 +1201,8 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         Gizmos.DrawWireCube(areaCenter, areaVolumeSize);
         }
 
+        DrawDensityFocusGizmo();
+
         if (m_exclusionObjects == null)return;
 
         for (int i = 0; i < m_exclusionObjects.Length; ++i)
@@ -1064,5 +1220,30 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             Gizmos.color = new Color(1.0f, 0.15f, 0.05f, 0.95f);
             Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
         }
+    }
+
+    /// <summary>
+    /// 密集範囲をSceneビューへ黄色の半透明Boxとして表示します。
+    /// Focus Pointを移動すると、実際の生成中心とGizmoが同時に移動します。
+    /// </summary>
+    private void DrawDensityFocusGizmo()
+    {
+        if (m_densityFocusPoint == null)return;
+
+        Transform orientation = m_generationVolumeObject != null
+            ? m_generationVolumeObject.transform
+            : transform;
+        Gizmos.matrix = Matrix4x4.TRS(
+            m_densityFocusPoint.position,
+            orientation.rotation,
+            Vector3.one);
+        Vector3 size = new Vector3(
+            Mathf.Max(0.01f, m_densityFocusSize.x),
+            0.25f,
+            Mathf.Max(0.01f, m_densityFocusSize.y));
+        Gizmos.color = new Color(1.0f, 0.8f, 0.05f, 0.16f);
+        Gizmos.DrawCube(Vector3.zero, size);
+        Gizmos.color = new Color(1.0f, 0.85f, 0.1f, 0.95f);
+        Gizmos.DrawWireCube(Vector3.zero, size);
     }
 }

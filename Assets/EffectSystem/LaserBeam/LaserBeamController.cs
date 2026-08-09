@@ -15,7 +15,7 @@ using UnityEngine.Serialization;
 /// </summary>
 [ExecuteAlways]
 [RequireComponent(typeof(Renderer))]
-public sealed class LaserBeamController : MonoBehaviour
+public sealed class LaserBeamController : LightEffectBase
 {
     private const float EMinimumValue = 0.0f;               //各表示値の最小値
     private const float EMaximumOpacity = 1.0f;             //透明度の最大値
@@ -48,6 +48,34 @@ public sealed class LaserBeamController : MonoBehaviour
 
     private Renderer m_targetRenderer;                      //表示対象Renderer
     private MaterialPropertyBlock m_propertyBlock;          //個別マテリアル設定
+
+    /// <summary>レーザーの表示色を取得・変更します。</summary>
+    public Color LaserColor
+    {
+        get
+        {
+            return m_laserColor;
+        }
+        set
+        {
+            m_laserColor = value;
+            Apply();
+        }
+    }
+
+    /// <summary>レーザーの発光強度を取得・変更します。</summary>
+    public float EmissionIntensity
+    {
+        get
+        {
+            return m_emissionIntensity;
+        }
+        set
+        {
+            m_emissionIntensity = Mathf.Max(EMinimumValue, value);
+            Apply();
+        }
+    }
 
     /// <summary>
     /// 有効化時に表示設定を反映します。

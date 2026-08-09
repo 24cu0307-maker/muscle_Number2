@@ -40,7 +40,6 @@ public sealed class SpotlightConeMesh : MonoBehaviour
     [SerializeField] private int m_segments = EDefaultSegments; //円周方向の分割数
     [FormerlySerializedAs("m_capEnd")]
     [SerializeField] private bool b_m_capEnd = false;     //終端面は白飛びの原因になるため、通常は生成しない
-
     private Mesh m_mesh;                                  //実行時に生成するメッシュ
     private float m_runtimeLength = -1.0f;                 //衝突対応ライト用の一時的な長さ
 
@@ -63,6 +62,19 @@ public sealed class SpotlightConeMesh : MonoBehaviour
     /// <summary>
     /// 有効化されたときにメッシュを生成します。
     /// </summary>
+    /// <summary>
+    /// Composable EffectのInspectorから長さ・終端半径・滑らかさを設定し、
+    /// Scene Viewへ即時反映します。
+    /// </summary>
+    public void ConfigureShape(float _length, float _endRadius, int _segments)
+    {
+        m_length = Mathf.Max(EMinimumSize, _length);
+        m_endRadius = Mathf.Max(EMinimumSize, _endRadius);
+        m_segments = Mathf.Clamp(_segments, EMinimumSegments, EMaximumSegments);
+        m_runtimeLength = -1.0f;
+        Rebuild();
+    }
+
     private void OnEnable()
     {
         Rebuild();
@@ -132,11 +144,7 @@ public sealed class SpotlightConeMesh : MonoBehaviour
         Vector2[] uvs = new Vector2[vertices.Length];                       //UV座標群
         int[] triangles = new int[sideIndexCount + capIndexCount];          //三角形頂点番号群
 
-        BuildSides(
-            segmentCount,
-            vertices,
-            uvs,
-            triangles);
+        BuildSides(segmentCount, vertices, uvs, triangles);
 
         if (b_m_capEnd)
         {

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3347816817030983373}
   - component: {fileID: 1265182037753599572}
+  - component: {fileID: 903410837128945331}
   m_Layer: 0
   m_Name: HumanoidSkeleton
   m_TagString: Untagged
@@ -558,3 +559,15 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -3740023774930315418, guid: c43050076bd7f1448a03c1ab7cfd5515, type: 3}
   m_PrefabInstance: {fileID: 3484200039351230009}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &903410837128945331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785987348398820820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ef47c14db346fa96021c074fed3f47, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectOcclusionTarget

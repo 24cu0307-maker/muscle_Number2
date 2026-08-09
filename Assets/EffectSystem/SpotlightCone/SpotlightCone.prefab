@@ -125,8 +125,14 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.72, b: 0.3, a: 1}
   m_emissionIntensity: 2
   m_opacity: 0.18
+  m_volumeFill: 0.35
+  m_outerStreakIntensity: 0
+  m_outerStreakCount: 8
+  m_outerStreakSharpness: 5
+  m_outerStreakEndFadeStart: 0.48
   b_m_illuminateSurfaces: 1
   m_surfaceLight: {fileID: 1896389531826865426}
+  m_surfaceIlluminationScale: 20
 --- !u!108 &1896389531826865426
 Light:
   m_ObjectHideFlags: 0
@@ -138,7 +144,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.72, b: 0.3, a: 1}
-  m_Intensity: 25
+  m_Intensity: 1000
   m_Range: 6.25
   m_SpotAngle: 50.14324
   m_InnerSpotAngle: 27.578783

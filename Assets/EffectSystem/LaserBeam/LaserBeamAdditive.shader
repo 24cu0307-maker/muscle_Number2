@@ -39,6 +39,14 @@ Shader "Muscle/Effects/Laser Beam Additive"
             ZWrite Off
             Cull Off
 
+            Stencil
+            {
+                Ref 1
+                ReadMask 1
+                Comp NotEqual
+                Pass Keep
+            }
+
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment Frag
@@ -80,13 +88,15 @@ Shader "Muscle/Effects/Laser Beam Additive"
             {
                 half centerDistance = abs(input.uv.x * 2.0h - 1.0h);
                 half core = pow(saturate(1.0h - centerDistance), _CoreSharpness);
+                // Beam幅の外側へ向けた広いFadeで板ポリゴンの境界を隠します。
+                half sideFade = 1.0h - smoothstep(0.45h, 1.0h, centerDistance);
                 half startFade = smoothstep(0.0h, max(_StartFade, 0.001h), input.uv.y);
                 half endFade =
                     1.0h - smoothstep(1.0h - max(_EndFade, 0.001h), 1.0h, input.uv.y);
                 half pulseWave =
                     sin(input.uv.y * _PulseScale - _Time.y * _PulseSpeed) * 0.5h + 0.5h;
                 half pulse = lerp(1.0h, pulseWave, _PulseStrength);
-                half alpha = _Opacity * core * startFade * endFade * pulse;
+                half alpha = _Opacity * core * sideFade * startFade * endFade * pulse;
                 return half4(_Color.rgb * _Intensity, alpha * _Color.a);
             }
             ENDHLSL

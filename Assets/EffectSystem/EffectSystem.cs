@@ -331,13 +331,15 @@ public class EffectSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Timelineを優先し、未設定の場合は従来形式の演出を再生します。
+    /// Timelineを優先しつつ、CameraSequenceはTimelineと同時に再生します。
+    /// Timeline内に配置済みのParticle、Audio、Lightは二重再生を避けるため個別には開始しません。
     /// </summary>
     private void EffectPlay(SEffectData _effects)
     {
         if (_effects.Timeline != null)
         {
             PlayTimeline(_effects.Timeline, _effects.Director);
+            PlayCamera(_effects.CameraSequence);
             return;
         }
 

@@ -93,7 +93,10 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     /// </summary>
     private IEnumerator ShowNodesAfterAudienceSpawn()
     {
-        yield return null;
+        while (m_audienceSpawner != null && !m_audienceSpawner.IsSpawnComplete)
+        {
+            yield return null;
+        }
         ShowNodes();
     }
 

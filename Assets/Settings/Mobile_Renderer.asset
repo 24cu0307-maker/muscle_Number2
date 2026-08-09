@@ -26,8 +26,9 @@ MonoBehaviour:
     probeSamplingDebugMesh: {fileID: 0}
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
-  m_RendererFeatures: []
-  m_RendererFeatureMap: 
+  m_RendererFeatures:
+  - {fileID: 6102345678901234567}
+  m_RendererFeatureMap: 874b8c3710e3af54
   m_UseNativeRenderPass: 1
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
@@ -50,3 +51,20 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &6102345678901234567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d477a3f48945aa8eb730e9edc1441d, type: 3}
+  m_Name: Player Effect Stencil Mask
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectStencilFeature
+  m_Active: 1
+  m_playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  m_stencilMaskShader: {fileID: 4800000, guid: 70ae3db79739420cb6ece00fa2266f3e, type: 3}

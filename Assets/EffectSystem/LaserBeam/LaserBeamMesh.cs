@@ -116,6 +116,21 @@ public sealed class LaserBeamMesh : MonoBehaviour
     }
 
     /// <summary>
+    /// LaserBeamの形状生成処理を、Prefab以外の短い派生Effectからも再利用します。
+    /// ペンライト側で同じMesh生成コードを複製しないための共通設定口です。
+    /// </summary>
+    public void Configure(float _length, float _radius, int _planeCount)
+    {
+        m_length = Mathf.Max(EMinimumSize, _length);
+        m_radius = Mathf.Max(EMinimumSize, _radius);
+        m_planeCount = Mathf.Clamp(
+            _planeCount,
+            EMinimumPlanes,
+            EMaximumPlanes);
+        Rebuild();
+    }
+
+    /// <summary>
     /// メッシュを新規作成または初期化します。
     /// </summary>
     private void PrepareMesh()

@@ -15,6 +15,7 @@ namespace Mediapipe.Unity.Sample
   public abstract class BaseRunner : MonoBehaviour
   {
     private static readonly string _BootstrapName = nameof(Bootstrap);
+    private static Bootstrap _sharedBootstrap;
 
     [SerializeField] private GameObject _bootstrapPrefab;
 
@@ -75,17 +76,26 @@ namespace Mediapipe.Unity.Sample
 
     protected Bootstrap FindBootstrap()
     {
-      var bootstrapObj = GameObject.Find("Bootstrap");
-
-      if (bootstrapObj == null)
+      // 複数のRunnerが同じフレームで初期化されてもBootstrapを一つだけ共有する。
+      // GameObject.Findだけに頼ると、生成タイミングによって各RunnerがPrefabを
+      // 個別にInstantiateする可能性があるため、静的参照を共通の取得口にする。
+      if (_sharedBootstrap != null)
       {
-        Debug.Log("Initializing the Bootstrap GameObject");
-        bootstrapObj = Instantiate(_bootstrapPrefab);
-        bootstrapObj.name = _BootstrapName;
-        DontDestroyOnLoad(bootstrapObj);
+        return _sharedBootstrap;
       }
 
-      return bootstrapObj.GetComponent<Bootstrap>();
+      _sharedBootstrap = FindFirstObjectByType<Bootstrap>(FindObjectsInactive.Include);
+
+      if (_sharedBootstrap == null)
+      {
+        Debug.Log("Initializing the Bootstrap GameObject");
+        var bootstrapObj = Instantiate(_bootstrapPrefab);
+        bootstrapObj.name = _BootstrapName;
+        DontDestroyOnLoad(bootstrapObj);
+        _sharedBootstrap = bootstrapObj.GetComponent<Bootstrap>();
+      }
+
+      return _sharedBootstrap;
     }
   }
 }

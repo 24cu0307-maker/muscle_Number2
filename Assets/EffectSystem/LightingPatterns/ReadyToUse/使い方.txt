@@ -1,0 +1,29 @@
+ライティングパターン完成Preset
+
+1. 使用したいPrefabをHierarchyへドラッグしてください。
+2. PrefabのTransform位置を演者の足元へ合わせてください。
+3. Transformのローカル-Z方向が客席・メインカメラ側です。
+4. 配置した時点でLight、影、照射角、コーン、ハローなどが自動生成されます。
+
+再生中・停止中にInspectorから変更できる項目
+
+Intensity Scale : パターン全体の光量
+Position Scale  : 演者からライトまでの距離
+Range Scale     : 実Spot Lightの照射距離
+Spot Angle Scale: Spot Lightの照射角
+Color Tint      : パターン全体へ掛ける色
+Shadow Strength : 影の濃さ
+Animate         : レーザー系の自動回転
+Animation Speed : 自動回転速度
+
+01_BasicLighting
+プレーン、フロント、エッジ、アンダーライトです。
+
+02_BacklightAndHalo
+明るい逆光、シルエット逆光、光条付き逆光、ハローのみです。
+
+03_SpecialLighting
+スポットライト、レーザー、多重露光風演出です。
+
+生成される「Generated Lighting Pattern」は一時Objectです。
+元Prefabを直接展開・編集せず、配置したPattern RootのInspectorから調整してください。

@@ -26,7 +26,6 @@ public sealed class SpotlightConeController : MonoBehaviour
     private const float ERadiansToDegrees = 2.0f * Mathf.Rad2Deg; //コーン半角からSpot Light全角への変換係数
     private const float ESurfaceLightRangeExtension = 1.25f; //終端面でも光量を残すためコーンより先まで届かせる倍率
     private const float ESurfaceLightAngleExtension = 1.15f; //コーン外側と照射面まで包む実ライト角度倍率
-    private const float ESurfaceLightIntensityScale = 0.5f; //距離二乗とメッシュ強度からCandelaへ変換する係数
     private const float EMaximumSurfaceLightIntensity = 12000.0f; //長距離ライト用のCandela安全上限
     private const int EMaximumShadowLightsPerFrame = 2;    //同時にShadow Mapを作成するSpot Light数
     private const float ESurfaceLightShadowStrength = 0.65f; //真っ黒になり過ぎない影の濃さ
@@ -37,6 +36,15 @@ public sealed class SpotlightConeController : MonoBehaviour
     private static readonly int m_colorId = Shader.PropertyToID("_Color");         //色のShader ID
     private static readonly int m_intensityId = Shader.PropertyToID("_Intensity"); //発光強度のShader ID
     private static readonly int m_opacityId = Shader.PropertyToID("_Opacity");     //透明度のShader ID
+    private static readonly int m_volumeFillId = Shader.PropertyToID("_VolumeFill"); //コーン内部の光量
+    private static readonly int m_outerStreakIntensityId =
+        Shader.PropertyToID("_OuterStreakIntensity"); //コーン外周を流れる光条強度のShader ID
+    private static readonly int m_outerStreakCountId =
+        Shader.PropertyToID("_OuterStreakCount"); //コーン円周上の光条本数のShader ID
+    private static readonly int m_outerStreakSharpnessId =
+        Shader.PropertyToID("_OuterStreakSharpness"); //コーン外周光条の細さを表すShader ID
+    private static readonly int m_outerStreakEndFadeStartId =
+        Shader.PropertyToID("_OuterStreakEndFadeStart"); //光条が外側で薄くなり始める位置のShader ID
     private static int m_shadowBudgetFrame = -1;              //Shadow枠を数えているFrame番号
     private static int m_usedShadowLightCount;                //現在FrameでShadowを許可したLight数
 
@@ -49,14 +57,23 @@ public sealed class SpotlightConeController : MonoBehaviour
     [Range(EMinimumOpacity, EMaximumOpacity)]
     [FormerlySerializedAs("m_opacity")]
     [SerializeField] private float m_opacity = EDefaultOpacity;         //透明度
+    [SerializeField, Range(0.0f, 1.0f)] private float m_volumeFill = 0.35f; //輪郭だけでなくコーン内部を満たす濃さ
+
+    [Header("Outer Cone Streaks")]
+    [SerializeField, Range(0.0f, 2.0f)] private float m_outerStreakIntensity; //コーン外周面へ描く縦方向の光条強度
+    [SerializeField, Range(2.0f, 24.0f)] private float m_outerStreakCount = 8.0f; //円周方向へ配置する光条本数
+    [SerializeField, Range(1.0f, 16.0f)] private float m_outerStreakSharpness = 5.0f; //光条一本ごとの細さ
+    [SerializeField, Range(0.1f, 0.95f)] private float m_outerStreakEndFadeStart = 0.48f; //終端へ向かう減衰の開始位置
 
     [Header("Surface Illumination")]
     [SerializeField] private bool b_m_illuminateSurfaces = true; //床・人物など照射先を実際に明るくするか
     [SerializeField] private Light m_surfaceLight; //コーンの色・距離・角度へ同期する実Spot Light
+    [SerializeField, Min(0.0f)] private float m_surfaceIlluminationScale = 20.0f; //コーン内の床・人物を照らす強度倍率
 
     private Renderer m_targetRenderer;                                 //表示対象Renderer
     private MaterialPropertyBlock m_propertyBlock;                     //個別マテリアル設定
     private SpotlightConeMesh m_coneMesh;                              //実ライトの形状を取得するコーンメッシュ
+    private RectangularSpotlightMesh m_rectangularMesh;                //四角形ライト専用メッシュ
     private int m_lastShadowRequestFrame = -1;                         //同一Frameの重複Shadow要求を防ぐ番号
     private bool b_m_castsShadowThisFrame;                             //現在FrameにこのLightが影を担当するか
 
@@ -190,6 +207,30 @@ public sealed class SpotlightConeController : MonoBehaviour
     }
 
     /// <summary>
+    /// コーン表面に表示する光条の強さを設定します。
+    /// ハローのみを使用する派生エフェクトでは0を指定します。
+    /// </summary>
+    public void SetOuterStreakIntensity(float _intensity)
+    {
+        m_outerStreakIntensity = Mathf.Max(0.0f, _intensity);
+        Apply();
+    }
+
+    /// <summary>
+    /// Coneとは別に実Lightを生成・制御するかを切り替えます。
+    /// Composable Lightの視覚Effectとして使う場合はfalseを指定します。
+    /// </summary>
+    public void SetSurfaceIlluminationEnabled(bool _enabled)
+    {
+        b_m_illuminateSurfaces = _enabled;
+        if (!b_m_illuminateSurfaces && m_surfaceLight != null)
+        {
+            m_surfaceLight.enabled = false;
+        }
+        Apply();
+    }
+
+    /// <summary>
     /// MaterialPropertyBlockへ現在の表示設定を反映します。
     /// </summary>
     private void Apply()
@@ -209,6 +250,19 @@ public sealed class SpotlightConeController : MonoBehaviour
         m_propertyBlock.SetFloat(
             m_opacityId,
             Mathf.Clamp(m_opacity, EMinimumOpacity, EMaximumOpacity));
+        m_propertyBlock.SetFloat(m_volumeFillId, Mathf.Clamp01(m_volumeFill));
+        m_propertyBlock.SetFloat(
+            m_outerStreakIntensityId,
+            Mathf.Max(0.0f, m_outerStreakIntensity));
+        m_propertyBlock.SetFloat(
+            m_outerStreakCountId,
+            Mathf.Max(2.0f, m_outerStreakCount));
+        m_propertyBlock.SetFloat(
+            m_outerStreakSharpnessId,
+            Mathf.Max(1.0f, m_outerStreakSharpness));
+        m_propertyBlock.SetFloat(
+            m_outerStreakEndFadeStartId,
+            Mathf.Clamp(m_outerStreakEndFadeStart, 0.1f, 0.95f));
         m_targetRenderer.SetPropertyBlock(m_propertyBlock);
         UpdateSurfaceLight();
     }
@@ -228,11 +282,12 @@ public sealed class SpotlightConeController : MonoBehaviour
             return;
         }
 
-        if (m_coneMesh == null)
+        if (m_coneMesh == null && m_rectangularMesh == null)
         {
             m_coneMesh = GetComponent<SpotlightConeMesh>();
+            m_rectangularMesh = GetComponent<RectangularSpotlightMesh>();
         }
-        if (m_coneMesh == null)return;
+        if (m_coneMesh == null && m_rectangularMesh == null)return;
 
         if (m_surfaceLight == null)
         {
@@ -240,11 +295,17 @@ public sealed class SpotlightConeController : MonoBehaviour
         }
         if (m_surfaceLight == null)return;
 
-        float coneLength = Mathf.Max(
-            EMinimumLightRange,
-            m_coneMesh.ConfiguredLength);
+        bool isRectangular = m_rectangularMesh != null;
+        float configuredLength = isRectangular
+            ? m_rectangularMesh.ConfiguredLength
+            : m_coneMesh.ConfiguredLength;
+        float configuredEndRadius = isRectangular
+            ? m_rectangularMesh.ConfiguredEndRadius
+            : m_coneMesh.ConfiguredEndRadius;
+        float coneLength = Mathf.Max(EMinimumLightRange, configuredLength);
         float halfAngleRadians = Mathf.Atan(
-            m_coneMesh.ConfiguredEndRadius / coneLength);
+            configuredEndRadius / coneLength);
+        //URPはPyramidを実照明として扱わないため、四角形もCookie付きSpotで照射します。
         m_surfaceLight.type = LightType.Spot;
         m_surfaceLight.color = m_lightColor;
         //UnityのSpot Lightはrange終端で光量が0になるため、表示コーンより少し先まで延長します。
@@ -260,7 +321,7 @@ public sealed class SpotlightConeController : MonoBehaviour
         float distanceCompensatedIntensity = m_emissionIntensity
             * coneLength
             * coneLength
-            * ESurfaceLightIntensityScale;
+            * Mathf.Max(0.0f, m_surfaceIlluminationScale);
         m_surfaceLight.intensity = Mathf.Clamp(
             distanceCompensatedIntensity,
             0.0f,

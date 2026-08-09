@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &200936539611618941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3031494038618901062}
+  m_Layer: 0
+  m_Name: PenlightRightHandAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3031494038618901062
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200936539611618941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.13737424, y: 0.69363415, z: 0.69363415, w: 0.1373742}
+  m_LocalPosition: {x: 0.014853477, y: 0.012130616, z: 0}
+  m_LocalScale: {x: 0.0066666664, y: 0.0066666664, z: 0.0066666664}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 181403897813804630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5013144655591110899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4078397963140347590}
+  m_Layer: 0
+  m_Name: PenlightLeftHandAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4078397963140347590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013144655591110899}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.082996376, y: 0.69717914, z: 0.6996497, w: -0.13245086}
+  m_LocalPosition: {x: -0.014963949, y: 0.012269938, z: -0.0000000031789142}
+  m_LocalScale: {x: 0.0066666664, y: 0.0066666664, z: 0.0066666664}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 181403897813804630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &364440409879691709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64,12 +126,57 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
       propertyPath: m_Name
       value: audience 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4078397963140347590}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3031494038618901062}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -428288498267174298}
   m_SourcePrefab: {fileID: 100100000, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+--- !u!4 &181403897813804630 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+  m_PrefabInstance: {fileID: 364440409879691709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &706969822493179116 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e383ea08a5878a946bcc88ab07616d93, type: 3}
+  m_PrefabInstance: {fileID: 364440409879691709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-428288498267174298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706969822493179116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4bc9e19b7149a69b99a524789a4f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudiencePenlight
+  m_leftHandAnchor: {fileID: 4078397963140347590}
+  m_rightHandAnchor: {fileID: 3031494038618901062}
+  m_vAngle: 45
+  m_pairSpacing: 0.025
+  b_m_enableTipGlow: 1
+  m_glowSizeMultiplier: 10
+  m_pointLightRange: 1.4
+  m_minimumPointLightIntensity: 0.05
+  m_maximumPointLightIntensity: 0.55
+  m_maximumActivePointLights: 24

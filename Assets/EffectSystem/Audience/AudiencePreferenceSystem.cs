@@ -31,6 +31,7 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
         new Dictionary<AudienceReaction, Vector3>(); //観客別好み
     private bool b_m_initialized; //好み作成済みか
     private bool b_m_evaluated; //評価済みか
+    private Coroutine m_initializeCoroutine;
 
     /// <summary>
     /// Canvas表示用に指定観客の三種類の好みを返します。
@@ -58,6 +59,24 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        FindAudienceSpawner();
+        if (m_audienceSpawner != null && !m_audienceSpawner.IsSpawnComplete)
+        {
+            m_initializeCoroutine = StartCoroutine(InitializeAfterAudienceSpawn());
+        }
+        else
+        {
+            InitializePreferences();
+        }
+    }
+
+    private System.Collections.IEnumerator InitializeAfterAudienceSpawn()
+    {
+        while (m_audienceSpawner != null && !m_audienceSpawner.IsSpawnComplete)
+        {
+            yield return null;
+        }
+        m_initializeCoroutine = null;
         InitializePreferences();
     }
 
