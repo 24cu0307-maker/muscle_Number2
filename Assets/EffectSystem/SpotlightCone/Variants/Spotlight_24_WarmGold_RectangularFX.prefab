@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1001 &7448216305094712301
 PrefabInstance:
@@ -11,6 +11,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
       propertyPath: m_Name
       value: Spotlight_24_WarmGold_RectangularFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
       propertyPath: m_length
@@ -25,24 +29,44 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11400001, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
-      propertyPath: m_lightColor.g
-      value: 0.58
+      propertyPath: m_opacity
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 11400001, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
       propertyPath: m_lightColor.b
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 11400001, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_lightColor.g
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
       propertyPath: m_emissionIntensity
       value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 11400001, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
-      propertyPath: m_opacity
-      value: 0.1
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_Range
+      value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
-      propertyPath: m_Mesh
-      value:
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_Color.b
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_Color.g
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_Intensity
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_SpotAngle
+      value: 39.914257
+      objectReference: {fileID: 0}
+    - target: {fileID: 1896389531826865426, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 21.952843
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -55,7 +79,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5164028793145567013}
   m_SourcePrefab: {fileID: 100100000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
---- !u!1 &7448216305094712302 stripped
+--- !u!1 &7448216305094679885 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 769b6e68d4914a35a642093ef757874b, type: 3}
   m_PrefabInstance: {fileID: 7448216305094712301}
@@ -66,11 +90,11 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7448216305094712302}
+  m_GameObject: {fileID: 7448216305094679885}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b93672bdca024d059bbb5b3e7b33f242, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BacklightSourceGlow
   m_glowColor: {r: 1, g: 0.58, b: 0.2, a: 1}
   m_glowSize: 10
@@ -96,11 +120,11 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7448216305094712302}
+  m_GameObject: {fileID: 7448216305094679885}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a54c8d70be5d4f8e93d77b9d92e79136, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RadialLightRays
   m_color: {r: 1, g: 0.58, b: 0.2, a: 1}
   m_size: 14
@@ -119,4 +143,3 @@ MonoBehaviour:
   m_cameraDepthOffset: 0
   b_m_renderThroughGeometry: 0
   m_localOffset: {x: 0, y: 0, z: 0.07}
-

@@ -42,8 +42,8 @@ public sealed class CameraShotPreset : ScriptableObject
     private const float E_DEFAULT_START_RADIUS = 4.2f;           //開始半径の初期値
     private const float E_DEFAULT_END_RADIUS = 3.5f;             //終了半径の初期値
 
-    private const float E_MIN_OFFSET = -3.0f;                     //高さと横ずらしの最小値
-    private const float E_MAX_OFFSET = 3.0f;                      //高さと横ずらしの最大値
+    private const float E_MIN_OFFSET = -50.0f;                     //高さと横ずらしの最小値
+    private const float E_MAX_OFFSET = 50.0f;                      //高さと横ずらしの最大値
     private const float E_DEFAULT_START_HEIGHT = 0.0f;            //開始高さの初期値
     private const float E_DEFAULT_END_HEIGHT = -0.2f;             //終了高さの初期値
     private const float E_DEFAULT_SIDE = 0.0f;                    //横ずらしの初期値

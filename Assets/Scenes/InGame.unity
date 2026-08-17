@@ -756,6 +756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b53cb34600d804b8d93b527a9b5995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScenesLoad
+  m_mediaPipeSceneName: Holistic
+  m_initializationTimeoutSeconds: 30
 --- !u!4 &720925344
 Transform:
   m_ObjectHideFlags: 0
@@ -989,6 +991,8 @@ MonoBehaviour:
   _RightShoulderRotationDirMirrored: {x: 0, y: 0, z: 0}
   _RightElbowRotationDirMirrored: {x: 0, y: 0, z: 0}
   _NeckDirMirrored: {x: 0, y: 0, z: 0}
+  scoreText: {fileID: 0}
+  debugfloat: 0
 --- !u!114 &830706424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2586,11 +2590,12 @@ MonoBehaviour:
   m_gameplayPriority: 10
   m_activePosePriority: 100
   m_inactivePosePriority: 0
-  m_testSequence: {fileID: 11400000, guid: 5be130d8b89bcb246b3eed833c7baa3e, type: 2}
+  m_testSequence: {fileID: 11400000, guid: 317407f35f240d0499286630b392282e, type: 2}
   m_testSequenceList: []
   m_testSequenceIndex: 0
   m_testPlayKey: 112
   m_stopKey: 111
+  m_SetPlay: 0
 --- !u!4 &2006347346
 Transform:
   m_ObjectHideFlags: 0
@@ -2636,18 +2641,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIData
   ui:
-  - {fileID: 1988579920}
-  - {fileID: 1458203147}
-  - {fileID: 337545210}
-  - {fileID: 965554630}
-  - {fileID: 276807035}
-  - {fileID: 295767543}
-  - {fileID: 542793359}
-  - {fileID: 1782460941}
-  - {fileID: 2094588786}
-  - {fileID: 463666682}
-  - {fileID: 1394361667}
-  - {fileID: 1735199688}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
+  - m_currentFrameSuccess: {fileID: 0}
+    m_currentFrameApproaching: {fileID: 0}
+    m_currentFrameFailure: {fileID: 0}
+    m_currentFrameWating: {fileID: 0}
 --- !u!4 &2027467367
 Transform:
   m_ObjectHideFlags: 0
