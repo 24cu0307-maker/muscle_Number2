@@ -51,7 +51,7 @@ public class ArmController : MonoBehaviour
         //カメラ
         cameraJudge = new CameraRelativeMovement();
 
-        
+        _camera = GameObject.Find("Camera");
 
         //方向計算クラス
         _DirectionVectorCalculator = new DirectionVectorCalculator();
@@ -68,7 +68,11 @@ public class ArmController : MonoBehaviour
         //座標を取得
         _Body = PositionDataManager.Instance.positionData.Body;
 
+        if (_camera == null)
+        {
+            _camera = GameObject.Find("Camera");
 
+        }
 
         //方向ベクトルを計算　※引数（a、b）→ a - b
         _RightShoulderRotationDir = _DirectionVectorCalculator.Vector(_Body[14], _Body[12]);

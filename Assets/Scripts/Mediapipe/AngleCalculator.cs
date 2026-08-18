@@ -24,6 +24,8 @@ public class AngleCalculator : MonoBehaviour
 
     private void Update()
     {
+
+        if (dataManager.positionData == null) return;
         //座標データの更新
         _Body = dataManager.positionData.Body;
 
