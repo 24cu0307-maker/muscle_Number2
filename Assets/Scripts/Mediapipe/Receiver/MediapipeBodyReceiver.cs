@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MediapipeBodyReceiver : MonoBehaviour
 {
-
+    private const int ERequiredBodyLandmarkCount = 33;
 
     //オブザーバー
     private void OnEnable()
@@ -29,24 +29,26 @@ public class MediapipeBodyReceiver : MonoBehaviour
             return;
         if (result.Landmark == null)
             return;
-        if (result.Landmark.Count == 0)
+        if (result.Landmark.Count < ERequiredBodyLandmarkCount)
+            return;
+        if (PositionDataManager.Instance == null
+            || PositionDataManager.Instance.positionData == null)
             return;
 
         //座標を格納する箱
         Vector3[] Body = new Vector3[37];
 
-        for (int i = 0; i < result.Landmark.Count; ++i)
+        for (int i = 0; i < ERequiredBodyLandmarkCount; ++i)
         {
 
             //座標を受け取り
             Landmark point = result.Landmark[i];
 
-            //丸め誤差
-            if (new Vector3(point.X, point.Y * -1, point.Z).magnitude <= 0.081111111f) return;
+            Vector3 bodyPoint = new Vector3(point.X, point.Y * -1, point.Z);
+            if (!IsFinite(bodyPoint))return;
 
-
-            //座標を格納
-            Body[i] = new Vector3(point.X, point.Y * -1, point.Z); 
+            // World Landmarkは腰付近を原点とするため、原点に近い点も有効値として保存する
+            Body[i] = bodyPoint;
 
 
             
@@ -55,6 +57,16 @@ public class MediapipeBodyReceiver : MonoBehaviour
         //データを保存
         PositionDataManager.Instance.positionData.SetBodyPosition(Body);
 
+    }
+
+    private static bool IsFinite(Vector3 _point)
+    {
+        return !float.IsNaN(_point.x)
+            && !float.IsNaN(_point.y)
+            && !float.IsNaN(_point.z)
+            && !float.IsInfinity(_point.x)
+            && !float.IsInfinity(_point.y)
+            && !float.IsInfinity(_point.z);
     }
 
 }
