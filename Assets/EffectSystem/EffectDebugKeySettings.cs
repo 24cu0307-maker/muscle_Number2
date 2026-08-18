@@ -7,6 +7,7 @@
 *@remarks Inspectorから各Debug表示キーを変更可能*
 *━━━━━━━━━*/
 
+using GameFlowTemplate;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -20,13 +21,14 @@ using UnityEngine.InputSystem.Controls;
 public sealed class EffectDebugKeySettings : MonoBehaviour
 {
     private const string EAlphaPrefix = "Alpha"; //数字KeyCodeの接頭辞
+    private bool b_m_resultRequested; //F10によるResult遷移の多重実行防止
 
     [SerializeField] private KeyCode m_liveEffectToggleKey =
         KeyCode.F7; //LiveEffect確認Panel表示切替Key
     [SerializeField] private KeyCode m_voltageToggleKey =
         KeyCode.F8; //Voltage Debug Panel表示切替Key
     [SerializeField] private KeyCode m_exitDebugKey =
-        KeyCode.Escape; //Debug再生終了Key
+        KeyCode.F10; //Debug再生終了Key
 
     public KeyCode LiveEffectToggleKey
     {
@@ -50,6 +52,26 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
         {
             return m_exitDebugKey;
         }
+    }
+
+    /// <summary>
+    /// Debug表示Componentの有効状態に関係なく、Result遷移キーを監視します。
+    /// </summary>
+    private void Update()
+    {
+        if (b_m_resultRequested || !IsKeyDown(m_exitDebugKey))return;
+
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogWarning(
+                "[EffectDebugKeySettings] GameManagerが見つからないためResultへ遷移できません。",
+                this);
+            return;
+        }
+
+        b_m_resultRequested = true;
+        gameManager.FinishGame();
     }
 
     /// <summary>

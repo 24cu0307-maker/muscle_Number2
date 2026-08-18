@@ -21,7 +21,6 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
 
     private readonly List<string> m_effectNames = new List<string>(); //演出名一覧
     private int m_selectedIndex; //選択中演出番号
-    private EffectDebugKeySettings m_debugKeySettings; //共通Debug Key設定
 
     /// <summary>
     /// 同じObjectのEffectSystemと登録済み演出名を取得します。
@@ -29,7 +28,7 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
     private void Awake()
     {
         LiveStagePostProcess.GetOrCreate(gameObject);
-        m_debugKeySettings = EffectDebugKeySettings.GetOrCreate(gameObject);
+        EffectDebugKeySettings.GetOrCreate(gameObject);
 
         if (m_effectSystem == null)
         {
@@ -37,31 +36,6 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
         }
 
         RefreshNames();
-    }
-
-    private void Update()
-    {
-        if (m_debugKeySettings == null)
-        {
-            m_debugKeySettings = EffectDebugKeySettings.GetOrCreate(gameObject);
-        }
-
-        if (m_debugKeySettings != null
-            && EffectDebugKeySettings.IsKeyDown(
-                m_debugKeySettings.ExitDebugKey))
-        {
-            ExitDebug();
-        }
-    }
-
-    /// <summary>EditorではPlay Modeを停止し、BuildではApplicationを終了します。</summary>
-    private static void ExitDebug()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
     }
 
     /// <summary>
