@@ -5220,7 +5220,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a228f84b8db84e61a06a41fd34fe6f83, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LaserBeamController
   m_laserColor: {r: 0.01, g: 1, b: 1, a: 1}
   m_emissionIntensity: 8
@@ -5639,6 +5639,7 @@ GameObject:
   - component: {fileID: 130277793}
   - component: {fileID: 130277792}
   - component: {fileID: 130277791}
+  - component: {fileID: 130277795}
   m_Layer: 0
   m_Name: LiveEffectDeployment
   m_TagString: Untagged
@@ -5772,6 +5773,26 @@ Transform:
   - {fileID: 799275658}
   m_Father: {fileID: 2130000102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &130277795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130277790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd50411d70445e488d26cad2e85670c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::LiveStagePostProcess
+  m_bloomThreshold: 0.85
+  m_bloomIntensity: 1.1
+  m_bloomScatter: 0.72
+  b_m_highQualityFiltering: 1
+  m_postExposure: 0.08
+  m_contrast: 18
+  m_saturation: 8
+  m_colorFilter: {r: 1, g: 0.98, b: 0.97, a: 1}
 --- !u!1 &131874073
 GameObject:
   m_ObjectHideFlags: 0
