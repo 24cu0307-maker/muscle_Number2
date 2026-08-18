@@ -32,7 +32,7 @@ public static class GameSession
     public static void StartNewGame()
     {
         m_score = MinimumScore;
-        Load(FilmingScene);
+        Load(TutorialScene);
     }
 
     /// <summary>
