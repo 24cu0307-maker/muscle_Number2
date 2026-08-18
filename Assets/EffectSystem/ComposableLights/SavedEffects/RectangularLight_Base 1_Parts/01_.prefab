@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &100000
+--- !u!1 &290922476335672674
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 400000}
-  - component: {fileID: 11400000}
-  - component: {fileID: 3518030913169292784}
-  - component: {fileID: 796859626890801203}
+  - component: {fileID: 3928430455699646799}
+  - component: {fileID: 4904203038202551923}
+  - component: {fileID: 7842912083635193336}
+  - component: {fileID: 3519102075928386334}
   m_Layer: 0
-  m_Name: Effect_Edge_Rim
+  m_Name: 01_
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &400000
+--- !u!4 &3928430455699646799
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 290922476335672674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -34,46 +34,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &11400000
+--- !u!114 &4904203038202551923
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 290922476335672674}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e97d8ea9e9541d0911da3f87b93f29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdditionalSpotLightEffect
-  m_color: {r: 1, g: 0.22, b: 0.08, a: 1}
-  m_intensity: 2500
-  m_range: 30.59
-  m_spotAngle: 62
-  m_innerAngleRatio: 0.52
+  m_color: {r: 1, g: 1, b: 1, a: 1}
+  m_intensity: 4087.5
+  m_range: 94.04
+  m_spotAngle: 73
+  m_innerAngleRatio: 1
   b_m_useShadows: 1
-  m_shadowStrength: 0.6
---- !u!108 &3518030913169292784
+  m_shadowStrength: 1
+--- !u!108 &7842912083635193336
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 290922476335672674}
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 1, g: 0.22, b: 0.08, a: 1}
-  m_Intensity: 2500
-  m_Range: 30.59
-  m_SpotAngle: 62
-  m_InnerSpotAngle: 32.239998
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 4087.5
+  m_Range: 94.04
+  m_SpotAngle: 73
+  m_InnerSpotAngle: 73
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.6
+    m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -118,13 +118,13 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &796859626890801203
+--- !u!114 &3519102075928386334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 290922476335672674}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
