@@ -14,10 +14,12 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class GameSession
 {
+    
     public const string TitleScene = "Title";           // タイトルシーン名
     public const string TutorialScene = "Tutorial";     // チュートリアルシーン名
     public const string GameplayScene = "Gameplay";     // インゲームシーン名
     public const string ResultScene = "Result";         // リザルトシーン名
+    public const string FilmingScene = "Filming";           //写真撮影シーン名
 
     private const int MinimumScore = 0;                  // スコアの最小値
     private static int m_score;                          // 現在のスコア
@@ -30,7 +32,7 @@ public static class GameSession
     public static void StartNewGame()
     {
         m_score = MinimumScore;
-        Load(TutorialScene);
+        Load(FilmingScene);
     }
 
     /// <summary>

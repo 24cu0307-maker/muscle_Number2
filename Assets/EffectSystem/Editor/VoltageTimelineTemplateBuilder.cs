@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VoltageTimelineTemplateBuilder.cs*
 *@brief Voltageとライブ演出を階層化したTimeline Templateを生成する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks 現在SceneのEffect配置をTrackへBindingするEditor専用機能*

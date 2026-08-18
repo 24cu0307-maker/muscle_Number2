@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file VenueVoltageSystem.cs*
 *@brief スコアと連続成功に応じて会場の色と成功音を変化させる*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
 *@remarks Gameplay_EffectWork専用の独立追加システム*

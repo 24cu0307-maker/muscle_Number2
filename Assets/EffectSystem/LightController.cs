@@ -1,7 +1,7 @@
 /*━━━━━━━━━
 @file LightController.cs
 @brief ライト点灯・回転・移動・色変更を制御
-@author 24CU0000 Name
+@author 24cu0312 久場洸太
 @date 2026/07/10
 最終更新日 2026/07/10
 @remarks EffectSystemからIlluminationを呼んで使用

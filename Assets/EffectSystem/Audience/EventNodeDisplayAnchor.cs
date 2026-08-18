@@ -1,7 +1,7 @@
 /*━━━━━━━━━*
 *@file EventNodeDisplayAnchor.cs*
 *@brief Event Node用World Space Canvasの手動配置位置を表示する*
-*@author 24CU0000 Name*
+*@author 24cu0312 久場洸太*
 *@date 2026/08/03*
 *最終更新日 2026/08/03*
 *@remarks Scene View上で左・中央・右の位置調整に使用する*

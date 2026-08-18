@@ -37,6 +37,9 @@ public class BodyController : MonoBehaviour
         //カメラ
         cameraJudge = new CameraRelativeMovement();
 
+        _camera = GameObject.Find("Camera");
+
+
         //方向計算クラス
         _DirectionVectorCalculator = new DirectionVectorCalculator();
     }
@@ -49,7 +52,12 @@ public class BodyController : MonoBehaviour
         //座標を取得
         _Body = PositionDataManager.Instance.positionData.Body;
 
-        
+        if(_camera == null)
+        {
+            _camera = GameObject.Find("Camera");
+
+        }
+
 
 
         //方向

@@ -15,16 +15,19 @@ public class ExcelLoader : MonoBehaviour
 
     public ExcelPoseJudgeLoader excelPoseJudgeLoader;
     public ExcelPoseTimeFlowLoader excelPoseTimeFlowLoader;
+    public InputPoseJudge inputPoseJudge;
 
     private void Awake()
     {
         //CSVファイルを読み込む為のクラス
         excelPoseJudgeLoader = new ExcelPoseJudgeLoader();
         excelPoseTimeFlowLoader = new ExcelPoseTimeFlowLoader();
+        inputPoseJudge = new InputPoseJudge();
 
         //CSVファイルを読み込み
         excelPoseJudgeLoader.LoadCsv();
-        excelPoseTimeFlowLoader.LoadCsv();
+        excelPoseTimeFlowLoader.LoadCsv("PoseTimeFlow");
+        inputPoseJudge.LoadCsv();
     }
 
 
@@ -89,6 +92,8 @@ public class ExcelPoseJudgeLoader
                 float.Parse(cells[8]),
                 float.Parse(cells[9]));
 
+            pose.PoseMax = lines.Length - 1;
+
             //ポーズを追加
             poseList.Add(pose);
 
@@ -96,6 +101,75 @@ public class ExcelPoseJudgeLoader
     }
 
 }
+
+///<summary>
+///ポーズの判定のCSVデータの読み込み(入力用)
+///</summary>
+public class InputPoseJudge
+{
+    private List<CSVPoseData> poseList = new List<CSVPoseData>();
+
+    public List<CSVPoseData> GetCSVDatas() { return poseList; }
+
+    public void LoadCsv()
+    {
+        TextAsset csv =
+            Resources.Load<TextAsset>("InputPoseJudge");
+
+        if (csv == null)
+        {
+            Debug.LogError("CSVが見つかりません");
+            return;
+        }
+
+        string[] lines = csv.text.Split('\n');
+
+        // 1行目はヘッダーなので飛ばす
+        for (int i = 1; i < lines.Length; i++)
+        {
+            //空行がある場合スキップ
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
+
+            //カンマで分割
+            string[] cells = lines[i].Trim().Split(',');
+
+            //CSVData作成
+            CSVPoseData pose = new CSVPoseData();
+
+            //名前を保存
+            pose.PoseName = cells[0];
+
+            pose.PoseID = int.Parse(cells[1]);
+
+            //左肩を保存
+            pose.LeftShoulderRotation = new Vector3(
+                float.Parse(cells[2]),
+                float.Parse(cells[3]));
+
+            //左腕を保存
+            pose.LeftelbowRotation = new Vector3(
+                float.Parse(cells[4]),
+                float.Parse(cells[5]));
+
+
+            pose.RightShoulderRotation = new Vector3(
+                float.Parse(cells[6]),
+                float.Parse(cells[7]));
+
+            pose.RightelbowRotation = new Vector3(
+                float.Parse(cells[8]),
+                float.Parse(cells[9]));
+
+            pose.PoseMax = lines.Length - 1;
+
+            //ポーズを追加
+            poseList.Add(pose);
+
+        }
+    }
+
+}
+
 
 ///<summary>
 ///ポーズの順番のCSVデータの読み込み
@@ -107,10 +181,10 @@ public class ExcelPoseTimeFlowLoader
     public List<CSVDataPoseFlow> GetCSVDatas() { return poseList; }
 
 
-    public void LoadCsv()
+    public void LoadCsv(string _excelName)
     {
         TextAsset csv =
-            Resources.Load<TextAsset>("PoseTimeFlow");
+            Resources.Load<TextAsset>(_excelName);
 
         if (csv == null)
         {

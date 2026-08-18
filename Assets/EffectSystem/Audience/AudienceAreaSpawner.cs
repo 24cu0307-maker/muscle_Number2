@@ -1,75 +1,78 @@
-/*â”â”â”â”â”â”â”â”â”*
+/*„ª„ª„ª„ª„ª„ª„ª„ª„ª*
 *@file AudienceAreaSpawner.cs*
-*@brief æŒ‡å®šç¯„å›²ã¸è¦³å®¢ã‚’ç­‰é–“éš”ã¨èª¤å·®ä»˜ãã§ç”Ÿæˆã™ã‚‹*
-*@author 24CU0000 Name*
+*@brief w’è”ÍˆÍ‚ÖŠÏ‹q‚ğ“™ŠÔŠu‚ÆŒë·•t‚«‚Å¶¬‚·‚é*
+*@author 24cu0312 ‹vêŸ©‘¾*
 *@date 2026/07/29*
-*æœ€çµ‚æ›´æ–°æ—¥ 2026/07/29*
-*@remarks Meshã¾ãŸã¯Prefabã‚’Inspectorã‹ã‚‰è¨­å®š*
-*â”â”â”â”â”â”â”â”â”*/
+*ÅIXV“ú 2026/07/29*
+*@remarks Mesh‚Ü‚½‚ÍPrefab‚ğInspector‚©‚çİ’è*
+*„ª„ª„ª„ª„ª„ª„ª„ª„ª*/
 
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 /// <summary>
-/// çŸ©å½¢ç¯„å›²ã¸æŒ‡å®šäººæ•°ã®è¦³å®¢ã‚’Gridé…ç½®ã—ã¾ã™ã€‚
+/// ‹éŒ`”ÍˆÍ‚Öw’èl”‚ÌŠÏ‹q‚ğGrid”z’u‚µ‚Ü‚·B
 /// </summary>
 public sealed class AudienceAreaSpawner : MonoBehaviour
 {
-    private const string EAudienceName = "Audience"; //ç”ŸæˆObjectå
-    private const int EMinimumAudienceCount = 1; //æœ€å°äººæ•°
-    private const float EMinimumIntervalSeconds = 0.1f; //æœ€çŸ­Reactioné–“éš”
-    private const float EMinimumCullingInterval = 0.02f; //æœ€çŸ­å¯è¦–åˆ¤å®šé–“éš”
-    private const float ERaycastMargin = 1.0f; //ç”Ÿæˆç¯„å›²ä¸Šä¸‹ã®Rayä½™ç™½
-    private const float EMinimumSuccessReactionRatio = 0.2f; //æœ€ä½æˆåŠŸåå¿œäººæ•°ç‡
-    private const float EMaximumSuccessReactionRatio = 1.0f; //æœ€é«˜æˆåŠŸåå¿œäººæ•°ç‡
-    private const float EFailureReactionRatio = 0.45f; //å¤±æ•—åå¿œäººæ•°ç‡
-    private const float EMinimumSuccessStrength = 0.7f; //æœ€ä½æˆåŠŸå‹•ä½œå¼·åº¦
-    private const float EMaximumSuccessStrength = 1.8f; //æœ€é«˜æˆåŠŸå‹•ä½œå¼·åº¦
-    private const float EFailureReactionStrength = 0.8f; //å¤±æ•—å‹•ä½œå¼·åº¦
+    private const string EAudienceName = "Audience"; //¶¬Object–¼
+    private const int EMinimumAudienceCount = 1; //Å¬l”
+    private const float EMinimumIntervalSeconds = 0.1f; //Å’ZReactionŠÔŠu
+    private const float EMinimumCullingInterval = 0.02f; //Å’Z‰Â‹”»’èŠÔŠu
+    private const float ERaycastMargin = 1.0f; //¶¬”ÍˆÍã‰º‚ÌRay—]”’
+    private const float EMinimumSuccessReactionRatio = 0.2f; //Å’á¬Œ÷”½‰l”—¦
+    private const float EMaximumSuccessReactionRatio = 1.0f; //Å‚¬Œ÷”½‰l”—¦
+    private const float EFailureReactionRatio = 0.45f; //¸”s”½‰l”—¦
+    private const float EMinimumSuccessStrength = 0.7f; //Å’á¬Œ÷“®ì‹­“x
+    private const float EMaximumSuccessStrength = 1.8f; //Å‚¬Œ÷“®ì‹­“x
+    private const float EFailureReactionStrength = 0.8f; //¸”s“®ì‹­“x
 
-    [SerializeField] private GameObject m_audiencePrefab; //ä»»æ„ã®è¦³å®¢Prefab
-    [SerializeField] private Mesh m_audienceMesh; //Prefabæœªä½¿ç”¨æ™‚ã®Mesh
-    [SerializeField] private Material[] m_materials; //è¦³å®¢Materialä¸€è¦§
-    [SerializeField] private GameObject m_generationVolumeObject; //ç”Ÿæˆç¯„å›²Cube
-    [SerializeField] private Vector2 m_areaSize = new Vector2(20.0f, 12.0f); //é…ç½®ç¯„å›²
-    [SerializeField] private float m_areaHeight = 3.0f; //ç”Ÿæˆç¯„å›²ã®é«˜ã•
-    [SerializeField] private bool b_m_showAreaVolumes = true; //åŠé€æ˜ç¯„å›²è¡¨ç¤º
-    [SerializeField] private GameObject[] m_exclusionObjects; //ç”Ÿæˆç¦æ­¢Cubeä¸€è¦§
-    [SerializeField] private LayerMask m_groundLayers = ~0; //åºŠã¨ã—ã¦åˆ¤å®šã™ã‚‹Layer
-    [SerializeField] private float m_groundOffset; //è¶³å…ƒã¨åºŠã®è¿½åŠ è·é›¢
-    [SerializeField] private int m_audienceCount = 100; //ç”Ÿæˆäººæ•°
-    [SerializeField] private Vector2 m_positionError = new Vector2(0.25f, 0.25f); //ä½ç½®èª¤å·®
-    [SerializeField] private Vector2 m_scaleRange = new Vector2(0.9f, 1.1f); //Scaleå·®
-    [SerializeField] private float m_yawError = 8.0f; //Yå›è»¢èª¤å·®
-    [SerializeField] private bool b_m_spawnOnStart = true; //é–‹å§‹æ™‚è‡ªå‹•ç”Ÿæˆ
-    [SerializeField] private bool b_m_autoReaction = true; //è‡ªå‹•Reaction
+
+    [SerializeField,Range(0.1f,1.0f)] private float m_spawnAreaScale; 
+
+    [SerializeField] private GameObject m_audiencePrefab; //”CˆÓ‚ÌŠÏ‹qPrefab
+    [SerializeField] private Mesh m_audienceMesh; //Prefab–¢g—p‚ÌMesh
+    [SerializeField] private Material[] m_materials; //ŠÏ‹qMaterialˆê——
+    [SerializeField] private GameObject m_generationVolumeObject; //¶¬”ÍˆÍCube
+    [SerializeField] private Vector2 m_areaSize = new Vector2(20.0f, 12.0f); //”z’u”ÍˆÍ
+    [SerializeField] private float m_areaHeight = 3.0f; //¶¬”ÍˆÍ‚Ì‚‚³
+    [SerializeField] private bool b_m_showAreaVolumes = true; //”¼“§–¾”ÍˆÍ•\¦
+    [SerializeField] private GameObject[] m_exclusionObjects; //¶¬‹Ö~Cubeˆê——
+    [SerializeField] private LayerMask m_groundLayers = ~0; //°‚Æ‚µ‚Ä”»’è‚·‚éLayer
+    [SerializeField] private float m_groundOffset; //‘«Œ³‚Æ°‚Ì’Ç‰Á‹——£
+    [SerializeField] private int m_audienceCount = 100; //¶¬l”
+    [SerializeField] private Vector2 m_positionError = new Vector2(0.25f, 0.25f); //ˆÊ’uŒë·
+    [SerializeField] private Vector2 m_scaleRange = new Vector2(0.9f, 1.1f); //Scale·
+    [SerializeField] private float m_yawError = 8.0f; //Y‰ñ“]Œë·
+    [SerializeField] private bool b_m_spawnOnStart = true; //ŠJn©“®¶¬
+    [SerializeField] private bool b_m_autoReaction = true; //©“®Reaction
     [SerializeField] private Vector2 m_reactionIntervalRange =
-        new Vector2(1.0f, 2.5f); //Reactioné–“éš”
-    [SerializeField] private bool b_m_enableCameraCulling = true; //ç”»é¢å¤–ã®è¦³å®¢ã‚’ç„¡åŠ¹åŒ–
-    [SerializeField] private Camera m_targetCamera; //å¯è¦–ç¯„å›²ã‚’ä½¿ç”¨ã™ã‚‹Camera
-    [SerializeField] private float m_cullingInterval = 0.15f; //å¯è¦–åˆ¤å®šé–“éš”
-    [SerializeField] private float m_cullingMargin = 0.5f; //ç”»é¢ç«¯åˆ¤å®šã®ä½™ç™½
+        new Vector2(1.0f, 2.5f); //ReactionŠÔŠu
+    [SerializeField] private bool b_m_enableCameraCulling = true; //‰æ–ÊŠO‚ÌŠÏ‹q‚ğ–³Œø‰»
+    [SerializeField] private Camera m_targetCamera; //‰Â‹”ÍˆÍ‚ğg—p‚·‚éCamera
+    [SerializeField] private float m_cullingInterval = 0.15f; //‰Â‹”»’èŠÔŠu
+    [SerializeField] private float m_cullingMargin = 0.5f; //‰æ–Ê’[”»’è‚Ì—]”’
     [Header("Voltage Reactions")]
-    [SerializeField] private VenueVoltageSystem m_voltageSystem; //æˆåŠŸå¤±æ•—é€šçŸ¥å…ƒ
-    [SerializeField] private bool b_m_useVoltageReactions = true; //åˆ¤å®šé€£å‹•ã‚’ä½¿ç”¨ã™ã‚‹ã‹
+    [SerializeField] private VenueVoltageSystem m_voltageSystem; //¬Œ÷¸”s’Ê’mŒ³
+    [SerializeField] private bool b_m_useVoltageReactions = true; //”»’è˜A“®‚ğg—p‚·‚é‚©
     [SerializeField] private float m_minimumSuccessReactionRatio =
-        EMinimumSuccessReactionRatio; //Voltageæœ€ä½æ™‚ã®æˆåŠŸåå¿œäººæ•°ç‡
+        EMinimumSuccessReactionRatio; //VoltageÅ’á‚Ì¬Œ÷”½‰l”—¦
     [SerializeField] private float m_maximumSuccessReactionRatio =
-        EMaximumSuccessReactionRatio; //Voltageæœ€é«˜æ™‚ã®æˆåŠŸåå¿œäººæ•°ç‡
+        EMaximumSuccessReactionRatio; //VoltageÅ‚‚Ì¬Œ÷”½‰l”—¦
     [SerializeField] private float m_failureReactionRatio =
-        EFailureReactionRatio; //å¤±æ•—æ™‚ã®åå¿œäººæ•°ç‡
+        EFailureReactionRatio; //¸”s‚Ì”½‰l”—¦
     [SerializeField] private float m_minimumSuccessStrength =
-        EMinimumSuccessStrength; //Voltageæœ€ä½æ™‚ã®æˆåŠŸå‹•ä½œå¼·åº¦
+        EMinimumSuccessStrength; //VoltageÅ’á‚Ì¬Œ÷“®ì‹­“x
     [SerializeField] private float m_maximumSuccessStrength =
-        EMaximumSuccessStrength; //Voltageæœ€é«˜æ™‚ã®æˆåŠŸå‹•ä½œå¼·åº¦
+        EMaximumSuccessStrength; //VoltageÅ‚‚Ì¬Œ÷“®ì‹­“x
     [SerializeField] private float m_failureReactionStrength =
-        EFailureReactionStrength; //å¤±æ•—æ™‚ã®å‹•ä½œå¼·åº¦
+        EFailureReactionStrength; //¸”s‚Ì“®ì‹­“x
 
     private readonly List<AudienceReaction> m_audiences =
-        new List<AudienceReaction>(); //ç”Ÿæˆæ¸ˆã¿è¦³å®¢ä¸€è¦§
+        new List<AudienceReaction>(); //¶¬Ï‚İŠÏ‹qˆê——
     private readonly List<AudienceReaction> m_visibleAudiences =
-        new List<AudienceReaction>(); //ç¾åœ¨ç”»é¢å†…ã®è¦³å®¢ä¸€è¦§
+        new List<AudienceReaction>(); //Œ»İ‰æ–Ê“à‚ÌŠÏ‹qˆê——
 
     public IReadOnlyList<AudienceReaction> Audiences
     {
@@ -79,12 +82,12 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         }
     }
     private readonly List<Bounds> m_audienceBounds =
-        new List<Bounds>(); //è¦³å®¢ã”ã¨ã®åŸºæº–Bounds
-    private float m_nextReactionTime; //æ¬¡å›Reactionæ™‚åˆ»
-    private float m_nextCullingTime; //æ¬¡å›å¯è¦–åˆ¤å®šæ™‚åˆ»
+        new List<Bounds>(); //ŠÏ‹q‚²‚Æ‚ÌŠî€Bounds
+    private float m_nextReactionTime; //Ÿ‰ñReaction
+    private float m_nextCullingTime; //Ÿ‰ñ‰Â‹”»’è
 
     /// <summary>
-    /// å¿…è¦ãªã‚‰é–‹å§‹æ™‚ã«è¦³å®¢ã‚’ç”Ÿæˆã—ã¾ã™ã€‚
+    /// •K—v‚È‚çŠJn‚ÉŠÏ‹q‚ğ¶¬‚µ‚Ü‚·B
     /// </summary>
     private void Start()
     {
@@ -95,7 +98,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Componentæœ‰åŠ¹æ™‚ã«Voltageé€šçŸ¥ã‚’è³¼èª­ã—ã¾ã™ã€‚
+    /// Component—LŒø‚ÉVoltage’Ê’m‚ğw“Ç‚µ‚Ü‚·B
     /// </summary>
     private void OnEnable()
     {
@@ -104,7 +107,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Componentç„¡åŠ¹æ™‚ã«Voltageé€šçŸ¥ã‚’è§£é™¤ã—ã¾ã™ã€‚
+    /// Component–³Œø‚ÉVoltage’Ê’m‚ğ‰ğœ‚µ‚Ü‚·B
     /// </summary>
     private void OnDisable()
     {
@@ -112,7 +115,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ä¸€å®šé–“éš”ã§è¦³å®¢ã¸ãƒ©ãƒ³ãƒ€ãƒ ãªãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚
+    /// ˆê’èŠÔŠu‚ÅŠÏ‹q‚Öƒ‰ƒ“ƒ_ƒ€‚ÈƒŠƒAƒNƒVƒ‡ƒ“‚ğÀs‚µ‚Ü‚·B
     /// </summary>
     private void Update()
     {
@@ -128,72 +131,75 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         PlayRandomReaction();
         float minimumInterval =
-            Mathf.Max(EMinimumIntervalSeconds, m_reactionIntervalRange.x); //æœ€çŸ­é–“éš”
+            Mathf.Max(EMinimumIntervalSeconds, m_reactionIntervalRange.x); //Å’ZŠÔŠu
         float maximumInterval =
-            Mathf.Max(minimumInterval, m_reactionIntervalRange.y); //æœ€é•·é–“éš”
+            Mathf.Max(minimumInterval, m_reactionIntervalRange.y); //Å’·ŠÔŠu
         m_nextReactionTime =
             Time.time + Random.Range(minimumInterval, maximumInterval);
     }
 
     /// <summary>
-    /// ç¾åœ¨ã®è¨­å®šã‹ã‚‰è¦³å®¢ã‚’å†ç”Ÿæˆã—ã¾ã™ã€‚
+    /// Œ»İ‚Ìİ’è‚©‚çŠÏ‹q‚ğÄ¶¬‚µ‚Ü‚·B
     /// </summary>
     [ContextMenu("Spawn Audience")]
     public void SpawnAudience()
     {
         ClearAudience();
         int audienceCount =
-            Mathf.Max(EMinimumAudienceCount, m_audienceCount); //å®‰å…¨ãªäººæ•°
-        Vector2 horizontalSize = GetHorizontalAreaSize(); //ç¾åœ¨ã®æ¨ªãƒ»å¥¥è¡Œå¯¸æ³•
+            Mathf.Max(EMinimumAudienceCount, m_audienceCount); //ˆÀ‘S‚Èl”
+        Vector2 horizontalSize = GetHorizontalAreaSize(); //Œ»İ‚Ì‰¡E‰œs¡–@
         int columns = Mathf.CeilToInt(Mathf.Sqrt(
             audienceCount
             * horizontalSize.x
-            / Mathf.Max(0.01f, horizontalSize.y))); //æ¨ªæ•°
-        int rows = Mathf.CeilToInt((float)audienceCount / columns); //ç¸¦æ•°
+            / Mathf.Max(0.01f, horizontalSize.y))); //‰¡”
+        int rows = Mathf.CeilToInt((float)audienceCount / columns); //c”
         List<Vector3> candidatePositions =
             CreateCandidatePositions(
                 columns,
-                rows); //ç¦æ­¢ç¯„å›²ã‚’é™¤å¤–ã—ãŸå€™è£œä½ç½®
+                rows); //‹Ö~”ÍˆÍ‚ğœŠO‚µ‚½Œó•âˆÊ’u
         int spawnCount = Mathf.Min(
             audienceCount,
-            candidatePositions.Count); //å®Ÿéš›ã«ç”Ÿæˆå¯èƒ½ãªäººæ•°
+            candidatePositions.Count); //ÀÛ‚É¶¬‰Â”\‚Èl”
         for (int i = 0; i < spawnCount; ++i)
         {
             int candidateIndex = Mathf.Min(
                 candidatePositions.Count - 1,
                 Mathf.FloorToInt(
-                    (float)i * candidatePositions.Count / spawnCount)); //å‡ç­‰æŠ½å‡ºä½ç½®
+                    (float)i * candidatePositions.Count / spawnCount)); //‹Ï“™’ŠoˆÊ’u
             CreateAudience(i, candidatePositions[candidateIndex]);
         }
 
         if (spawnCount < audienceCount)
         {
             Debug.LogWarning(
-                $"ç”Ÿæˆå¯èƒ½ãªç¯„å›²ãŒä¸è¶³ã—ã¦ã„ã‚‹ãŸã‚ã€"
-                + $"{audienceCount}äººä¸­{spawnCount}äººã‚’ç”Ÿæˆã—ã¾ã—ãŸã€‚",
+                $"¶¬‰Â”\‚È”ÍˆÍ‚ª•s‘«‚µ‚Ä‚¢‚é‚½‚ßA"
+                + $"{audienceCount}l’†{spawnCount}l‚ğ¶¬‚µ‚Ü‚µ‚½B",
                 this);
         }
     }
 
     /// <summary>
-    /// ç¦æ­¢ç¯„å›²ã‚’é¿ã‘ãŸç­‰é–“éš”ã®ç”Ÿæˆå€™è£œã‚’ä½œæˆã—ã¾ã™ã€‚
+    /// ‹Ö~”ÍˆÍ‚ğ”ğ‚¯‚½“™ŠÔŠu‚Ì¶¬Œó•â‚ğì¬‚µ‚Ü‚·B
     /// </summary>
     private List<Vector3> CreateCandidatePositions(
         int _basecolumns,
         int _baserows)
     {
         List<Vector3> candidatePositions =
-            new List<Vector3>(); //ç”Ÿæˆå¯èƒ½ãªå€™è£œä½ç½®
+            new List<Vector3>(); //¶¬‰Â”\‚ÈŒó•âˆÊ’u
         for (int i = 0; i < _baserows; ++i)
         {
             for (int j = 0; j < _basecolumns; ++j)
             {
+                float areaScale = Mathf.Clamp01(m_spawnAreaScale);
+                float offset = (1.0f - areaScale) * 0.5f;
+
                 float normalizedX = _basecolumns <= 1
                     ? 0.5f
-                    : (float)j / (_basecolumns - 1); //æ­£è¦åŒ–æ¨ªä½ç½®
+                    : offset + (float)j / (_basecolumns - 1) * areaScale; //³‹K‰»‰¡ˆÊ’u
                 float normalizedZ = _baserows <= 1
                     ? 0.5f
-                    : (float)i / (_baserows - 1); //æ­£è¦åŒ–å¥¥è¡Œä½ç½®
+                    : offset + (float)i / (_baserows - 1) * areaScale; //³‹K‰»‰œsˆÊ’u
                 if (!TryGetGroundPosition(
                     normalizedX,
                     normalizedZ,
@@ -208,7 +214,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ç”ŸæˆCubeå†…ã‹ã‚‰ä¸‹å‘ãã«åºŠã‚’æ¤œç´¢ã—ã¦Localé…ç½®ä½ç½®ã‚’è¿”ã—ã¾ã™ã€‚
+    /// ¶¬Cube“à‚©‚ç‰ºŒü‚«‚É°‚ğŒŸõ‚µ‚ÄLocal”z’uˆÊ’u‚ğ•Ô‚µ‚Ü‚·B
     /// </summary>
     private bool TryGetGroundPosition(
         float _normalizedx,
@@ -233,13 +239,13 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         }
 
         Transform volumeTransform =
-            m_generationVolumeObject.transform; //ç”Ÿæˆç¯„å›²Cube Transform
+            m_generationVolumeObject.transform; //¶¬”ÍˆÍCube Transform
         Vector3 volumeLocalTop = new Vector3(
             Mathf.Lerp(-0.5f, 0.5f, _normalizedx),
             0.5f,
-            Mathf.Lerp(-0.5f, 0.5f, _normalizedz)); //Cubeä¸Šé¢ã®å€™è£œ
+            Mathf.Lerp(-0.5f, 0.5f, _normalizedz)); //Cubeã–Ê‚ÌŒó•â
         Vector3 worldPosition =
-            volumeTransform.TransformPoint(volumeLocalTop); //Rayé–‹å§‹åŸºæº–ä½ç½®
+            volumeTransform.TransformPoint(volumeLocalTop); //RayŠJnŠî€ˆÊ’u
         Vector3 horizontalError = volumeTransform.TransformVector(
             new Vector3(
                 Random.Range(-m_positionError.x, m_positionError.x)
@@ -250,16 +256,16 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         worldPosition += horizontalError + Vector3.up * ERaycastMargin;
         float rayDistance =
             Mathf.Abs(volumeTransform.lossyScale.y)
-            + ERaycastMargin * 2.0f; //Cubeå…¨é«˜ã‚’é€šéã™ã‚‹è·é›¢
+            + ERaycastMargin * 2.0f; //Cube‘S‚‚ğ’Ê‰ß‚·‚é‹——£
         RaycastHit[] hits = Physics.RaycastAll(
             worldPosition,
             Vector3.down,
             rayDistance,
             m_groundLayers,
-            QueryTriggerInteraction.Ignore); //ç¯„å›²å†…ã®åºŠå€™è£œ
-        bool b_foundGround = false; //æœ‰åŠ¹ãªåºŠã‚’å–å¾—ã§ããŸã‹
-        RaycastHit hit = default; //æ¡ç”¨ã™ã‚‹åºŠ
-        float nearestDistance = float.MaxValue; //æœ€çŸ­åºŠè·é›¢
+            QueryTriggerInteraction.Ignore); //”ÍˆÍ“à‚Ì°Œó•â
+        bool b_foundGround = false; //—LŒø‚È°‚ğæ“¾‚Å‚«‚½‚©
+        RaycastHit hit = default; //Ì—p‚·‚é°
+        float nearestDistance = float.MaxValue; //Å’Z°‹——£
         for (int i = 0; i < hits.Length; ++i)
         {
             if (IsAreaHelperCollider(hits[i].collider))continue;
@@ -277,7 +283,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         }
 
         Vector3 hitVolumeLocal =
-            volumeTransform.InverseTransformPoint(hit.point); //Cubeå†…ã®åºŠä½ç½®
+            volumeTransform.InverseTransformPoint(hit.point); //Cube“à‚Ì°ˆÊ’u
         if (Mathf.Abs(hitVolumeLocal.x) > 0.5f
             || Mathf.Abs(hitVolumeLocal.y) > 0.5f
             || Mathf.Abs(hitVolumeLocal.z) > 0.5f)
@@ -291,7 +297,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ç”Ÿæˆç¯„å›²ãƒ»ç¦æ­¢ç¯„å›²è¡¨ç¤ºç”¨Cubeã®Colliderã‹ç¢ºèªã—ã¾ã™ã€‚
+    /// ¶¬”ÍˆÍE‹Ö~”ÍˆÍ•\¦—pCube‚ÌCollider‚©Šm”F‚µ‚Ü‚·B
     /// </summary>
     private bool IsAreaHelperCollider(Collider _collider)
     {
@@ -303,7 +309,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         for (int i = 0; i < m_exclusionObjects.Length; ++i)
         {
-            GameObject exclusionObject = m_exclusionObjects[i]; //ç¦æ­¢ç¯„å›²Object
+            GameObject exclusionObject = m_exclusionObjects[i]; //‹Ö~”ÍˆÍObject
             if (exclusionObject != null
                 && _collider.transform.IsChildOf(
                     exclusionObject.transform))return true;
@@ -313,40 +319,40 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ç¾åœ¨ä½¿ç”¨ã—ã¦ã„ã‚‹ç”Ÿæˆç¯„å›²ã®æ¨ªå¹…ã¨å¥¥è¡Œãã‚’è¿”ã—ã¾ã™ã€‚
+    /// Œ»İg—p‚µ‚Ä‚¢‚é¶¬”ÍˆÍ‚Ì‰¡•‚Æ‰œs‚«‚ğ•Ô‚µ‚Ü‚·B
     /// </summary>
     private Vector2 GetHorizontalAreaSize()
     {
         if (m_generationVolumeObject == null)return m_areaSize;
 
         Vector3 scale =
-            m_generationVolumeObject.transform.lossyScale; //ç”ŸæˆCube Worldå¯¸æ³•
+            m_generationVolumeObject.transform.lossyScale; //¶¬Cube World¡–@
         return new Vector2(Mathf.Abs(scale.x), Mathf.Abs(scale.z));
     }
 
     /// <summary>
-    /// æŒ‡å®šLocalä½ç½®ãŒç”Ÿæˆç¦æ­¢ç¯„å›²å†…ã‹ç¢ºèªã—ã¾ã™ã€‚
+    /// w’èLocalˆÊ’u‚ª¶¬‹Ö~”ÍˆÍ“à‚©Šm”F‚µ‚Ü‚·B
     /// </summary>
     private bool IsInsideExclusionArea(Vector3 _localposition)
     {
         if (m_exclusionObjects == null)return false;
 
         Vector3 worldPosition =
-            transform.TransformPoint(_localposition); //å€™è£œã®Worldä½ç½®
+            transform.TransformPoint(_localposition); //Œó•â‚ÌWorldˆÊ’u
         for (int i = 0; i < m_exclusionObjects.Length; ++i)
         {
-            GameObject exclusionObject = m_exclusionObjects[i]; //ç¢ºèªCube
+            GameObject exclusionObject = m_exclusionObjects[i]; //Šm”FCube
             if (exclusionObject == null)continue;
 
             Vector3 exclusionLocalPosition =
                 exclusionObject.transform.InverseTransformPoint(
-                    worldPosition); //CubeåŸºæº–ã®å€™è£œä½ç½®
+                    worldPosition); //CubeŠî€‚ÌŒó•âˆÊ’u
             bool b_insideX =
-                Mathf.Abs(exclusionLocalPosition.x) <= 0.5f; //Cubeæ¨ªç¯„å›²å†…
+                Mathf.Abs(exclusionLocalPosition.x) <= 0.5f; //Cube‰¡”ÍˆÍ“à
             bool b_insideY =
-                Mathf.Abs(exclusionLocalPosition.y) <= 0.5f; //Cubeé«˜ã•ç¯„å›²å†…
+                Mathf.Abs(exclusionLocalPosition.y) <= 0.5f; //Cube‚‚³”ÍˆÍ“à
             bool b_insideZ =
-                Mathf.Abs(exclusionLocalPosition.z) <= 0.5f; //Cubeå¥¥è¡Œç¯„å›²å†…
+                Mathf.Abs(exclusionLocalPosition.z) <= 0.5f; //Cube‰œs”ÍˆÍ“à
             if (b_insideX && b_insideY && b_insideZ)return true;
         }
 
@@ -354,25 +360,25 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// è¦³å®¢ä¸€ä½“ã‚’ç”Ÿæˆã—ã¦å¤–è¦³å·®ã‚’è¨­å®šã—ã¾ã™ã€‚
+    /// ŠÏ‹qˆê‘Ì‚ğ¶¬‚µ‚ÄŠOŠÏ·‚ğİ’è‚µ‚Ü‚·B
     /// </summary>
     private void CreateAudience(int _index, Vector3 _localposition)
     {
         GameObject audienceObject = m_audiencePrefab != null
             ? Instantiate(m_audiencePrefab, transform)
-            : CreateMeshAudience(); //ç”Ÿæˆã—ãŸè¦³å®¢
+            : CreateMeshAudience(); //¶¬‚µ‚½ŠÏ‹q
         audienceObject.name = $"{EAudienceName}_{_index:000}";
         audienceObject.transform.SetParent(transform, false);
         audienceObject.transform.localPosition = _localposition;
         audienceObject.transform.localRotation =
             Quaternion.Euler(0.0f, Random.Range(-m_yawError, m_yawError), 0.0f);
-        float scale = Random.Range(m_scaleRange.x, m_scaleRange.y); //å€‹ä½“Scale
+        float scale = Random.Range(m_scaleRange.x, m_scaleRange.y); //ŒÂ‘ÌScale
         audienceObject.transform.localScale *= scale;
         ApplyRandomMaterial(audienceObject);
         AlignAudienceFeet(audienceObject, _localposition);
 
         AudienceReaction reaction =
-            audienceObject.GetComponent<AudienceReaction>(); //Reactionåˆ¶å¾¡
+            audienceObject.GetComponent<AudienceReaction>(); //Reaction§Œä
         if (reaction == null)
         {
             reaction = audienceObject.AddComponent<AudienceReaction>();
@@ -383,53 +389,53 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Rendererä¸‹ç«¯ãŒå–å¾—ã—ãŸåºŠä½ç½®ã¸åˆã†ã‚ˆã†è¦³å®¢ã‚’ä¸Šæ–¹å‘ã¸è£œæ­£ã—ã¾ã™ã€‚
+    /// Renderer‰º’[‚ªæ“¾‚µ‚½°ˆÊ’u‚Ö‡‚¤‚æ‚¤ŠÏ‹q‚ğã•ûŒü‚Ö•â³‚µ‚Ü‚·B
     /// </summary>
     private void AlignAudienceFeet(
         GameObject _audienceobject,
         Vector3 _groundlocalposition)
     {
         Renderer[] renderers =
-            _audienceobject.GetComponentsInChildren<Renderer>(true); //è¦³å®¢Rendererç¾¤
+            _audienceobject.GetComponentsInChildren<Renderer>(true); //ŠÏ‹qRendererŒQ
         if (renderers.Length == 0)return;
 
-        Bounds worldBounds = renderers[0].bounds; //è¦³å®¢å…¨ä½“Bounds
+        Bounds worldBounds = renderers[0].bounds; //ŠÏ‹q‘S‘ÌBounds
         for (int i = 1; i < renderers.Length; ++i)
         {
             worldBounds.Encapsulate(renderers[i].bounds);
         }
 
         float groundWorldY =
-            transform.TransformPoint(_groundlocalposition).y; //åºŠWorldé«˜ã•
+            transform.TransformPoint(_groundlocalposition).y; //°World‚‚³
         float heightDifference =
-            groundWorldY - worldBounds.min.y + m_groundOffset; //è¶³å…ƒè£œæ­£é‡
+            groundWorldY - worldBounds.min.y + m_groundOffset; //‘«Œ³•â³—Ê
         _audienceobject.transform.position += Vector3.up * heightDifference;
     }
 
     /// <summary>
-    /// æŒ‡å®šMeshã‹ã‚‰è¦³å®¢Objectã‚’ä½œæˆã—ã¾ã™ã€‚
+    /// w’èMesh‚©‚çŠÏ‹qObject‚ğì¬‚µ‚Ü‚·B
     /// </summary>
     private GameObject CreateMeshAudience()
     {
         GameObject audienceObject = new GameObject(
             EAudienceName,
             typeof(MeshFilter),
-            typeof(MeshRenderer)); //Meshè¦³å®¢
+            typeof(MeshRenderer)); //MeshŠÏ‹q
         audienceObject.GetComponent<MeshFilter>().sharedMesh = m_audienceMesh;
         return audienceObject;
     }
 
     /// <summary>
-    /// ç™»éŒ²Materialã‹ã‚‰ä¸€ã¤ã‚’è¦³å®¢ã¸è¨­å®šã—ã¾ã™ã€‚
+    /// “o˜^Material‚©‚çˆê‚Â‚ğŠÏ‹q‚Öİ’è‚µ‚Ü‚·B
     /// </summary>
     private void ApplyRandomMaterial(GameObject _audienceobject)
     {
         if (m_materials == null || m_materials.Length == 0)return;
 
         Renderer[] renderers =
-            _audienceobject.GetComponentsInChildren<Renderer>(true); //å¤–è¦³Renderer
+            _audienceobject.GetComponentsInChildren<Renderer>(true); //ŠOŠÏRenderer
         Material material =
-            m_materials[Random.Range(0, m_materials.Length)]; //é¸æŠMaterial
+            m_materials[Random.Range(0, m_materials.Length)]; //‘I‘ğMaterial
         for (int i = 0; i < renderers.Length; ++i)
         {
             renderers[i].sharedMaterial = material;
@@ -437,7 +443,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ä¸€éƒ¨ã®è¦³å®¢ã¸ãƒ©ãƒ³ãƒ€ãƒ ãªãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚
+    /// ˆê•”‚ÌŠÏ‹q‚Öƒ‰ƒ“ƒ_ƒ€‚ÈƒŠƒAƒNƒVƒ‡ƒ“‚ğÀs‚µ‚Ü‚·B
     /// </summary>
     public void PlayRandomReaction()
     {
@@ -448,34 +454,34 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             EMinimumAudienceCount,
             Mathf.CeilToInt(
                 m_visibleAudiences.Count
-                * EMinimumSuccessReactionRatio)); //åŒæ™‚Reactionäººæ•°
+                * EMinimumSuccessReactionRatio)); //“¯Reactionl”
         for (int i = 0; i < reactionCount; ++i)
         {
             AudienceReaction audience =
                 m_visibleAudiences[
-                    Random.Range(0, m_visibleAudiences.Count)]; //å¯¾è±¡è¦³å®¢
+                    Random.Range(0, m_visibleAudiences.Count)]; //‘ÎÛŠÏ‹q
             EAudienceReaction reaction =
                 (EAudienceReaction)Random.Range(
                     0,
-                    (int)EAudienceReaction.Disappointed); //é€šå¸¸å‹•ä½œç¨®é¡
+                    (int)EAudienceReaction.Disappointed); //’Êí“®ìí—Ş
             audience.PlayReaction(reaction);
         }
     }
 
     /// <summary>
-    /// æˆåŠŸæ™‚ã«Voltageæ¯”ä¾‹ã®äººæ•°ã¨å¼·åº¦ã§è¦³å®¢ã‚’åå¿œã•ã›ã¾ã™ã€‚
+    /// ¬Œ÷‚ÉVoltage”ä—á‚Ìl”‚Æ‹­“x‚ÅŠÏ‹q‚ğ”½‰‚³‚¹‚Ü‚·B
     /// </summary>
     public void PlaySuccessReaction(float _normalizedvoltage)
     {
-        float voltage = Mathf.Clamp01(_normalizedvoltage); //å®‰å…¨ãªVoltage
+        float voltage = Mathf.Clamp01(_normalizedvoltage); //ˆÀ‘S‚ÈVoltage
         float reactionRatio = Mathf.Lerp(
             Mathf.Clamp01(m_minimumSuccessReactionRatio),
             Mathf.Clamp01(m_maximumSuccessReactionRatio),
-            voltage); //æˆåŠŸåå¿œäººæ•°ç‡
+            voltage); //¬Œ÷”½‰l”—¦
         float strength = Mathf.Lerp(
             Mathf.Max(0.0f, m_minimumSuccessStrength),
             Mathf.Max(0.0f, m_maximumSuccessStrength),
-            voltage); //æˆåŠŸå‹•ä½œå¼·åº¦
+            voltage); //¬Œ÷“®ì‹­“x
         PlayAudienceReaction(
             true,
             reactionRatio,
@@ -483,7 +489,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// å¤±æ•—æ™‚ã«è¦³å®¢ã¸è½èƒ†ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚
+    /// ¸”s‚ÉŠÏ‹q‚Ö—’_ƒŠƒAƒNƒVƒ‡ƒ“‚ğÀs‚µ‚Ü‚·B
     /// </summary>
     public void PlayFailureReaction()
     {
@@ -494,7 +500,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// æŒ‡å®šå‰²åˆã®ç”»é¢å†…è¦³å®¢ã¸é‡è¤‡ãªã—ã§åˆ¤å®šãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚
+    /// w’èŠ„‡‚Ì‰æ–Ê“àŠÏ‹q‚Öd•¡‚È‚µ‚Å”»’èƒŠƒAƒNƒVƒ‡ƒ“‚ğÀs‚µ‚Ü‚·B
     /// </summary>
     private void PlayAudienceReaction(
         bool _bsuccess,
@@ -507,19 +513,19 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         int reactionCount = Mathf.Clamp(
             Mathf.CeilToInt(m_visibleAudiences.Count * _reactionratio),
             EMinimumAudienceCount,
-            m_visibleAudiences.Count); //ä»Šå›åå¿œã™ã‚‹äººæ•°
+            m_visibleAudiences.Count); //¡‰ñ”½‰‚·‚él”
         for (int i = 0; i < reactionCount; ++i)
         {
             int randomIndex = Random.Range(
                 i,
-                m_visibleAudiences.Count); //æœªé¸æŠç¯„å›²ã®æŠ½é¸ä½ç½®
+                m_visibleAudiences.Count); //–¢‘I‘ğ”ÍˆÍ‚Ì’Š‘IˆÊ’u
             AudienceReaction selectedAudience =
-                m_visibleAudiences[randomIndex]; //ä»Šå›åå¿œã™ã‚‹è¦³å®¢
+                m_visibleAudiences[randomIndex]; //¡‰ñ”½‰‚·‚éŠÏ‹q
             m_visibleAudiences[randomIndex] = m_visibleAudiences[i];
             m_visibleAudiences[i] = selectedAudience;
             EAudienceReaction reaction = _bsuccess
                 ? GetSuccessReaction()
-                : EAudienceReaction.Disappointed; //åˆ¤å®šåˆ¥å‹•ä½œ
+                : EAudienceReaction.Disappointed; //”»’è•Ê“®ì
             selectedAudience.PlayReaction(reaction, _strength);
         }
 
@@ -531,14 +537,14 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ç”»é¢å†…ã§æœ‰åŠ¹ãªè¦³å®¢ã‚’å†åˆ©ç”¨Listã¸é›†ã‚ã¾ã™ã€‚
+    /// ‰æ–Ê“à‚Å—LŒø‚ÈŠÏ‹q‚ğÄ—˜—pList‚ÖW‚ß‚Ü‚·B
     /// </summary>
     private void CollectVisibleAudiences()
     {
         m_visibleAudiences.Clear();
         for (int i = 0; i < m_audiences.Count; ++i)
         {
-            AudienceReaction audience = m_audiences[i]; //ç¢ºèªå¯¾è±¡
+            AudienceReaction audience = m_audiences[i]; //Šm”F‘ÎÛ
             if (audience != null && audience.gameObject.activeInHierarchy)
             {
                 m_visibleAudiences.Add(audience);
@@ -547,11 +553,11 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// æˆåŠŸå‘ã‘ã®ä¸Šæ–¹å‘ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«è¿”ã—ã¾ã™ã€‚
+    /// ¬Œ÷Œü‚¯‚Ìã•ûŒüƒŠƒAƒNƒVƒ‡ƒ“‚ğƒ‰ƒ“ƒ_ƒ€‚É•Ô‚µ‚Ü‚·B
     /// </summary>
     private static EAudienceReaction GetSuccessReaction()
     {
-        int reactionIndex = Random.Range(0, 3); //æˆåŠŸå‹•ä½œã®æŠ½é¸ç•ªå·
+        int reactionIndex = Random.Range(0, 3); //¬Œ÷“®ì‚Ì’Š‘I”Ô†
         switch (reactionIndex)
         {
             case 0:
@@ -564,7 +570,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// VenueVoltageSystemã‚’å–å¾—ã—ã¾ã™ã€‚
+    /// VenueVoltageSystem‚ğæ“¾‚µ‚Ü‚·B
     /// </summary>
     private void FindVoltageSystem()
     {
@@ -574,7 +580,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Voltageã®æˆåŠŸå¤±æ•—é€šçŸ¥ã‚’è³¼èª­ã—ã¾ã™ã€‚
+    /// Voltage‚Ì¬Œ÷¸”s’Ê’m‚ğw“Ç‚µ‚Ü‚·B
     /// </summary>
     private void SubscribeVoltageEvents()
     {
@@ -587,7 +593,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Voltageã®æˆåŠŸå¤±æ•—é€šçŸ¥ã‚’è§£é™¤ã—ã¾ã™ã€‚
+    /// Voltage‚Ì¬Œ÷¸”s’Ê’m‚ğ‰ğœ‚µ‚Ü‚·B
     /// </summary>
     private void UnsubscribeVoltageEvents()
     {
@@ -598,7 +604,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// ç”Ÿæˆæ¸ˆã¿è¦³å®¢ã‚’å‰Šé™¤ã—ã¾ã™ã€‚
+    /// ¶¬Ï‚İŠÏ‹q‚ğíœ‚µ‚Ü‚·B
     /// </summary>
     [ContextMenu("Clear Audience")]
     public void ClearAudience()
@@ -607,7 +613,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         m_audienceBounds.Clear();
         for (int i = transform.childCount - 1; i >= 0; --i)
         {
-            GameObject child = transform.GetChild(i).gameObject; //å‰Šé™¤å¯¾è±¡
+            GameObject child = transform.GetChild(i).gameObject; //íœ‘ÎÛ
             if (Application.isPlaying)
             {
                 Destroy(child);
@@ -620,7 +626,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// æŒ‡å®šCameraã®è¦–éŒå°å¤–ã«ã„ã‚‹è¦³å®¢ã‚’ç„¡åŠ¹åŒ–ã—ã¾ã™ã€‚
+    /// w’èCamera‚Ì‹‘äŠO‚É‚¢‚éŠÏ‹q‚ğ–³Œø‰»‚µ‚Ü‚·B
     /// </summary>
     private void UpdateAudienceVisibility()
     {
@@ -638,32 +644,32 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             Time.unscaledTime
             + Mathf.Max(EMinimumCullingInterval, m_cullingInterval);
         Plane[] frustumPlanes =
-            GeometryUtility.CalculateFrustumPlanes(m_targetCamera); //Cameraè¦–éŒå°
+            GeometryUtility.CalculateFrustumPlanes(m_targetCamera); //Camera‹‘ä
         int audienceCount =
-            Mathf.Min(m_audiences.Count, m_audienceBounds.Count); //åˆ¤å®šå¯èƒ½äººæ•°
+            Mathf.Min(m_audiences.Count, m_audienceBounds.Count); //”»’è‰Â”\l”
         for (int i = 0; i < audienceCount; ++i)
         {
-            AudienceReaction audience = m_audiences[i]; //åˆ¤å®šå¯¾è±¡
+            AudienceReaction audience = m_audiences[i]; //”»’è‘ÎÛ
             if (audience == null)continue;
 
-            Bounds localBounds = m_audienceBounds[i]; //ç”Ÿæˆæ™‚ã®Local Bounds
+            Bounds localBounds = m_audienceBounds[i]; //¶¬‚ÌLocal Bounds
             Vector3 worldCenter =
-                audience.transform.TransformPoint(localBounds.center); //Worldä¸­å¿ƒ
-            Vector3 lossyScale = audience.transform.lossyScale; //ç¾åœ¨World Scale
+                audience.transform.TransformPoint(localBounds.center); //World’†S
+            Vector3 lossyScale = audience.transform.lossyScale; //Œ»İWorld Scale
             Vector3 worldSize = Vector3.Scale(
                 localBounds.size,
                 new Vector3(
                     Mathf.Abs(lossyScale.x),
                     Mathf.Abs(lossyScale.y),
-                    Mathf.Abs(lossyScale.z))); //Worldå¯¸æ³•
+                    Mathf.Abs(lossyScale.z))); //World¡–@
             worldSize += Vector3.one * Mathf.Max(0.0f, m_cullingMargin);
             Bounds worldBounds = new Bounds(
                 worldCenter,
-                worldSize); //ä½™ç™½ä»˜ãåˆ¤å®šBounds
+                worldSize); //—]”’•t‚«”»’èBounds
             bool b_isVisible =
                 GeometryUtility.TestPlanesAABB(
                     frustumPlanes,
-                    worldBounds); //Cameraå†…åˆ¤å®š
+                    worldBounds); //Camera“à”»’è
             if (audience.gameObject.activeSelf != b_isVisible)
             {
                 audience.gameObject.SetActive(b_isVisible);
@@ -672,18 +678,18 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// è¦³å®¢Rendererç¾¤ã‚’ã¾ã¨ã‚ãŸLocal Boundsã‚’ç”Ÿæˆã—ã¾ã™ã€‚
+    /// ŠÏ‹qRendererŒQ‚ğ‚Ü‚Æ‚ß‚½Local Bounds‚ğ¶¬‚µ‚Ü‚·B
     /// </summary>
     private static Bounds CreateAudienceBounds(GameObject _audienceobject)
     {
         Renderer[] renderers =
-            _audienceobject.GetComponentsInChildren<Renderer>(true); //è¦³å®¢Rendererç¾¤
+            _audienceobject.GetComponentsInChildren<Renderer>(true); //ŠÏ‹qRendererŒQ
         if (renderers.Length == 0)
         {
             return new Bounds(Vector3.zero, Vector3.one);
         }
 
-        Bounds worldBounds = renderers[0].bounds; //çµ±åˆå‰World Bounds
+        Bounds worldBounds = renderers[0].bounds; //“‡‘OWorld Bounds
         for (int i = 1; i < renderers.Length; ++i)
         {
             worldBounds.Encapsulate(renderers[i].bounds);
@@ -691,17 +697,17 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         Vector3 localCenter =
             _audienceobject.transform.InverseTransformPoint(
-                worldBounds.center); //Localä¸­å¿ƒ
-        Vector3 lossyScale = _audienceobject.transform.lossyScale; //ç¾åœ¨World Scale
+                worldBounds.center); //Local’†S
+        Vector3 lossyScale = _audienceobject.transform.lossyScale; //Œ»İWorld Scale
         Vector3 localSize = new Vector3(
             SafeDivide(worldBounds.size.x, lossyScale.x),
             SafeDivide(worldBounds.size.y, lossyScale.y),
-            SafeDivide(worldBounds.size.z, lossyScale.z)); //Localå¯¸æ³•
+            SafeDivide(worldBounds.size.z, lossyScale.z)); //Local¡–@
         return new Bounds(localCenter, localSize);
     }
 
     /// <summary>
-    /// ScaleãŒ0ã®å ´åˆã‚’è€ƒæ…®ã—ã¦å®‰å…¨ã«é™¤ç®—ã—ã¾ã™ã€‚
+    /// Scale‚ª0‚Ìê‡‚ğl—¶‚µ‚ÄˆÀ‘S‚ÉœZ‚µ‚Ü‚·B
     /// </summary>
     private static float SafeDivide(float _value, float _divisor)
     {
@@ -711,7 +717,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Sceneä¸Šã¸é…ç½®ç¯„å›²ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚
+    /// Sceneã‚Ö”z’u”ÍˆÍ‚ğ•\¦‚µ‚Ü‚·B
     /// </summary>
     private void OnDrawGizmosSelected()
     {
@@ -731,11 +737,11 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         else
         {
         Gizmos.matrix = transform.localToWorldMatrix;
-        float areaHeight = Mathf.Max(0.01f, m_areaHeight); //å®‰å…¨ãªç”Ÿæˆç¯„å›²é«˜ã•
+        float areaHeight = Mathf.Max(0.01f, m_areaHeight); //ˆÀ‘S‚È¶¬”ÍˆÍ‚‚³
         Vector3 areaCenter =
-            new Vector3(0.0f, areaHeight * 0.5f, 0.0f); //åº•é¢ã‚’åŸºæº–ã«ã—ãŸä¸­å¿ƒ
+            new Vector3(0.0f, areaHeight * 0.5f, 0.0f); //’ê–Ê‚ğŠî€‚É‚µ‚½’†S
         Vector3 areaVolumeSize =
-            new Vector3(m_areaSize.x, areaHeight, m_areaSize.y); //ç”Ÿæˆç¯„å›²å¯¸æ³•
+            new Vector3(m_areaSize.x, areaHeight, m_areaSize.y); //¶¬”ÍˆÍ¡–@
         if (b_m_showAreaVolumes)
         {
             Gizmos.color = new Color(0.0f, 0.8f, 1.0f, 0.12f);
@@ -750,7 +756,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         for (int i = 0; i < m_exclusionObjects.Length; ++i)
         {
-            GameObject exclusionObject = m_exclusionObjects[i]; //è¡¨ç¤ºç¦æ­¢Cube
+            GameObject exclusionObject = m_exclusionObjects[i]; //•\¦‹Ö~Cube
             if (exclusionObject == null)continue;
 
             Gizmos.matrix = exclusionObject.transform.localToWorldMatrix;
