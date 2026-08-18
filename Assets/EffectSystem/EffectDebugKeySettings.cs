@@ -25,6 +25,8 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
         KeyCode.F7; //LiveEffect確認Panel表示切替Key
     [SerializeField] private KeyCode m_voltageToggleKey =
         KeyCode.F8; //Voltage Debug Panel表示切替Key
+    [SerializeField] private KeyCode m_exitDebugKey =
+        KeyCode.Escape; //Debug再生終了Key
 
     public KeyCode LiveEffectToggleKey
     {
@@ -39,6 +41,14 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
         get
         {
             return m_voltageToggleKey;
+        }
+    }
+
+    public KeyCode ExitDebugKey
+    {
+        get
+        {
+            return m_exitDebugKey;
         }
     }
 

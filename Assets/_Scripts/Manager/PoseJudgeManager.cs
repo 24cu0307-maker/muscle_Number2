@@ -32,7 +32,7 @@ public class PoseJudgeManager : MonoBehaviour
 
     private void Awake()
     {
-        
+        LiveStagePostProcess.GetOrCreate(gameObject);
     }
 
 

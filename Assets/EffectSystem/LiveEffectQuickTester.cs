@@ -15,21 +15,22 @@ using UnityEngine;
 /// </summary>
 public sealed class LiveEffectQuickTester : MonoBehaviour
 {
-    private const float EPanelWidth = 420.0f; //パネル横幅
-    private const float EPanelHeight = 125.0f; //パネル縦幅
     private const int EFirstEffectIndex = 0; //先頭演出番号
 
     [SerializeField] private EffectSystem m_effectSystem; //確認対象
-    [SerializeField] private bool b_m_showPanel = true; //パネル表示状態
 
     private readonly List<string> m_effectNames = new List<string>(); //演出名一覧
     private int m_selectedIndex; //選択中演出番号
+    private EffectDebugKeySettings m_debugKeySettings; //共通Debug Key設定
 
     /// <summary>
     /// 同じObjectのEffectSystemと登録済み演出名を取得します。
     /// </summary>
     private void Awake()
     {
+        LiveStagePostProcess.GetOrCreate(gameObject);
+        m_debugKeySettings = EffectDebugKeySettings.GetOrCreate(gameObject);
+
         if (m_effectSystem == null)
         {
             m_effectSystem = GetComponent<EffectSystem>();
@@ -38,61 +39,29 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
         RefreshNames();
     }
 
-    /// <summary>
-    /// 開発確認用操作パネルをゲーム画面へ表示します。
-    /// </summary>
-    private void OnGUI()
+    private void Update()
     {
-        if (!b_m_showPanel || m_effectNames.Count == 0)return;
-
-        GUILayout.BeginArea(
-            new Rect(20.0f, 20.0f, EPanelWidth, EPanelHeight),
-            "LIVE EFFECT QUICK TEST",
-            GUI.skin.window);
-        GUILayout.Label(
-            $"{m_selectedIndex + 1}/{m_effectNames.Count}  "
-            + m_effectNames[m_selectedIndex]);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("<", GUILayout.Width(55.0f)))
+        if (m_debugKeySettings == null)
         {
-            SelectPrevious();
+            m_debugKeySettings = EffectDebugKeySettings.GetOrCreate(gameObject);
         }
 
-        if (GUILayout.Button("PLAY"))
+        if (m_debugKeySettings != null
+            && EffectDebugKeySettings.IsKeyDown(
+                m_debugKeySettings.ExitDebugKey))
         {
-            m_effectSystem.PlayEffect(m_effectNames[m_selectedIndex]);
+            ExitDebug();
         }
-
-        if (GUILayout.Button("STOP"))
-        {
-            m_effectSystem.StopEffectTimeline();
-        }
-
-        if (GUILayout.Button(">", GUILayout.Width(55.0f)))
-        {
-            SelectNext();
-        }
-
-        GUILayout.EndHorizontal();
-        GUILayout.EndArea();
     }
 
-    /// <summary>
-    /// 一つ前の演出を選択します。
-    /// </summary>
-    private void SelectPrevious()
+    /// <summary>EditorではPlay Modeを停止し、BuildではApplicationを終了します。</summary>
+    private static void ExitDebug()
     {
-        m_selectedIndex =
-            (m_selectedIndex - 1 + m_effectNames.Count)
-            % m_effectNames.Count;
-    }
-
-    /// <summary>
-    /// 一つ次の演出を選択します。
-    /// </summary>
-    private void SelectNext()
-    {
-        m_selectedIndex = (m_selectedIndex + 1) % m_effectNames.Count;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     /// <summary>

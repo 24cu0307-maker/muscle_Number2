@@ -37,6 +37,12 @@ public sealed class SpotlightConeController : MonoBehaviour
     private static readonly int m_intensityId = Shader.PropertyToID("_Intensity"); //発光強度のShader ID
     private static readonly int m_opacityId = Shader.PropertyToID("_Opacity");     //透明度のShader ID
     private static readonly int m_volumeFillId = Shader.PropertyToID("_VolumeFill"); //コーン内部の光量
+    private static readonly int m_glowIntensityId =
+        Shader.PropertyToID("_GlowIntensity"); //Bloomへつなぐ外周拡散光の強度
+    private static readonly int m_glowSpreadId =
+        Shader.PropertyToID("_GlowSpread"); //外周拡散光の広がり
+    private static readonly int m_glowSoftnessId =
+        Shader.PropertyToID("_GlowSoftness"); //外周拡散光の輪郭減衰
     private static readonly int m_outerStreakIntensityId =
         Shader.PropertyToID("_OuterStreakIntensity"); //コーン外周を流れる光条強度のShader ID
     private static readonly int m_outerStreakCountId =
@@ -58,6 +64,11 @@ public sealed class SpotlightConeController : MonoBehaviour
     [FormerlySerializedAs("m_opacity")]
     [SerializeField] private float m_opacity = EDefaultOpacity;         //透明度
     [SerializeField, Range(0.0f, 1.0f)] private float m_volumeFill = 0.35f; //輪郭だけでなくコーン内部を満たす濃さ
+
+    [Header("Diffuse Cone Glow")]
+    [SerializeField, Range(0.0f, 2.0f)] private float m_glowIntensity = 0.35f; //Bloomへつなぐ薄い外周発光
+    [SerializeField, Range(0.0f, 0.5f)] private float m_glowSpread = 0.08f; //Cone外側へ膨らませる距離
+    [SerializeField, Range(0.5f, 8.0f)] private float m_glowSoftness = 2.5f; //輪郭の柔らかさ
 
     [Header("Outer Cone Streaks")]
     [SerializeField, Range(0.0f, 2.0f)] private float m_outerStreakIntensity; //コーン外周面へ描く縦方向の光条強度
@@ -251,6 +262,15 @@ public sealed class SpotlightConeController : MonoBehaviour
             m_opacityId,
             Mathf.Clamp(m_opacity, EMinimumOpacity, EMaximumOpacity));
         m_propertyBlock.SetFloat(m_volumeFillId, Mathf.Clamp01(m_volumeFill));
+        m_propertyBlock.SetFloat(
+            m_glowIntensityId,
+            Mathf.Max(0.0f, m_glowIntensity));
+        m_propertyBlock.SetFloat(
+            m_glowSpreadId,
+            Mathf.Max(0.0f, m_glowSpread));
+        m_propertyBlock.SetFloat(
+            m_glowSoftnessId,
+            Mathf.Max(0.5f, m_glowSoftness));
         m_propertyBlock.SetFloat(
             m_outerStreakIntensityId,
             Mathf.Max(0.0f, m_outerStreakIntensity));

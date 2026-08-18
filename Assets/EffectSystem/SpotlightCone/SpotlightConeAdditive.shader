@@ -18,6 +18,9 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
         _EdgeSoftness ("Edge Softness", Range(0.1, 8)) = 2.0
         _StartFade ("Start Fade", Range(0.01, 1)) = 0.12
         _EndFade ("End Fade", Range(0.01, 1)) = 0.3
+        _GlowIntensity ("Diffuse Glow Intensity", Range(0, 2)) = 0.35
+        _GlowSpread ("Diffuse Glow Spread", Range(0, 0.5)) = 0.08
+        _GlowSoftness ("Diffuse Glow Softness", Range(0.5, 8)) = 2.5
         _OuterStreakIntensity ("Outer Streak Intensity", Range(0, 2)) = 0
         _OuterStreakCount ("Outer Streak Count", Range(2, 24)) = 8
         _OuterStreakSharpness ("Outer Streak Sharpness", Range(1, 16)) = 5
@@ -65,6 +68,9 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                 half _EdgeSoftness;
                 half _StartFade;
                 half _EndFade;
+                half _GlowIntensity;
+                half _GlowSpread;
+                half _GlowSoftness;
                 half _OuterStreakIntensity;
                 half _OuterStreakCount;
                 half _OuterStreakSharpness;
@@ -176,6 +182,108 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                     saturate(outerStreak * 0.7h));
                 half3 finalColor = streakColor * compressedBrightness;
                 return half4(finalColor, alpha * _Color.a);
+            }
+            ENDHLSL
+        }
+
+        //元のConeより少し外側へ広げた薄いShellです。
+        //HDR色を加算することでBloomが輪郭外側を拾い、光が空気中へ拡散して見えます。
+        Pass
+        {
+            Name "SpotlightConeDiffuseGlow"
+            Tags { "LightMode" = "SRPDefaultUnlit" }
+            Blend SrcAlpha One
+            ZWrite Off
+            Cull Back
+
+            Stencil
+            {
+                Ref 1
+                ReadMask 1
+                Comp NotEqual
+                Pass Keep
+            }
+
+            HLSLPROGRAM
+            #pragma vertex GlowVert
+            #pragma fragment GlowFrag
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            CBUFFER_START(UnityPerMaterial)
+                half4 _Color;
+                half _Intensity;
+                half _Opacity;
+                half _VolumeFill;
+                half _EdgeSoftness;
+                half _StartFade;
+                half _EndFade;
+                half _GlowIntensity;
+                half _GlowSpread;
+                half _GlowSoftness;
+                half _OuterStreakIntensity;
+                half _OuterStreakCount;
+                half _OuterStreakSharpness;
+                half _OuterStreakEndFadeStart;
+            CBUFFER_END
+
+            struct GlowAttributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct GlowVaryings
+            {
+                float4 positionCS : SV_POSITION;
+                float3 normalWS : TEXCOORD0;
+                float3 viewDirWS : TEXCOORD1;
+                float2 uv : TEXCOORD2;
+            };
+
+            GlowVaryings GlowVert(GlowAttributes input)
+            {
+                GlowVaryings output;
+                //光源側はほぼ動かさず、Coneが広がるほど外側Shellも広げます。
+                float spread = _GlowSpread * smoothstep(0.0, 0.35, input.uv.y);
+                float3 expandedPositionOS =
+                    input.positionOS.xyz + normalize(input.normalOS) * spread;
+                VertexPositionInputs positions =
+                    GetVertexPositionInputs(expandedPositionOS);
+                output.positionCS = positions.positionCS;
+                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                output.viewDirWS =
+                    GetWorldSpaceNormalizeViewDir(positions.positionWS);
+                output.uv = input.uv;
+                return output;
+            }
+
+            half4 GlowFrag(GlowVaryings input) : SV_Target
+            {
+                half facing = abs(dot(
+                    normalize(input.normalWS),
+                    normalize(input.viewDirWS)));
+                //正面は薄く、シルエット付近だけを柔らかく残します。
+                half rim = pow(saturate(1.0h - facing), _GlowSoftness);
+                half startFade = smoothstep(
+                    0.0h,
+                    max(_StartFade, 0.001h),
+                    input.uv.y);
+                half endFade = 1.0h - smoothstep(
+                    1.0h - max(_EndFade, 0.001h),
+                    1.0h,
+                    input.uv.y);
+                half distanceFade = lerp(1.0h, 0.25h, saturate(input.uv.y));
+                half alpha = _Opacity
+                    * _GlowIntensity
+                    * rim
+                    * startFade
+                    * endFade
+                    * distanceFade;
+                half3 glowColor = _Color.rgb
+                    * max(_Intensity, 0.0h)
+                    * _GlowIntensity;
+                return half4(glowColor, alpha * _Color.a);
             }
             ENDHLSL
         }
