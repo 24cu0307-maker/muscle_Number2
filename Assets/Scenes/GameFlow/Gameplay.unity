@@ -5349,6 +5349,9 @@ MonoBehaviour:
   m_emissionIntensity: 3
   m_opacity: 0.13
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -5601,7 +5604,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -5617,7 +5620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5657,6 +5660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
   m_liveEffectToggleKey: 288
   m_voltageToggleKey: 289
+  m_exitDebugKey: 27
 --- !u!114 &130277792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5670,7 +5674,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
   m_effectSystem: {fileID: 130277793}
-  b_m_showPanel: 1
 --- !u!114 &130277793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11148,7 +11151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -16181,118 +16184,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 458608571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &222649178
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 222649182}
-  - component: {fileID: 222649181}
-  - component: {fileID: 222649180}
-  - component: {fileID: 222649179}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &222649179
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222649178}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &222649180
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222649178}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &222649181
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222649178}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &222649182
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222649178}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.05334, y: 19.25, z: 22.2}
-  m_LocalScale: {x: 200, y: 200, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &253336847 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
@@ -17214,7 +17105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -17230,7 +17121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17846,6 +17737,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -27725,6 +27619,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.2
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -33081,6 +32978,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.4
   m_opacity: 0.1
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -39094,6 +38994,9 @@ MonoBehaviour:
   m_emissionIntensity: 5
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -45783,7 +45686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -50969,6 +50872,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.5
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -51125,6 +51031,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -51711,6 +51620,9 @@ MonoBehaviour:
   m_emissionIntensity: 5.5
   m_opacity: 0.19
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -61913,7 +61825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -72314,6 +72226,9 @@ MonoBehaviour:
   m_emissionIntensity: 4
   m_opacity: 0.14
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -72567,6 +72482,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.5
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -73062,6 +72980,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.8
   m_opacity: 0.14
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -73582,6 +73503,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.2
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -83953,7 +83877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -83969,7 +83893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -84238,6 +84162,9 @@ MonoBehaviour:
   m_emissionIntensity: 100
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -90130,6 +90057,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -90441,7 +90371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -95918,7 +95848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -95934,7 +95864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -95977,6 +95907,9 @@ MonoBehaviour:
   m_emissionIntensity: 4
   m_opacity: 0.17
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -107353,7 +107286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -107493,7 +107426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -107509,7 +107442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -108741,6 +108674,9 @@ MonoBehaviour:
   m_emissionIntensity: 5.5
   m_opacity: 0.19
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -108872,6 +108808,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.8
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -109174,6 +109113,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.2
   m_opacity: 0.11
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -109442,6 +109384,9 @@ MonoBehaviour:
   m_emissionIntensity: 1.8
   m_opacity: 0.12
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -119710,6 +119655,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.2
   m_opacity: 0.17
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -125588,7 +125536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -125604,7 +125552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -126018,6 +125966,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.7
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -131763,6 +131714,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -132239,7 +132193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -132255,7 +132209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -137909,6 +137863,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.8
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -138257,7 +138214,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -138273,7 +138230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -138908,6 +138865,9 @@ MonoBehaviour:
   m_emissionIntensity: 100
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -149937,6 +149897,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.4
   m_opacity: 0.1
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -150453,7 +150416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -155767,7 +155730,6 @@ SceneRoots:
   - {fileID: 2130000105}
   - {fileID: 489626251}
   - {fileID: 1356760023}
-  - {fileID: 222649182}
   - {fileID: 1913841250}
   - {fileID: 1439779801}
   - {fileID: 1232293261}
