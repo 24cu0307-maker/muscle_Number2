@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 878190261666400569}
   - component: {fileID: 2791450013189051944}
   m_Layer: 0
-  m_Name: Effect_SpotlightCone
+  m_Name: Effect_SpotlightCone 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,10 +49,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeVisualEffect
   m_color: {r: 1, g: 0.97647065, b: 0.90196085, a: 1}
-  m_intensity: 0.25
+  m_intensity: 1.92
   m_opacity: 0.092
-  m_length: 123.01
-  m_endRadius: 33.8
+  m_length: 68.8
+  m_endRadius: 14.4
   m_segments: 32
 --- !u!33 &4944818678006533195
 MeshFilter:
@@ -123,8 +123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a7a29b3ff44b34a43ba89b0f4a1e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
-  m_length: 123.01
-  m_endRadius: 33.8
+  m_length: 68.8
+  m_endRadius: 14.4
   m_segments: 32
   b_m_capEnd: 0
 --- !u!114 &2791450013189051944
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
   m_lightColor: {r: 1, g: 0.97647065, b: 0.90196085, a: 1}
-  m_emissionIntensity: 0.25
+  m_emissionIntensity: 1.92
   m_opacity: 0.092
   m_volumeFill: 0.35
   m_glowIntensity: 0.35
