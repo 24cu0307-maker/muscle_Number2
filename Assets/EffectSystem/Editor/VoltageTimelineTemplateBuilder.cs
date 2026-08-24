@@ -379,8 +379,16 @@ public static class VoltageTimelineTemplateBuilder
 
         SerializedObject serializedSystem =
             new SerializedObject(effectSystem); //EffectSystem設定
+        EffectList effectList = effectSystem.GetComponent<EffectList>();
+        if (effectList == null)
+        {
+            effectList = Undo.AddComponent<EffectList>(effectSystem.gameObject);
+        }
+        serializedSystem.FindProperty("m_effectList").objectReferenceValue = effectList;
+        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
+        SerializedObject serializedList = new SerializedObject(effectList);
         SerializedProperty effects =
-            serializedSystem.FindProperty("m_effectDatas"); //Effect一覧
+            serializedList.FindProperty("m_effects"); //Effect一覧
         int effectIndex = FindEffectIndex(effects, _effectname); //登録位置
         if (effectIndex < 0)
         {
@@ -398,8 +406,8 @@ public static class VoltageTimelineTemplateBuilder
             _timeline;
         effect.FindPropertyRelative("m_director").objectReferenceValue =
             _director;
-        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
-        EditorUtility.SetDirty(effectSystem);
+        serializedList.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(effectList);
     }
 
     /// <summary>

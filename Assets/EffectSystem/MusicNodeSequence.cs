@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// BGM上へ配置するPose Node情報です。
@@ -21,6 +22,8 @@ public struct SMusicNodeEvent
     public float m_time; //BGM開始からの秒数
     public int m_poseId; //Pose ID
     public string m_eventName; //表示名
+    [FormerlySerializedAs("m_successEffectName")]
+    public string m_successEffectNames; //成功時に固定再生する演出名。複数指定は|区切り
 }
 
 public enum EMusicEventType

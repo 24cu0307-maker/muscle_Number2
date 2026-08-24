@@ -5,12 +5,12 @@ using UnityEngine;
 
 
 ///<summary>
-///CSVƒf[ƒ^‚Ì“Ç‚İ‚İ‚Æ•Û‘¶
+///CSVãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ã¨ä¿å­˜
 ///</summary>
 [DefaultExecutionOrder(-400)]
 public class ExcelLoader : MonoBehaviour
 {
-    //ƒCƒ“ƒXƒ^ƒ“ƒX‰»
+    //ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
     //public static ExcelLoader Instance { get; private set; }
 
     public ExcelPoseJudgeLoader excelPoseJudgeLoader;
@@ -19,12 +19,12 @@ public class ExcelLoader : MonoBehaviour
 
     private void Awake()
     {
-        //CSVƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Şˆ×‚ÌƒNƒ‰ƒX
+        //CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€ç‚ºã®ã‚¯ãƒ©ã‚¹
         excelPoseJudgeLoader = new ExcelPoseJudgeLoader();
         excelPoseTimeFlowLoader = new ExcelPoseTimeFlowLoader();
         excelPoseTimeFlowLoader_SP = new ExcelPoseTimeFlowLoader();
 
-        //CSVƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İ
+        //CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿
         excelPoseJudgeLoader.LoadCsv();
         excelPoseTimeFlowLoader.LoadCsv("PoseTimeFlow");
         excelPoseTimeFlowLoader_SP.LoadCsv("PoseTimeFlow_SP");
@@ -35,7 +35,7 @@ public class ExcelLoader : MonoBehaviour
 }
 
 ///<summary>
-///ƒ|[ƒY‚Ì”»’è‚ÌCSVƒf[ƒ^‚Ì“Ç‚İ‚İ
+///ãƒãƒ¼ã‚ºã®åˆ¤å®šã®CSVãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 ///</summary>
 public class ExcelPoseJudgeLoader
 {
@@ -50,35 +50,35 @@ public class ExcelPoseJudgeLoader
 
         if (csv == null)
         {
-            Debug.LogError("CSV‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
+            Debug.LogError("CSVãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“");
             return;
         }
 
         string[] lines = csv.text.Split('\n');
 
-        // 1s–Ú‚Íƒwƒbƒ_[‚È‚Ì‚Å”ò‚Î‚·
+        // 1è¡Œç›®ã¯ãƒ˜ãƒƒãƒ€ãƒ¼ãªã®ã§é£›ã°ã™
         for (int i = 1; i < lines.Length; i++)
         {
-            //‹ós‚ª‚ ‚éê‡ƒXƒLƒbƒv
+            //ç©ºè¡ŒãŒã‚ã‚‹å ´åˆã‚¹ã‚­ãƒƒãƒ—
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
-            //ƒJƒ“ƒ}‚Å•ªŠ„
+            //ã‚«ãƒ³ãƒã§åˆ†å‰²
             string[] cells = lines[i].Trim().Split(',');
 
-            //CSVDataì¬
+            //CSVDataä½œæˆ
             CSVPoseData pose = new CSVPoseData();
 
-            //–¼‘O‚ğ•Û‘¶
+            //åå‰ã‚’ä¿å­˜
             pose.PoseName = cells[0];
 
             pose.PoseID = int.Parse(cells[1]);
 
-            //¶Œ¨‚ğ•Û‘¶
+            //å·¦è‚©ã‚’ä¿å­˜
             pose.LeftShoulderRotation = new Vector3(
                 float.Parse(cells[2]),
                 float.Parse(cells[3]));
 
-            //¶˜r‚ğ•Û‘¶
+            //å·¦è…•ã‚’ä¿å­˜
             pose.LeftelbowRotation = new Vector3(
                 float.Parse(cells[4]),
                 float.Parse(cells[5]));
@@ -94,7 +94,7 @@ public class ExcelPoseJudgeLoader
 
             pose.PoseMax = lines.Length - 1;
 
-            //ƒ|[ƒY‚ğ’Ç‰Á
+            //ãƒãƒ¼ã‚ºã‚’è¿½åŠ 
             poseList.Add(pose);
 
         }
@@ -103,7 +103,7 @@ public class ExcelPoseJudgeLoader
 }
 
 ///<summary>
-///ƒ|[ƒY‚Ì‡”Ô‚ÌCSVƒf[ƒ^‚Ì“Ç‚İ‚İ
+///ãƒãƒ¼ã‚ºã®é †ç•ªã®CSVãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 ///</summary>
 public class ExcelPoseTimeFlowLoader
 {
@@ -119,36 +119,41 @@ public class ExcelPoseTimeFlowLoader
 
         if (csv == null)
         {
-            Debug.LogError("CSV‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
+            Debug.LogError("CSVãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“");
             return;
         }
 
         string[] lines = csv.text.Split('\n');
 
-        // 1s–Ú‚Íƒwƒbƒ_[‚È‚Ì‚Å”ò‚Î‚·
+        // 1è¡Œç›®ã¯ãƒ˜ãƒƒãƒ€ãƒ¼ãªã®ã§é£›ã°ã™
         for (int i = 1; i < lines.Length; i++)
         {
-            //‹ós‚ª‚ ‚éê‡ƒXƒLƒbƒv
+            //ç©ºè¡ŒãŒã‚ã‚‹å ´åˆã‚¹ã‚­ãƒƒãƒ—
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
-            //ƒJƒ“ƒ}‚Å•ªŠ„
+            //ã‚«ãƒ³ãƒã§åˆ†å‰²
             string[] cells = lines[i].Trim().Split(',');
 
-            //CSVDataì¬
+            //CSVDataä½œæˆ
             CSVDataPoseFlow pose = new CSVDataPoseFlow();
 
-            //‡”Ô‚ğ•Û‘¶
+            //é †ç•ªã‚’ä¿å­˜
             pose.FlowNumber = int.Parse(cells[0]);
 
             pose.PoseID = int.Parse(cells[1]);
 
-            //–¼‘O‚ğ•Û‘¶
+            //åå‰ã‚’ä¿å­˜
             pose.PoseName = cells[2];
 
-            //•\¦ŠÔ
+            //è¡¨ç¤ºæ™‚é–“
             pose.time = float.Parse(cells[3]);
 
-            //ƒ|[ƒY‚ğ’Ç‰Á
+            //5åˆ—ç›®ã¯ä»»æ„ã€‚ç©ºæ¬„ã¾ãŸã¯æ—§CSVã§ã¯å¾“æ¥ã©ãŠã‚Šãƒ©ãƒ³ãƒ€ãƒ æ¼”å‡ºã‚’ä½¿ç”¨ã™ã‚‹
+            pose.SuccessEffectNames = cells.Length >= 5
+                ? cells[4].Trim()
+                : string.Empty;
+
+            //ãƒãƒ¼ã‚ºã‚’è¿½åŠ 
             poseList.Add(pose);
         }
     }

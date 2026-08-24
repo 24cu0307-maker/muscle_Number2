@@ -4,12 +4,12 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Gameplay_Kuba_Backupを基に、MediaPipeを起動しないEffect確認Sceneを生成します。
+/// 現行Gameplayを基に、MediaPipeを起動しないEffect確認Sceneを生成します。
 /// </summary>
 public static class EffectDebugSceneGenerator
 {
     private const string SourceScene =
-        "Assets/Scenes/GameFlow/Gameplay_Kuba_Backup.unity";
+        "Assets/Scenes/GameFlow/Gameplay.unity";
     private const string DebugScene =
         "Assets/Scenes/GameFlow/Gameplay_EffectDebug.unity";
 

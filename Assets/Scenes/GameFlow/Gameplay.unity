@@ -5845,6 +5845,7 @@ GameObject:
   m_Component:
   - component: {fileID: 130277794}
   - component: {fileID: 130277793}
+  - component: {fileID: 130277799}
   - component: {fileID: 130277792}
   - component: {fileID: 130277791}
   - component: {fileID: 130277795}
@@ -5883,7 +5884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
   m_effectSystem: {fileID: 130277793}
---- !u!114 &130277793
+--- !u!114 &130277799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5892,10 +5893,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 130277790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d65b251efc42e84e83de5c88fa02ae7, type: 3}
+  m_Script: {fileID: 11500000, guid: b4c9a79e1f76410eb79bbf0ab3b1938e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EffectSystem
-  m_effectDatas:
+  m_EditorClassIdentifier: Assembly-CSharp::EffectList
+  m_effects:
   - m_effectName: SpotLight_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -6000,8 +6001,48 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: 358f59d9e49e4aa44be03f048ef841e9, type: 2}
     m_director: {fileID: 584413440}
+  - m_effectName: Strobe
+    m_playDelaySeconds: 0
+    m_particles: []
+    m_audioSources: []
+    m_lightControllers: []
+    m_cameraSequence: {fileID: 0}
+    m_timeline: {fileID: 0}
+    m_director: {fileID: 0}
+    b_m_useStrobe: 1
+    m_strobeColor: {r: 1, g: 0.95, b: 0.8, a: 1}
+    m_strobeDurationSeconds: 0.45
+    m_strobeFlashCount: 4
+    m_strobeMaximumAlpha: 0.9
+  - m_effectName: CameraShake
+    m_playDelaySeconds: 0
+    m_particles: []
+    m_audioSources: []
+    m_lightControllers: []
+    m_cameraSequence: {fileID: 0}
+    m_timeline: {fileID: 0}
+    m_director: {fileID: 0}
+    b_m_useCameraShake: 1
+    m_cameraShakeDurationSeconds: 0.55
+    m_cameraShakeStrength: 0.02
+    m_cameraShakeFrequency: 32
+--- !u!114 &130277793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130277790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d65b251efc42e84e83de5c88fa02ae7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EffectSystem
+  m_effectList: {fileID: 130277799}
+  m_legacyEffectDatas: []
   m_cameraDirector: {fileID: 2075913570}
   m_effectDirector: {fileID: 0}
+  m_cameraShakeTarget: {fileID: 2040577845}
 --- !u!4 &130277794
 Transform:
   m_ObjectHideFlags: 0
