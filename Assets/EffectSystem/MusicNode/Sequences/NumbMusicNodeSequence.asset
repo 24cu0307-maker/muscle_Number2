@@ -19,70 +19,87 @@ MonoBehaviour:
     m_time: 2.7687466
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 2
     m_time: 15.307086
     m_poseId: 2
     m_eventName: Event
+    m_successEffectNames: EffectBeam_00|CameraShake
   - m_nodeNumber: 3
     m_time: 17.601
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 4
     m_time: 19.557
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 5
     m_time: 25.229
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 7
     m_time: 29.727001
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 8
     m_time: 33.15
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 9
     m_time: 37.061
     m_poseId: 2
     m_eventName: Event
+    m_successEffectNames: EffectBeam_00|CameraShake
   - m_nodeNumber: 12
     m_time: 39.746033
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 15
     m_time: 48.502003
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 16
     m_time: 51.436005
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 21
     m_time: 57.499004
     m_poseId: 2
     m_eventName: Event
+    m_successEffectNames: EffectBeam_00|CameraShake
   - m_nodeNumber: 24
     m_time: 61.410004
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 26
     m_time: 63.366005
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 27
     m_time: 78.33889
     m_poseId: 1
     m_eventName: Event
+    m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 29
     m_time: 91.86319
     m_poseId: 2
     m_eventName: Event
+    m_successEffectNames: EffectBeam_00|CameraShake
   - m_nodeNumber: 28
     m_time: 97.22188
     m_poseId: 0
     m_eventName: Event
+    m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
@@ -95,22 +112,27 @@ MonoBehaviour:
       m_time: 3.5238595
       m_poseId: 0
       m_eventName: Front Double Biceps
+      m_successEffectNames: 
     - m_nodeNumber: 2
       m_time: 4.3418984
       m_poseId: 1
       m_eventName: Most Muscular
+      m_successEffectNames: 
     - m_nodeNumber: 3
       m_time: 5.034085
       m_poseId: 2
       m_eventName: Side Pose
+      m_successEffectNames: 
     - m_nodeNumber: 8
       m_time: 7.1106453
       m_poseId: 0
       m_eventName: Decision
+      m_successEffectNames: 
     - m_nodeNumber: 9
       m_time: 19.27559
       m_poseId: 0
       m_eventName: End
+      m_successEffectNames: 
   - b_m_enabled: 1
     m_eventName: Special Node Branch
     m_triggerNodeNumber: 12
@@ -122,15 +144,19 @@ MonoBehaviour:
       m_time: 42.733
       m_poseId: 0
       m_eventName: Special Pose A
+      m_successEffectNames: 
     - m_nodeNumber: 102
       m_time: 44.233
       m_poseId: 1
       m_eventName: Special Pose B
+      m_successEffectNames: 
     - m_nodeNumber: 103
       m_time: 45.733
       m_poseId: 2
       m_eventName: Special Pose C
+      m_successEffectNames: 
     - m_nodeNumber: 104
       m_time: 47.233
       m_poseId: 0
       m_eventName: Special Finale
+      m_successEffectNames: 

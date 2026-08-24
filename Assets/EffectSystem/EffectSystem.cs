@@ -9,9 +9,11 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 /// <summary>
 /// 名前ごとに再生する演出設定です。
@@ -46,6 +48,21 @@ public struct SEffectData
     [SerializeField] private PlayableAsset m_timeline;               //優先再生するTimeline
     [Tooltip("このTimeline専用のDirector。未設定の場合はEffectSystem共通Directorを使用します。")]
     [SerializeField] private PlayableDirector m_director;             //Timeline専用Director
+
+    [Header("Screen Strobe (Optional)")]
+    [Tooltip("演出開始時に画面全体を点滅させます。")]
+    [SerializeField] private bool b_m_useStrobe;
+    [SerializeField] private Color m_strobeColor;
+    [Min(0.05f)] [SerializeField] private float m_strobeDurationSeconds;
+    [Min(1)] [SerializeField] private int m_strobeFlashCount;
+    [Range(0.0f, 1.0f)] [SerializeField] private float m_strobeMaximumAlpha;
+
+    [Header("Camera Shake (Optional)")]
+    [Tooltip("演出開始時に現在のカメラへ加算式の揺れを適用します。")]
+    [SerializeField] private bool b_m_useCameraShake;
+    [Min(0.05f)] [SerializeField] private float m_cameraShakeDurationSeconds;
+    [Min(0.0f)] [SerializeField] private float m_cameraShakeStrength;
+    [Min(0.1f)] [SerializeField] private float m_cameraShakeFrequency;
 
     public string EffectName
     {
@@ -110,6 +127,16 @@ public struct SEffectData
             return m_director;
         }
     }
+
+    public bool UsesStrobe => b_m_useStrobe;
+    public Color StrobeColor => m_strobeColor;
+    public float StrobeDuration => Mathf.Max(0.05f, m_strobeDurationSeconds);
+    public int StrobeFlashCount => Mathf.Max(1, m_strobeFlashCount);
+    public float StrobeMaximumAlpha => Mathf.Clamp01(m_strobeMaximumAlpha);
+    public bool UsesCameraShake => b_m_useCameraShake;
+    public float CameraShakeDuration => Mathf.Max(0.05f, m_cameraShakeDurationSeconds);
+    public float CameraShakeStrength => Mathf.Max(0.0f, m_cameraShakeStrength);
+    public float CameraShakeFrequency => Mathf.Max(0.1f, m_cameraShakeFrequency);
 }
 
 /// <summary>
@@ -122,8 +149,11 @@ public class EffectSystem : MonoBehaviour
     private const int EEmptyEffectCount = 0;                         //演出が未登録の状態
 
     [Header("Effects")]
+    [Tooltip("個別エフェクトを一元管理するEffectList。")]
+    [SerializeField] private EffectList m_effectList;
+    [FormerlySerializedAs("m_effectDatas")]
     [FormerlySerializedAs("EffectDatas")]
-    [SerializeField] private SEffectData[] m_effectDatas;            //登録された演出設定群
+    [SerializeField] private SEffectData[] m_legacyEffectDatas;      //旧Scene互換用
 
     [Header("Camera")]
     [Tooltip("Assets/newCamera の CameraSequence を再生するDirector。")]
@@ -135,6 +165,9 @@ public class EffectSystem : MonoBehaviour
     [FormerlySerializedAs("m_effectDirector")]
     [SerializeField] private PlayableDirector m_effectDirector;      //Timeline演出用Director
 
+    [Tooltip("揺らすCamera。未設定時はMain Camera、次にScene内Cameraを自動取得します。")]
+    [SerializeField] private Camera m_cameraShakeTarget;
+
     private bool b_m_isPlayEffect = true;                            //対象演出が再生を完了したか
     private readonly HashSet<PlayableDirector> m_playingDirectors =
         new HashSet<PlayableDirector>(); //現在再生中のDirector一覧
@@ -142,13 +175,49 @@ public class EffectSystem : MonoBehaviour
     private string m_nowplayEffectName = ""; //旧APIの再生状態確認で照合する、最後に要求されたEffect名
     private readonly HashSet<int> m_reservedRandomEffectIndices =
         new HashSet<int>(); //抽選済みで開始待機中または再生中のEffect番号
+    private Coroutine m_strobeCoroutine;
+    private Coroutine m_cameraShakeCoroutine;
+    private Image m_strobeImage;
+    private Camera m_activeShakeCamera;
+    private Vector2 m_cameraProjectionOffset;
+    private Matrix4x4 m_originalProjectionMatrix;
+    private bool b_m_projectionOffsetApplied;
+    private CinemachineBrain m_activeShakeBrain;
+    private Vector3 m_appliedCinemachineShakeOffset;
+
+    /// <summary>
+    /// Scene読込時に自動再生された演出用Particleを、最初の描画前に停止します。
+    /// Music Nodeから明示的に再生されたParticleは以降通常どおり動作します。
+    /// </summary>
+    private IEnumerator Start()
+    {
+        yield return null; //全ParticleSystemのPlay On Awake適用を待つ
+
+        ParticleSystem[] sceneParticles = FindObjectsByType<ParticleSystem>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+        for (int i = 0; i < sceneParticles.Length; ++i)
+        {
+            ParticleSystem particle = sceneParticles[i];
+            if (particle == null || !particle.main.playOnAwake)continue;
+
+            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+    }
 
     /// <summary>
     /// 登録されている演出設定を取得します。
     /// </summary>
     public SEffectData[] GetEffectDatas()
     {
-        return m_effectDatas;
+        if (m_effectList != null
+            && m_effectList.Effects != null
+            && m_effectList.Effects.Length > 0)
+        {
+            return m_effectList.Effects;
+        }
+
+        return m_legacyEffectDatas;
     }
 
     /// <summary>
@@ -164,9 +233,10 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     public void PlayEffect(string _effectname)
     {
-        if (m_effectDatas == null)return;
+        SEffectData[] effectDatas = GetEffectDatas();
+        if (effectDatas == null)return;
 
-        foreach (SEffectData effectData in m_effectDatas)
+        foreach (SEffectData effectData in effectDatas)
         {
             if (effectData.EffectName != _effectname)continue;
 
@@ -184,13 +254,14 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     public void PlayRandomEffect()
     {
-        if (m_effectDatas == null || m_effectDatas.Length == EEmptyEffectCount)return;
+        SEffectData[] effectDatas = GetEffectDatas();
+        if (effectDatas == null || effectDatas.Length == EEmptyEffectCount)return;
 
         List<int> availableIndices = new List<int>();
-        for (int i = 0; i < m_effectDatas.Length; ++i)
+        for (int i = 0; i < effectDatas.Length; ++i)
         {
             if (m_reservedRandomEffectIndices.Contains(i))continue;
-            if (HasPlayingEffect(m_effectDatas[i]))continue;
+            if (HasPlayingEffect(effectDatas[i]))continue;
 
             availableIndices.Add(i);
         }
@@ -204,12 +275,12 @@ public class EffectSystem : MonoBehaviour
         int randomIndex = availableIndices[
             Random.Range(0, availableIndices.Count)]; //未再生候補から抽選
         m_reservedRandomEffectIndices.Add(randomIndex);
-        ScheduleEffect(m_effectDatas[randomIndex]);
+        ScheduleEffect(effectDatas[randomIndex]);
         StartCoroutine(ReleaseRandomReservation(
             randomIndex,
-            m_effectDatas[randomIndex]));
+            effectDatas[randomIndex]));
 
-        m_nowplayEffectName =  m_effectDatas[randomIndex].EffectName;
+        m_nowplayEffectName = effectDatas[randomIndex].EffectName;
     }
 
     /// <summary>
@@ -240,9 +311,10 @@ public class EffectSystem : MonoBehaviour
     public void IsEffectPlay(string _effectname)
     {
         b_m_isPlayEffect = true;
-        if (m_effectDatas == null)return;
+        SEffectData[] effectDatas = GetEffectDatas();
+        if (effectDatas == null)return;
 
-        foreach (SEffectData effectData in m_effectDatas)
+        foreach (SEffectData effectData in effectDatas)
         {
             if (effectData.EffectName != _effectname)continue;
 
@@ -257,7 +329,8 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     public void IsEffectPlay()
     {
-        if (m_effectDatas == null) return;
+        SEffectData[] effectDatas = GetEffectDatas();
+        if (effectDatas == null)return;
         
         if (m_nowplayEffectName == "")
         {
@@ -265,7 +338,7 @@ public class EffectSystem : MonoBehaviour
             
             return;
         }
-        foreach (SEffectData effectData in m_effectDatas)
+        foreach (SEffectData effectData in effectDatas)
         {
             if (effectData.EffectName != m_nowplayEffectName) continue;
             Debug.Log("{+++}" + 
@@ -307,6 +380,62 @@ public class EffectSystem : MonoBehaviour
         }
     }
 
+    /// <summary>確認中を含む、EffectSystem管理下の演出をすべて停止します。</summary>
+    public void StopAllEffects()
+    {
+        StopEffectTimeline();
+        StopCameraEffect();
+
+        if (m_strobeCoroutine != null)
+        {
+            StopCoroutine(m_strobeCoroutine);
+            m_strobeCoroutine = null;
+        }
+        if (m_strobeImage != null)m_strobeImage.color = Color.clear;
+
+        if (m_cameraShakeCoroutine != null)
+        {
+            StopCoroutine(m_cameraShakeCoroutine);
+            m_cameraShakeCoroutine = null;
+        }
+        CinemachineCore.CameraUpdatedEvent.RemoveListener(
+            ApplyCinemachineCameraShake);
+        RestoreCinemachineCameraShake();
+        Camera.onPreCull -= ApplyCameraProjectionShake;
+        Camera.onPostRender -= RestoreCameraProjection;
+        RestoreCameraProjection();
+        m_activeShakeBrain = null;
+        m_activeShakeCamera = null;
+        m_cameraProjectionOffset = Vector2.zero;
+
+        SEffectData[] effectDatas = GetEffectDatas();
+        if (effectDatas == null)return;
+        for (int i = 0; i < effectDatas.Length; ++i)
+        {
+            ParticleSystem[] particles = effectDatas[i].Particles;
+            if (particles != null)
+            {
+                for (int particleIndex = 0;
+                    particleIndex < particles.Length;
+                    ++particleIndex)
+                {
+                    particles[particleIndex]?.Stop(
+                        true,
+                        ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
+            }
+
+            AudioSource[] audioSources = effectDatas[i].AudioSources;
+            if (audioSources == null)continue;
+            for (int audioIndex = 0;
+                audioIndex < audioSources.Length;
+                ++audioIndex)
+            {
+                audioSources[audioIndex]?.Stop();
+            }
+        }
+    }
+
     /// <summary>
     /// 設定された待ち時間を適用して演出を予約します。
     /// </summary>
@@ -336,6 +465,9 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     private void EffectPlay(SEffectData _effects)
     {
+        PlayStrobe(_effects);
+        PlayCameraShake(_effects);
+
         if (_effects.Timeline != null)
         {
             PlayTimeline(_effects.Timeline, _effects.Director);
@@ -475,5 +607,198 @@ public class EffectSystem : MonoBehaviour
         }
 
         m_cameraDirector.PlaySequence(_camerasequence);
+    }
+
+    /// <summary>Effect設定に応じて画面全体のストロボを開始します。</summary>
+    private void PlayStrobe(SEffectData _effects)
+    {
+        if (!_effects.UsesStrobe)return;
+
+        EnsureStrobeImage();
+        if (m_strobeImage == null)return;
+        if (m_strobeCoroutine != null)StopCoroutine(m_strobeCoroutine);
+        m_strobeCoroutine = StartCoroutine(StrobeRoutine(_effects));
+    }
+
+    private void EnsureStrobeImage()
+    {
+        if (m_strobeImage != null)return;
+
+        GameObject canvasObject = new GameObject(
+            "Effect Strobe Canvas",
+            typeof(RectTransform),
+            typeof(Canvas));
+        canvasObject.transform.SetParent(transform, false);
+        Canvas canvas = canvasObject.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = short.MaxValue - 10;
+
+        GameObject imageObject = new GameObject(
+            "Effect Strobe",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image));
+        imageObject.transform.SetParent(canvasObject.transform, false);
+        RectTransform imageRect = imageObject.GetComponent<RectTransform>();
+        imageRect.anchorMin = Vector2.zero;
+        imageRect.anchorMax = Vector2.one;
+        imageRect.offsetMin = Vector2.zero;
+        imageRect.offsetMax = Vector2.zero;
+        m_strobeImage = imageObject.GetComponent<Image>();
+        m_strobeImage.raycastTarget = false;
+        m_strobeImage.color = Color.clear;
+    }
+
+    private IEnumerator StrobeRoutine(SEffectData _effects)
+    {
+        float elapsed = 0.0f;
+        Color color = _effects.StrobeColor;
+        while (elapsed < _effects.StrobeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / _effects.StrobeDuration);
+            float pulse = Mathf.Abs(Mathf.Sin(
+                progress * _effects.StrobeFlashCount * Mathf.PI));
+            color.a = pulse * (1.0f - progress) * _effects.StrobeMaximumAlpha;
+            m_strobeImage.color = color;
+            yield return null;
+        }
+
+        m_strobeImage.color = Color.clear;
+        m_strobeCoroutine = null;
+    }
+
+    /// <summary>Effect設定に応じて現在のカメラへ加算式の揺れを開始します。</summary>
+    private void PlayCameraShake(SEffectData _effects)
+    {
+        if (!_effects.UsesCameraShake || _effects.CameraShakeStrength <= 0.0f)return;
+
+        if (m_cameraShakeCoroutine != null)StopCoroutine(m_cameraShakeCoroutine);
+        CinemachineCore.CameraUpdatedEvent.RemoveListener(
+            ApplyCinemachineCameraShake);
+        RestoreCinemachineCameraShake();
+        Camera.onPreCull -= ApplyCameraProjectionShake;
+        Camera.onPostRender -= RestoreCameraProjection;
+        RestoreCameraProjection();
+        m_cameraShakeCoroutine = StartCoroutine(CameraShakeRoutine(_effects));
+    }
+
+    private IEnumerator CameraShakeRoutine(SEffectData _effects)
+    {
+        m_activeShakeCamera = m_cameraShakeTarget != null
+            ? m_cameraShakeTarget
+            : Camera.main;
+        if (m_activeShakeCamera == null)
+        {
+            m_activeShakeCamera = FindFirstObjectByType<Camera>();
+        }
+        if (m_activeShakeCamera == null)
+        {
+            m_cameraShakeCoroutine = null;
+            yield break;
+        }
+
+        m_activeShakeBrain = m_activeShakeCamera.GetComponent<CinemachineBrain>();
+        if (m_activeShakeBrain != null)
+        {
+            CinemachineCore.CameraUpdatedEvent.AddListener(
+                ApplyCinemachineCameraShake);
+        }
+        else
+        {
+            Camera.onPreCull += ApplyCameraProjectionShake;
+            Camera.onPostRender += RestoreCameraProjection;
+        }
+        float elapsed = 0.0f;
+        float seed = Random.Range(0.0f, 1000.0f);
+        while (elapsed < _effects.CameraShakeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / _effects.CameraShakeDuration);
+            float amplitude = _effects.CameraShakeStrength * (1.0f - progress);
+            float sampleTime = seed + elapsed * _effects.CameraShakeFrequency;
+            m_cameraProjectionOffset = new Vector2(
+                Mathf.PerlinNoise(sampleTime, 0.0f) * 2.0f - 1.0f,
+                Mathf.PerlinNoise(0.0f, sampleTime) * 2.0f - 1.0f)
+                * amplitude;
+            yield return null;
+        }
+
+        CinemachineCore.CameraUpdatedEvent.RemoveListener(
+            ApplyCinemachineCameraShake);
+        RestoreCinemachineCameraShake();
+        Camera.onPreCull -= ApplyCameraProjectionShake;
+        Camera.onPostRender -= RestoreCameraProjection;
+        RestoreCameraProjection();
+        m_activeShakeBrain = null;
+        m_activeShakeCamera = null;
+        m_cameraProjectionOffset = Vector2.zero;
+        m_cameraShakeCoroutine = null;
+    }
+
+    /// <summary>
+    /// Cinemachine BrainがCameraSequenceを反映した直後に、最終出力Cameraへ揺れを加算します。
+    /// </summary>
+    private void ApplyCinemachineCameraShake(CinemachineBrain _brain)
+    {
+        if (_brain == null
+            || _brain != m_activeShakeBrain
+            || m_activeShakeCamera == null)return;
+
+        RestoreCinemachineCameraShake();
+        const float positionScale = 10.0f; //従来の画面比率StrengthをWorld移動量へ変換
+        Transform cameraTransform = m_activeShakeCamera.transform;
+        m_appliedCinemachineShakeOffset =
+            (cameraTransform.right * m_cameraProjectionOffset.x
+                + cameraTransform.up * m_cameraProjectionOffset.y)
+            * positionScale;
+        cameraTransform.position += m_appliedCinemachineShakeOffset;
+    }
+
+    private void RestoreCinemachineCameraShake()
+    {
+        if (m_activeShakeCamera == null
+            || m_appliedCinemachineShakeOffset == Vector3.zero)return;
+
+        m_activeShakeCamera.transform.position -=
+            m_appliedCinemachineShakeOffset;
+        m_appliedCinemachineShakeOffset = Vector3.zero;
+    }
+
+    private void ApplyCameraProjectionShake(Camera _camera)
+    {
+        if (_camera == null || _camera != m_activeShakeCamera)return;
+
+        m_originalProjectionMatrix = _camera.projectionMatrix;
+        Matrix4x4 shakenProjection = m_originalProjectionMatrix;
+        shakenProjection.m02 += m_cameraProjectionOffset.x;
+        shakenProjection.m12 += m_cameraProjectionOffset.y;
+        _camera.projectionMatrix = shakenProjection;
+        b_m_projectionOffsetApplied = true;
+    }
+
+    private void RestoreCameraProjection(Camera _camera)
+    {
+        if (_camera == null || _camera != m_activeShakeCamera)return;
+        RestoreCameraProjection();
+    }
+
+    private void RestoreCameraProjection()
+    {
+        if (!b_m_projectionOffsetApplied || m_activeShakeCamera == null)return;
+
+        m_activeShakeCamera.projectionMatrix = m_originalProjectionMatrix;
+        b_m_projectionOffsetApplied = false;
+    }
+
+    private void OnDisable()
+    {
+        CinemachineCore.CameraUpdatedEvent.RemoveListener(
+            ApplyCinemachineCameraShake);
+        RestoreCinemachineCameraShake();
+        Camera.onPreCull -= ApplyCameraProjectionShake;
+        Camera.onPostRender -= RestoreCameraProjection;
+        RestoreCameraProjection();
+        if (m_strobeImage != null)m_strobeImage.color = Color.clear;
     }
 }

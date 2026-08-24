@@ -500,8 +500,16 @@ public static class LiveShowTimelineBuilder
         }
 
         SerializedObject serializedSystem = new SerializedObject(effectSystem); //編集対象
+        EffectList effectList = effectSystem.GetComponent<EffectList>();
+        if (effectList == null)
+        {
+            effectList = Undo.AddComponent<EffectList>(effectSystem.gameObject);
+        }
+        serializedSystem.FindProperty("m_effectList").objectReferenceValue = effectList;
+        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
+        SerializedObject serializedList = new SerializedObject(effectList);
         SerializedProperty effects =
-            serializedSystem.FindProperty("m_effectDatas"); //EffectData配列
+            serializedList.FindProperty("m_effects"); //EffectData配列
         for (int i = 0; i < EShowCount; ++i)
         {
             int effectIndex = FindEffectIndex(effects, m_showNames[i]); //登録位置
@@ -518,8 +526,8 @@ public static class LiveShowTimelineBuilder
             effect.FindPropertyRelative("m_director").objectReferenceValue = _directors[i];
         }
 
-        serializedSystem.ApplyModifiedProperties();
-        EditorUtility.SetDirty(effectSystem);
+        serializedList.ApplyModifiedProperties();
+        EditorUtility.SetDirty(effectList);
     }
 
     /// <summary>

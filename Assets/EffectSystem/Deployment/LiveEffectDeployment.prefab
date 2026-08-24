@@ -703,9 +703,6 @@ MonoBehaviour:
   m_endRadius: 5
   m_segments: 64
   b_m_capEnd: 0
-  m_crossSectionShape: 0
-  m_endWidth: 4
-  m_endHeight: 2.5
 --- !u!114 &7504177658776697475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,12 +718,17 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
   m_outerStreakEndFadeStart: 0.48
   b_m_illuminateSurfaces: 1
   m_surfaceLight: {fileID: 0}
+  m_surfaceIlluminationScale: 20
 --- !u!95 &9110881451063969995
 Animator:
   serializedVersion: 7
@@ -6368,9 +6370,6 @@ MonoBehaviour:
   m_endRadius: 10
   m_segments: 32
   b_m_capEnd: 0
-  m_crossSectionShape: 0
-  m_endWidth: 4
-  m_endHeight: 2.5
 --- !u!114 &5749486698402710399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6386,12 +6385,17 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
   m_outerStreakEndFadeStart: 0.48
   b_m_illuminateSurfaces: 1
   m_surfaceLight: {fileID: 0}
+  m_surfaceIlluminationScale: 20
 --- !u!95 &1234115132291712979
 Animator:
   serializedVersion: 7
@@ -11991,9 +11995,6 @@ MonoBehaviour:
   m_endRadius: 5
   m_segments: 64
   b_m_capEnd: 0
-  m_crossSectionShape: 0
-  m_endWidth: 4
-  m_endHeight: 2.5
 --- !u!114 &3078249686409696064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12009,12 +12010,17 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.55, b: 0.12, a: 1}
   m_emissionIntensity: 100
   m_opacity: 0.16
+  m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
   m_outerStreakEndFadeStart: 0.48
   b_m_illuminateSurfaces: 1
   m_surfaceLight: {fileID: 0}
+  m_surfaceIlluminationScale: 20
 --- !u!95 &1466066859488082150
 Animator:
   serializedVersion: 7
@@ -27341,9 +27347,6 @@ MonoBehaviour:
   m_endRadius: 10
   m_segments: 32
   b_m_capEnd: 0
-  m_crossSectionShape: 0
-  m_endWidth: 4
-  m_endHeight: 2.5
 --- !u!114 &381206385972135517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27359,12 +27362,17 @@ MonoBehaviour:
   m_lightColor: {r: 1, g: 0.02, b: 0.01, a: 1}
   m_emissionIntensity: 4.5
   m_opacity: 0.2
+  m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
   m_outerStreakEndFadeStart: 0.48
   b_m_illuminateSurfaces: 1
   m_surfaceLight: {fileID: 0}
+  m_surfaceIlluminationScale: 20
 --- !u!95 &6935764906552076556
 Animator:
   serializedVersion: 7
@@ -32508,7 +32516,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d65b251efc42e84e83de5c88fa02ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectSystem
-  m_effectDatas:
+  m_effectList: {fileID: 0}
+  m_legacyEffectDatas:
   - m_effectName: Live_01_Opening
     m_playDelaySeconds: 0
     m_particles: []
@@ -32517,6 +32526,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: 86f71fd96f2ee9d4ea18c1558632e86f, type: 2}
     m_director: {fileID: 2081198345684235400}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: Live_02_ColorWave
     m_playDelaySeconds: 0
     m_particles: []
@@ -32525,6 +32543,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: b4e367710e27f1145a1776f6b5144a9c, type: 2}
     m_director: {fileID: 2848848498343143327}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: Live_03_LaserRush
     m_playDelaySeconds: 0
     m_particles: []
@@ -32533,6 +32560,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: ec693bf8d02cfbf478857b950b8693c6, type: 2}
     m_director: {fileID: 3568390806360328123}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: Live_04_ParticleBurst
     m_playDelaySeconds: 0
     m_particles: []
@@ -32541,6 +32577,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: 6b3a905c17236654790b95595d7b1ba7, type: 2}
     m_director: {fileID: 4200725553397181937}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: Live_05_Finale
     m_playDelaySeconds: 0
     m_particles: []
@@ -32549,8 +32594,18 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: ddb0eb81dfc43a04c81a277056d6d820, type: 2}
     m_director: {fileID: 6157072299233323294}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   m_cameraDirector: {fileID: 0}
   m_effectDirector: {fileID: 0}
+  m_cameraShakeTarget: {fileID: 0}
 --- !u!114 &8578914998147924594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32564,7 +32619,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
   m_effectSystem: {fileID: 0}
-  b_m_showPanel: 1
 --- !u!1 &8391950141034844351
 GameObject:
   m_ObjectHideFlags: 0
