@@ -22,6 +22,16 @@ public class UIController : MonoBehaviour
     [Header("CSVのデータリスト")]
     private List<CSVPoseData> poseDatas;
 
+
+    [Header("")]
+    private GameObject playerCharacter;
+
+    [Header("")]
+    private Vector3 playerCharacterSize;
+
+    [Header("")]
+    private Vector3 playerCharacterPosition;
+
     //private FlameBase m_FrontDoubleBiceps;
     //private FlameBase m_Most;
     //private FlameBase m_Side;
@@ -51,12 +61,50 @@ public class UIController : MonoBehaviour
     private const string m_currentFrameFailure = "Failure";
     private const string m_currentFrameWating = "Wating";
 
+
+
     private void Awake()
     {
         poseDatas = m_excelLoader.excelPoseJudgeLoader.GetCSVDatas();
         CSVPoseData pose = poseDatas[0];
         m_Frame = new FlameBase[pose.PoseMax];
 
+        /*
+        playerCharacter = GameObject.Find("Ch36").GetComponent<GameObject>();
+
+        Renderer renderer = playerCharacter.GetComponentInChildren<Renderer>();
+
+        //位置
+        playerCharacterPosition = m_canvas.InverseTransformPoint(playerCharacter.transform.position);
+        //サイズ
+        playerCharacterSize = renderer.bounds.size;
+        */
+
+        playerCharacter = GameObject.Find("Ch36");
+
+        Renderer renderer =
+       playerCharacter.GetComponentInChildren<Renderer>();
+
+        // 位置：Renderer全体の中心
+        playerCharacterPosition =
+            m_canvas.InverseTransformPoint(
+                renderer.bounds.center
+            );
+        //中心位置の調整
+        playerCharacterPosition.y =+ 0.1f;
+
+        // ワールド上のサイズ
+        Vector3 worldSize = renderer.bounds.size * 8.0f;
+
+        // Canvasローカルのサイズへ変換
+        playerCharacterSize = new Vector3(
+            worldSize.x / m_canvas.lossyScale.x,
+            worldSize.y / m_canvas.lossyScale.y,
+            worldSize.z / m_canvas.lossyScale.z
+        );
+
+        Debug.Log($"World Size : {worldSize}");
+        Debug.Log($"Canvas Size : {playerCharacterSize}");
     }
 
     /*
@@ -103,10 +151,10 @@ public class UIController : MonoBehaviour
     {
 
 
-        m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, Vector2.zero, m_canvas, new Vector2(650, 650));
-        m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, Vector2.zero, m_canvas, new Vector2(650, 650));
+        m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+        m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+        m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+        m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
         Debug.Log("wafewggg" + m_Frame[pose.PoseID].m_currentFrameSuccess);
         Show(m_Frame[pose.PoseID].m_currentFrameApproaching);
         Show(m_Frame[pose.PoseID].m_currentFrameWating);

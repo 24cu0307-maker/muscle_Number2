@@ -17,6 +17,18 @@ public struct FlameBase
         m_currentFrameFailure.SetActive(b);
         m_currentFrameWating.SetActive(b);
     }
+
+    public void SetSize()
+    {
+        m_currentFrameSuccess.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
+        m_currentFrameApproaching.transform.localScale = new Vector3(0.17f, 0.17f, 0.17f);
+        m_currentFrameFailure.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
+        m_currentFrameWating.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
+    }
+
+
+
+
 }
 
 public class UIData : MonoBehaviour
@@ -27,7 +39,7 @@ public class UIData : MonoBehaviour
     {
         foreach (var ui in ui) ui.SetActive(false);
 
-
+        foreach (var ui in ui) ui.SetSize();
     }
 
     public GameObject getUI(string _name, int _number)
