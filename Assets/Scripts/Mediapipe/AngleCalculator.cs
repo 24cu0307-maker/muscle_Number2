@@ -3,95 +3,103 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //
-//’ÊíƒNƒ‰ƒX‚ÅŠÇ—‚µ‚½‚¢
+//é€šå¸¸ã‚¯ãƒ©ã‚¹ã§ç®¡ç†ã—ãŸã„
 //
 public class AngleCalculator : MonoBehaviour
 {
     ///<summary>
-    ///ƒf[ƒ^‚ğ•Û‘¶ƒNƒ‰ƒX
+    ///ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã‚¯ãƒ©ã‚¹
     ///</summary>
     [SerializeField] private PositionDataManager dataManager;
 
     ///<summary>
-    ///Šp“xî•ñ•Û‘¶ƒNƒ‰ƒX
+    ///è§’åº¦æƒ…å ±ä¿å­˜ã‚¯ãƒ©ã‚¹
     ///</summary>
     [SerializeField] private AngleDataManager angleDataManager;
 
     ///<summary>
-    ///À•W‚ğŠi”[‚·‚é” 
+    ///åº§æ¨™ã‚’æ ¼ç´ã™ã‚‹ç®±
     ///</summary>
     [SerializeField] private Vector3[] _Body = new Vector3[37];
 
     private void Update()
     {
+        // Holisticã‚·ãƒ¼ãƒ³ã‚’å†èª­è¾¼ã™ã‚‹ã¨ã€ã‚·ãƒ¼ãƒ³å†…ã®Managerã¯Singletonã®é‡è¤‡ã¨ã—ã¦
+        // ç ´æ£„ã•ã‚Œã‚‹ãŸã‚ã€Inspectorã®å‚ç…§ã§ã¯ãªãç”Ÿå­˜ä¸­ã®Instanceã‚’ä½¿ç”¨ã™ã‚‹ã€‚
+        PositionDataManager activePositionManager = PositionDataManager.Instance;
+        AngleDataManager activeAngleManager = AngleDataManager.Instance;
+        if (activePositionManager == null
+            || activePositionManager.positionData == null
+            || activeAngleManager == null
+            || activeAngleManager.angleData == null)return;
 
-        if (dataManager.positionData == null) return;
-        //À•Wƒf[ƒ^‚ÌXV
-        _Body = dataManager.positionData.Body;
+        //åº§æ¨™ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°
+        _Body = activePositionManager.positionData.Body;
+        if (_Body == null || _Body.Length < 33)return;
 
 
-        //Šp“x‚ğæ“¾
-        //¶•I
+        //è§’åº¦ã‚’å–å¾—
+        //å·¦è‚˜
         float leftElbowAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.left_shoulder], _Body[(int)MediapipeBodyPart.left_elbow], _Body[(int)MediapipeBodyPart.left_wrist]);
-        //‰E•I
+        //å³è‚˜
         float RightElbowAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.right_shoulder], _Body[(int)MediapipeBodyPart.right_elbow], _Body[(int)MediapipeBodyPart.right_wrist]);
 
         /*
-        //¶èñ
+        //å·¦æ‰‹é¦–
         float leftWristAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.left_elbow], _Body[(int)MediapipeBodyPart.left_wrist], _LeftHand[(int)MediapipeHandPart.middle_finger_mcp]);
-        //‰Eèñ
+        //å³æ‰‹é¦–
         float rightWristAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.right_elbow], _Body[(int)MediapipeBodyPart.right_wrist], _RightHand[(int)MediapipeHandPart.middle_finger_mcp]);
         */
         
-        //¶èñ
+        //å·¦æ‰‹é¦–
         float leftWristAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.left_elbow], _Body[(int)MediapipeBodyPart.left_wrist], _Body[(int)MediapipeBodyPart.left_index]);
-        //‰Eèñ
+        //å³æ‰‹é¦–
         float rightWristAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.right_elbow], _Body[(int)MediapipeBodyPart.right_wrist], _Body[(int)MediapipeBodyPart.right_index]);
         
 
-        //¶Œ¨
+        //å·¦è‚©
         float leftShoulderAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.left_hip], _Body[(int)MediapipeBodyPart.left_shoulder], _Body[(int)MediapipeBodyPart.left_elbow]);
-        //‰EŒ¨
+        //å³è‚©
         float RightShoulderAngle = Angle_Vec2(_Body[(int)MediapipeBodyPart.right_hip], _Body[(int)MediapipeBodyPart.right_shoulder], _Body[(int)MediapipeBodyPart.right_elbow]);
 
         ///<summary>
-        ///¶˜r
+        ///å·¦è…•
         ///</summary>
-        angleDataManager.angleData.SetAngle(0, leftElbowAngle);
+        activeAngleManager.angleData.SetAngle(0, leftElbowAngle);
         ///<summary>
-        ///¶Œ¨
+        ///å·¦è‚©
         ///</summary>
-        angleDataManager.angleData.SetAngle(1, leftShoulderAngle);
+        activeAngleManager.angleData.SetAngle(1, leftShoulderAngle);
 
         ///<summary>
-        ///‰E˜r
+        ///å³è…•
         ///</summary>
-        angleDataManager.angleData.SetAngle(2, RightElbowAngle);
+        activeAngleManager.angleData.SetAngle(2, RightElbowAngle);
         ///<summary>
-        ///‰EŒ¨
+        ///å³è‚©
         ///</summary>
-        angleDataManager.angleData.SetAngle(3, RightShoulderAngle);
+        activeAngleManager.angleData.SetAngle(3, RightShoulderAngle);
 
 
     }
 
     ///<summary>
-    ///“àÏ‚ğx,y,zÀ•W‚Ås‚¤B
+    ///å†…ç©ã‚’x,y,zåº§æ¨™ã§è¡Œã†ã€‚
     ///</summary>
     public float Angle_Vec3(Vector3 pointA, Vector3 pointB, Vector3 pointC)
     {
-        //B‚ğ’†S‚Æ‚·‚éƒxƒNƒgƒ‹
-        //B‚©‚çA‚ÌƒxƒNƒgƒ‹
-        //B‚©‚çCƒxƒNƒgƒ‹
-        Vector3 BAQVec = pointA - pointB;
-        Vector3 BCQVec = pointC - pointB;
+        //Bã‚’ä¸­å¿ƒã¨ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«
+        //Bã‹ã‚‰Aã®ãƒ™ã‚¯ãƒˆãƒ«
+        //Bã‹ã‚‰Cãƒ™ã‚¯ãƒˆãƒ«
+        Vector3 BAï¼¿Vec = pointA - pointB;
+        Vector3 BCï¼¿Vec = pointC - pointB;
 
-        //“àÏ
-        float dotProduct = (BAQVec.x * BCQVec.x) + (BAQVec.y * BCQVec.y) + (BAQVec.z * BCQVec.z);
+        //å†…ç©
+        float dotProduct = (BAï¼¿Vec.x * BCï¼¿Vec.x) + (BAï¼¿Vec.y * BCï¼¿Vec.y) + (BAï¼¿Vec.z * BCï¼¿Vec.z);
 
-        //BA@BC@‚»‚ê‚¼‚ê‚ÌƒxƒNƒgƒ‹‚Ì’·‚³
-        float BA_Magnitude = Mathf.Sqrt((BAQVec.x * BAQVec.x) + (BAQVec.y * BAQVec.y) + (BAQVec.z * BAQVec.z));
-        float BC_Magnitude = Mathf.Sqrt((BCQVec.x * BCQVec.x) + (BCQVec.y * BCQVec.y) + (BCQVec.z * BCQVec.z));
+        //BAã€€BCã€€ãã‚Œãã‚Œã®ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
+        float BA_Magnitude = Mathf.Sqrt((BAï¼¿Vec.x * BAï¼¿Vec.x) + (BAï¼¿Vec.y * BAï¼¿Vec.y) + (BAï¼¿Vec.z * BAï¼¿Vec.z));
+        float BC_Magnitude = Mathf.Sqrt((BCï¼¿Vec.x * BCï¼¿Vec.x) + (BCï¼¿Vec.y * BCï¼¿Vec.y) + (BCï¼¿Vec.z * BCï¼¿Vec.z));
 
         float magnitude = BA_Magnitude * BC_Magnitude;
 
@@ -100,13 +108,13 @@ public class AngleCalculator : MonoBehaviour
             return float.NaN;
         }
 
-        //cosƒÆ
+        //cosÎ¸
         float cosTheta = Mathf.Clamp(dotProduct / magnitude, -1.0f, 1.0f);
 
-        //Œë·‘Îô
+        //èª¤å·®å¯¾ç­–
 
 
-        //ƒ‰ƒWƒAƒ“ ¨ “x”
+        //ãƒ©ã‚¸ã‚¢ãƒ³ â†’ åº¦æ•°
         float angle =
             Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
 
@@ -114,22 +122,22 @@ public class AngleCalculator : MonoBehaviour
     }
 
     ///<summary>
-    ///“àÏ‚ğx,yÀ•W‚Ås‚¤B
+    ///å†…ç©ã‚’x,yåº§æ¨™ã§è¡Œã†ã€‚
     ///</summary>
     public float Angle_Vec2(Vector3 pointA, Vector3 pointB, Vector3 pointC)
     {
-        //B‚ğ’†S‚Æ‚·‚éƒxƒNƒgƒ‹
-        //B‚©‚çA‚ÌƒxƒNƒgƒ‹
-        //B‚©‚çCƒxƒNƒgƒ‹
-        Vector3 BAQVec = pointA - pointB;
-        Vector3 BCQVec = pointC - pointB;
+        //Bã‚’ä¸­å¿ƒã¨ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«
+        //Bã‹ã‚‰Aã®ãƒ™ã‚¯ãƒˆãƒ«
+        //Bã‹ã‚‰Cãƒ™ã‚¯ãƒˆãƒ«
+        Vector3 BAï¼¿Vec = pointA - pointB;
+        Vector3 BCï¼¿Vec = pointC - pointB;
 
-        //“àÏ
-        float dotProduct = (BAQVec.x * BCQVec.x) + (BAQVec.y * BCQVec.y);
+        //å†…ç©
+        float dotProduct = (BAï¼¿Vec.x * BCï¼¿Vec.x) + (BAï¼¿Vec.y * BCï¼¿Vec.y);
 
-        //BA@BC@‚»‚ê‚¼‚ê‚ÌƒxƒNƒgƒ‹‚Ì’·‚³
-        float BA_Magnitude = Mathf.Sqrt((BAQVec.x * BAQVec.x) + (BAQVec.y * BAQVec.y));
-        float BC_Magnitude = Mathf.Sqrt((BCQVec.x * BCQVec.x) + (BCQVec.y * BCQVec.y));
+        //BAã€€BCã€€ãã‚Œãã‚Œã®ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
+        float BA_Magnitude = Mathf.Sqrt((BAï¼¿Vec.x * BAï¼¿Vec.x) + (BAï¼¿Vec.y * BAï¼¿Vec.y));
+        float BC_Magnitude = Mathf.Sqrt((BCï¼¿Vec.x * BCï¼¿Vec.x) + (BCï¼¿Vec.y * BCï¼¿Vec.y));
 
         float magnitude = BA_Magnitude * BC_Magnitude;
 
@@ -138,13 +146,13 @@ public class AngleCalculator : MonoBehaviour
             return float.NaN;
         }
 
-        //cosƒÆ
+        //cosÎ¸
         float cosTheta = Mathf.Clamp(dotProduct / magnitude, -1.0f, 1.0f);
 
-        //Œë·‘Îô
+        //èª¤å·®å¯¾ç­–
 
 
-        //ƒ‰ƒWƒAƒ“ ¨ “x”
+        //ãƒ©ã‚¸ã‚¢ãƒ³ â†’ åº¦æ•°
         float angle =
             Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
 

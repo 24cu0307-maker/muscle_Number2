@@ -1,0 +1,32 @@
+* text=auto
+
+# Source code and Unity text assets use Windows CRLF in the working tree.
+*.cs text eol=crlf
+*.shader text eol=crlf
+*.compute text eol=crlf
+*.hlsl text eol=crlf
+*.cginc text eol=crlf
+*.json text eol=crlf
+*.xml text eol=crlf
+*.txt text eol=crlf
+*.md text eol=crlf
+*.meta text eol=crlf
+*.unity text eol=crlf
+*.prefab text eol=crlf
+*.asset text eol=crlf
+*.mat text eol=crlf
+*.playable text eol=crlf
+*.anim text eol=crlf
+*.controller text eol=crlf
+
+# Binary assets must never be line-ending normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tga binary
+*.psd binary
+*.fbx binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.bytes binary
