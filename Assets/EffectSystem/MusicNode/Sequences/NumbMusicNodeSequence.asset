@@ -17,22 +17,22 @@ MonoBehaviour:
   m_eventsList:
   - m_nodeNumber: 1
     m_time: 2.7687466
-    m_poseId: 1
+    m_poseId: 0
     m_eventName: Event
     m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 2
     m_time: 15.307086
-    m_poseId: 2
+    m_poseId: 1
     m_eventName: Event
     m_successEffectNames: EffectBeam_00|CameraShake
   - m_nodeNumber: 3
     m_time: 17.601
-    m_poseId: 1
+    m_poseId: 2
     m_eventName: Event
     m_successEffectNames: EffectLight_KIMI_00|Strobe
   - m_nodeNumber: 4
     m_time: 19.557
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
     m_successEffectNames: EffectBurst_00|Strobe|CameraShake
   - m_nodeNumber: 5
@@ -112,12 +112,12 @@ MonoBehaviour:
       m_time: 3.5238595
       m_poseId: 0
       m_eventName: Front Double Biceps
-      m_successEffectNames: 
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
     - m_nodeNumber: 2
       m_time: 4.3418984
       m_poseId: 1
       m_eventName: Most Muscular
-      m_successEffectNames: 
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
     - m_nodeNumber: 3
       m_time: 5.034085
       m_poseId: 2
@@ -129,11 +129,11 @@ MonoBehaviour:
       m_eventName: Decision
       m_successEffectNames: 
     - m_nodeNumber: 9
-      m_time: 19.27559
+      m_time: 13.214473
       m_poseId: 0
       m_eventName: End
       m_successEffectNames: 
-  - b_m_enabled: 1
+  - b_m_enabled: 0
     m_eventName: Special Node Branch
     m_triggerNodeNumber: 12
     m_eventType: 1
