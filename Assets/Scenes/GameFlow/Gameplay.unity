@@ -12002,7 +12002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -41296,7 +41296,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 100
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 225
@@ -87373,7 +87373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -112583,7 +112583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -113822,7 +113822,7 @@ Transform:
   m_GameObject: {fileID: 1539109585}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09536028, y: 0.5562401, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -133488,7 +133488,7 @@ Transform:
   m_GameObject: {fileID: 1778300362}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09536028, y: 0.5562401, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -140153,7 +140153,7 @@ Transform:
   m_GameObject: {fileID: 1903205162}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09536028, y: 0.5562401, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -145561,7 +145561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -151915,7 +151915,7 @@ Transform:
   m_GameObject: {fileID: 2039680331}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -152192,7 +152192,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 225
-  field of view: 60.000004
+  field of view: 100
   orthographic: 0
   orthographic size: 5
   m_Depth: 0

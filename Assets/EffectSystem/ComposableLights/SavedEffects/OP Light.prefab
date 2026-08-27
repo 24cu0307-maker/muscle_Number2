@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &100000
+--- !u!1 &3202490405218570652
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 400000}
-  - component: {fileID: 10800000}
-  - component: {fileID: 11400000}
-  - component: {fileID: 4921785149695056029}
+  - component: {fileID: 6121434700823075978}
+  - component: {fileID: 6547910832625375811}
+  - component: {fileID: 8505260103990061063}
+  - component: {fileID: 6377760990245966277}
+  - component: {fileID: 6756698763694728981}
   m_Layer: 0
-  m_Name: StageLight_Spotlight_Halo
+  m_Name: OP Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &400000
+--- !u!4 &6121434700823075978
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 3202490405218570652}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.008062511, y: -0.0016499006, z: -0.024452396}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &10800000
+--- !u!108 &6547910832625375811
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 3202490405218570652}
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 0.72, b: 0.3, a: 1}
   m_Intensity: 850
-  m_Range: 15
-  m_SpotAngle: 58
-  m_InnerSpotAngle: 34
-  m_CookieSize2D: {x: 10, y: 10}
+  m_Range: 53.5
+  m_SpotAngle: 17.879332
+  m_InnerSpotAngle: 3.137932
+  m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -99,13 +100,13 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &11400000
+--- !u!114 &8505260103990061063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 3202490405218570652}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e37344910ce143b6881ee844b8d1081d, type: 3}
@@ -113,25 +114,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LightEffectComposer
   b_m_previewEffectsInEditMode: 1
   m_effects:
-  - m_name: Spotlight Cone
+  - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 11400000, guid: 60206bf542574b79b9c7f546f2b85df4, type: 3}
+    m_effectPrefab: {fileID: 9192339068133502779, guid: 0c2cd97b1caefec4e84eae6e4b0f051c, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
-    m_localScale: {x: 1, y: 1, z: 1}
-  - m_name: Source Halo
+    m_localScale: {x: 0, y: 0, z: 0}
+  - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 11400000, guid: 85a74e6ec61c425483fe6291a1fced41, type: 3}
+    m_effectPrefab: {fileID: 1311253844554028484, guid: c748a6d30ce542b4793f2840772d7c2c, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
-    m_localScale: {x: 1, y: 1, z: 1}
---- !u!114 &4921785149695056029
+    m_localScale: {x: 0, y: 0, z: 0}
+  - m_name: 
+    b_m_enabled: 1
+    m_effectPrefab: {fileID: 3746656655208628824, guid: 2335a61a7eb0615429a286c258eac34e, type: 3}
+    m_localPosition: {x: 0, y: 0, z: 0}
+    m_localEulerAngles: {x: 0, y: 0, z: 0}
+    m_localScale: {x: 0, y: 0, z: 0}
+  - m_name: 
+    b_m_enabled: 1
+    m_effectPrefab: {fileID: 4269329167256538501, guid: 9383f10a6632c3447810e1ecd7a5d210, type: 3}
+    m_localPosition: {x: 0, y: 0, z: 0}
+    m_localEulerAngles: {x: 0, y: 0, z: 0}
+    m_localScale: {x: 0, y: 0, z: 0}
+  - m_name: 
+    b_m_enabled: 1
+    m_effectPrefab: {fileID: 5244449067601954013, guid: 24e5cc025299ad140902613dd0aceaf2, type: 3}
+    m_localPosition: {x: 0, y: 0, z: 0}
+    m_localEulerAngles: {x: 0, y: 0, z: 0}
+    m_localScale: {x: 0, y: 0, z: 0}
+  - m_name: 
+    b_m_enabled: 1
+    m_effectPrefab: {fileID: 5751861515428142403, guid: fd09fc3bf818f55488c6550dbc90d418, type: 3}
+    m_localPosition: {x: 0, y: 0, z: 0}
+    m_localEulerAngles: {x: 0, y: 0, z: 0}
+    m_localScale: {x: 0, y: 0, z: 0}
+--- !u!114 &6377760990245966277
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 3202490405218570652}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
@@ -154,3 +179,18 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &6756698763694728981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202490405218570652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71cc5f4efe0a456c813dfb71c907ec29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RectangularLightCookie
+  m_widthRatio: 1
+  m_heightRatio: 0.62
+  m_edgeSoftness: 0.08
