@@ -29,5 +29,11 @@ UpgradeLog.htm
 *.opendb
 *.VC.db
 
+# Substance Painter local working and lock files
+*.spp
+*.spp.meta
+*.painter_lock
+*.painter_lock.meta
+
 sysinfo.txt
 crashlytics-build.properties
