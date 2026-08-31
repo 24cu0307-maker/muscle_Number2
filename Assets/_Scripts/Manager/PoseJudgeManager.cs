@@ -83,6 +83,14 @@ public class PoseJudgeManager : MonoBehaviour
     /// </summary>
     private void Judge(CSVDataPoseFlow _pose)
     {
+        if (EffectDebugKeySettings.ForceAllSuccess)
+        {
+            m_uiController.UIJudgeEnd_normal(_pose);
+            m_uiController.UIForcedQuit(_pose);
+            setState?.Invoke(InGameState.Success);
+            return;
+        }
+
         //通常成功時
         if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
             m_poseJudgeController.PoseJudge_Normal(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
@@ -128,25 +136,7 @@ public class PoseJudgeManager : MonoBehaviour
         string fixedEffectNames = _pose.SuccessEffectNames?.Trim();
         if (!string.IsNullOrEmpty(fixedEffectNames))
         {
-            string[] effectNames = fixedEffectNames.Split('|');
-            for (int i = 0; i < effectNames.Length; ++i)
-            {
-                string effectName = effectNames[i].Trim();
-                if (!string.IsNullOrEmpty(effectName))
-                {
-                    m_effectSystem?.PlayEffect(effectName);
-                }
-            }
-        }
-        else
-        {
-            int effectCount = m_venueVoltageSystem != null
-                ? m_venueVoltageSystem.GetSuccessEffectCount()
-                : 1;
-            for (int i = 0; i < effectCount; ++i)
-            {
-                m_effectSystem?.PlayRandomEffect();
-            }
+            m_effectSystem?.PlayMusicNodeEffects(fixedEffectNames);
         }
 
 

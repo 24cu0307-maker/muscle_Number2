@@ -37,15 +37,12 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     [SerializeField] private AudioClip m_choiceSound; //観客の好みが確定した瞬間に一度だけ鳴らす通知音
     [Header("Audience Choice Clear")]
     [SerializeField] private AudioClip m_clearSound; //候補Poseの成立時に再生する成功音
-    [SerializeField] private string m_clearEffectName; //EffectSystemへ要求するクリア演出の登録名
     [SerializeField] private float m_clearReactionIntervalSeconds = 0.2f; //成功後からEvent終了まで観客Animationを更新する間隔
     [SerializeField] private float m_clearFrameAnimationSeconds = 1.0f; //黄色い成功枠が拡大して消えるまでの時間
     [SerializeField] private float m_clearFrameScaleMultiplier = 1.65f; //成功枠Animation終了時の基準Scaleに対する倍率
     [SerializeField] private Color m_clearFrameColor =
         new Color(1.0f, 0.82f, 0.05f, 1.0f);
     [Header("Audience Choice Debug")]
-    [SerializeField] private bool b_m_enableDebugClearKey = true; //実Pose入力なしで成功演出を確認できるDebug機能の有効状態
-    [SerializeField] private KeyCode m_debugClearKey = KeyCode.F4; //表示中の候補から一つをランダム成功させる確認Key
     [SerializeField] private bool b_m_enablePoseDiagnostics; //候補Pose判定の詳細Logを一定間隔で出力するか
     [SerializeField] private float m_poseDiagnosticIntervalSeconds = 0.5f; //診断Logを連続出力し過ぎないための待機時間
     [SerializeField] private float m_canvasDelaySeconds = 0.2f; //Canvas表示待機時間
@@ -241,7 +238,6 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         float nextPoseDiagnosticTime = Time.unscaledTime;
         while (GetPlaybackClock() < decisionTime)
         {
-            if (TryStartDebugRandomClear())yield break;
             UpdateCandidatePoseDiagnostics(ref nextPoseDiagnosticTime);
             yield return null;
         }
@@ -253,7 +249,6 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             + $"displayed poses before End {endTime:F2}s.");
         while (b_m_isPlaying && GetPlaybackClock() < endTime)
         {
-            if (TryStartDebugRandomClear())yield break;
             if (TryCompleteDetectedCandidatePose())yield break;
             UpdateCandidatePoseDiagnostics(ref nextPoseDiagnosticTime);
             yield return null;
@@ -476,16 +471,10 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             m_gameManager?.AddScore(_bonusScore);
             m_audienceSpawner?.StartSequentialSuccessVoices(_preference);
             m_venueVoltageSystem?.RegisterSuccess(_bonusScore);
-            int effectCount = m_venueVoltageSystem != null
-                ? m_venueVoltageSystem.GetSuccessEffectCount()
-                : 1;
-            for (int i = 0; i < effectCount; ++i)
-            {
-                m_effectSystem?.PlayRandomEffect();
-            }
+            m_effectSystem?.PlayMusicNodeEffects(
+                candidate.m_successEffectNames);
 
             PlayClearSound(_preference);
-            PlayClearEffect();
             Debug.Log(
                 $"Audience Choice CLEAR: {candidate.m_eventName}, "
                 + $"Pose {candidate.m_poseId}, Bonus {_bonusScore}");
@@ -589,47 +578,6 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// Debug Key入力時に表示候補をランダム選択し、実Pose入力なしで成功処理を検証します。
-    /// 本番のScore・Effect・観客反応と同じ経路を通すため、演出連携の切り分けに使用できます。
-    /// </summary>
-    /// <returns>Debug成功処理を開始した場合はtrueです。</returns>
-    private bool TryStartDebugRandomClear()
-    {
-        if (!b_m_enableDebugClearKey
-            || !EffectDebugKeySettings.IsKeyDown(m_debugClearKey)
-            || m_currentEvent == null)return false;
-
-        int candidateCount = 0;
-        while (m_currentEvent.TryGetAudienceChoiceCandidate(
-            candidateCount,
-            out _))
-        {
-            ++candidateCount;
-        }
-        if (candidateCount <= 0)return false;
-
-        int randomIndex = Random.Range(0, candidateCount);
-        int minimumScore = m_currentEvent.m_minimumBonusScore;
-        int maximumScore = m_currentEvent.m_maximumBonusScore;
-        float randomPreference = Random.Range(0.0f, 1.0f);
-        int bonusScore = Mathf.RoundToInt(
-            Mathf.Lerp(minimumScore, maximumScore, randomPreference));
-        b_m_audienceSelectionEnabled = false;
-        m_canvasController?.SetPoseDetectionEnabled(false);
-        Debug.Log(
-            $"Audience Choice debug random CLEAR: {m_debugClearKey} "
-            + $"selected candidate {randomIndex + 1}/{candidateCount}, "
-            + $"Pose {GetAudienceChoicePoseId(randomIndex)}.");
-        m_playCoroutine = StartCoroutine(
-            ShowSelectedPoseNodeRoutine(
-                randomIndex,
-                randomPreference,
-                bonusScore,
-                true));
-        return true;
-    }
-
-    /// <summary>
     /// 成功した候補枠を黄色に変更し、脈動しながら拡大・透明化して消去します。
     /// ゲーム停止中の演出確認にも対応するため、unscaledDeltaTimeで進行します。
     /// </summary>
@@ -699,7 +647,8 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     private bool IsSelectedPoseSuccessful(CSVDataPoseFlow _pose)
     {
-        return m_poseJudgeController != null
+        return EffectDebugKeySettings.ForceAllSuccess
+            || m_poseJudgeController != null
             && m_poseJudgeController.GetisPose(_pose.PoseID);
     }
 
@@ -738,18 +687,6 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
 
         PlayPreferenceSound(_preference);
-    }
-
-    /// <summary>
-    /// Inspectorで指定した登録名をEffectSystemへ渡し、成功専用演出を再生します。
-    /// 未設定時は通常のランダムEffectだけを使用します。
-    /// </summary>
-    private void PlayClearEffect()
-    {
-        if (m_effectSystem == null
-            || string.IsNullOrWhiteSpace(m_clearEffectName))return;
-
-        m_effectSystem.PlayEffect(m_clearEffectName.Trim());
     }
 
     /// <summary>

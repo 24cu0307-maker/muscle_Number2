@@ -5988,6 +5988,7 @@ GameObject:
   - component: {fileID: 130277792}
   - component: {fileID: 130277791}
   - component: {fileID: 130277795}
+  - component: {fileID: 130277800}
   m_Layer: 0
   m_Name: LiveEffectDeployment
   m_TagString: Untagged
@@ -6007,9 +6008,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74dc04df4efc7654f9ba0c6d2208886e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
-  m_liveEffectToggleKey: 288
   m_voltageToggleKey: 289
   m_exitDebugKey: 291
+  m_restartKey: 286
+  m_forceSuccessToggleKey: 287
+  m_cameraRetargetKey: 290
 --- !u!114 &130277792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6044,6 +6047,23 @@ MonoBehaviour:
   m_cameraDirector: {fileID: 2075913570}
   m_effectDirector: {fileID: 0}
   m_cameraShakeTarget: {fileID: 2040577845}
+--- !u!114 &130277800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130277790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a74ee43e889d4bd49bc573927f22dc98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConditionalEffectManager
+  m_sequence: {fileID: 11400000, guid: 2ef020d581829724fab8bfc34038fc4c, type: 2}
+  m_effectSystem: {fileID: 130277793}
+  m_bgmSystem: {fileID: 0}
+  m_scoreManager: {fileID: 0}
+  m_voltageSystem: {fileID: 0}
 --- !u!4 &130277794
 Transform:
   m_ObjectHideFlags: 0
@@ -41557,8 +41577,6 @@ MonoBehaviour:
   m_clearFrameAnimationSeconds: 1
   m_clearFrameScaleMultiplier: 1.65
   m_clearFrameColor: {r: 1, g: 0.82, b: 0.05, a: 1}
-  b_m_enableDebugClearKey: 1
-  m_debugClearKey: 285
   b_m_enablePoseDiagnostics: 0
   m_poseDiagnosticIntervalSeconds: 0.5
   m_canvasDelaySeconds: 0.2
@@ -126890,8 +126908,6 @@ MonoBehaviour:
   m_maximumSuccessSoundVolume: 0.8
   m_minimumSuccessSoundPitch: 0.9
   m_maximumSuccessSoundPitch: 1.6
-  m_minimumSuccessEffectCount: 1
-  m_maximumSuccessEffectCount: 30
   m_minimumLightIntensityMultiplier: 0.7
   m_maximumLightIntensityMultiplier: 2
   m_blueColor: {r: 0.1, g: 0.35, b: 1, a: 0.025}
@@ -157739,8 +157755,6 @@ MonoBehaviour:
   m_testSequence: {fileID: 0}
   m_testSequenceList: []
   m_testSequenceIndex: 0
-  m_testPlayKey: 112
-  m_stopKey: 111
   m_SetPlay: 1
 --- !u!4 &2075913571
 Transform:

@@ -1,10 +1,10 @@
 /*━━━━━━━━━*
 *@file EffectDebugKeySettings.cs*
-*@brief EffectSystem関連のDebug表示キーを一括管理する*
+*@brief Gameplayで使用するDebugキーとDebug操作を一括管理する*
 *@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
-*@remarks Inspectorから各Debug表示キーを変更可能*
+*@remarks InspectorからすべてのDebugキーを変更可能*
 *━━━━━━━━━*/
 
 using GameFlowTemplate;
@@ -22,21 +22,20 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
 {
     private const string EAlphaPrefix = "Alpha"; //数字KeyCodeの接頭辞
     private bool b_m_resultRequested; //F10によるResult遷移の多重実行防止
+    private bool b_m_restartRequested; //Restartの多重実行防止
 
-    [SerializeField] private KeyCode m_liveEffectToggleKey =
-        KeyCode.F7; //LiveEffect確認Panel表示切替Key
+    public static bool ForceAllSuccess { get; private set; } //全成功Debug状態
+
     [SerializeField] private KeyCode m_voltageToggleKey =
         KeyCode.F8; //Voltage Debug Panel表示切替Key
     [SerializeField] private KeyCode m_exitDebugKey =
         KeyCode.F10; //Debug再生終了Key
-
-    public KeyCode LiveEffectToggleKey
-    {
-        get
-        {
-            return m_liveEffectToggleKey;
-        }
-    }
+    [SerializeField] private KeyCode m_restartKey =
+        KeyCode.F5; //現在のGameplayを最初から再読込するKey
+    [SerializeField] private KeyCode m_forceSuccessToggleKey =
+        KeyCode.F6; //全判定成功の切替Key
+    [SerializeField] private KeyCode m_cameraRetargetKey =
+        KeyCode.F9; //Camera注視対象を再設定するKey
 
     public KeyCode VoltageToggleKey
     {
@@ -54,12 +53,66 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
         }
     }
 
+    public KeyCode RestartKey => m_restartKey;
+    public KeyCode ForceSuccessToggleKey => m_forceSuccessToggleKey;
+    public KeyCode CameraRetargetKey => m_cameraRetargetKey;
+
     /// <summary>
     /// Debug表示Componentの有効状態に関係なく、Result遷移キーを監視します。
     /// </summary>
     private void Update()
     {
-        if (b_m_resultRequested || !IsKeyDown(m_exitDebugKey))return;
+        if (!b_m_restartRequested && IsKeyDown(m_restartKey))
+        {
+            RestartCurrentScene();
+            return;
+        }
+
+        if (IsKeyDown(m_forceSuccessToggleKey))
+        {
+            ForceAllSuccess = !ForceAllSuccess;
+            Debug.Log(
+                $"[DebugKey] 全成功判定: {(ForceAllSuccess ? "ON" : "OFF")}",
+                this);
+        }
+
+        if (IsKeyDown(m_cameraRetargetKey))
+        {
+            RetargetCamera();
+        }
+
+        if (!b_m_resultRequested && IsKeyDown(m_exitDebugKey))
+        {
+            MoveToResult();
+        }
+    }
+
+    private void RestartCurrentScene()
+    {
+        b_m_restartRequested = true;
+        ForceAllSuccess = false;
+        UnityEngine.SceneManagement.Scene activeScene =
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(activeScene.name);
+    }
+
+    private void RetargetCamera()
+    {
+        PoseCameraDirector cameraDirector = FindFirstObjectByType<PoseCameraDirector>();
+        if (cameraDirector == null)
+        {
+            Debug.LogWarning(
+                "[DebugKey] PoseCameraDirectorが見つからないため再ターゲットできません。",
+                this);
+            return;
+        }
+
+        cameraDirector.RetargetCurrentFocus();
+        Debug.Log("[DebugKey] カメラのフォーカス対象を再設定しました。", this);
+    }
+
+    private void MoveToResult()
+    {
 
         GameManager gameManager = FindFirstObjectByType<GameManager>();
         if (gameManager == null)

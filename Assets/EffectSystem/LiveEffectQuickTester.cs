@@ -20,12 +20,6 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
     private const float EPanelHeight = 520.0f;
     private const float EPanelMargin = 16.0f;
 
-    [Header("Keyboard")]
-    [SerializeField] private KeyCode m_previousEffectKey = KeyCode.LeftArrow;
-    [SerializeField] private KeyCode m_nextEffectKey = KeyCode.RightArrow;
-    [SerializeField] private KeyCode m_playEffectKey = KeyCode.Space;
-    [SerializeField] private KeyCode m_stopEffectKey = KeyCode.Backspace;
-
     [SerializeField] private EffectSystem m_effectSystem; //確認対象
 
     private readonly List<string> m_effectNames = new List<string>(); //演出名一覧
@@ -53,33 +47,6 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
             EPanelMargin,
             EPanelWidth,
             Mathf.Min(EPanelHeight, Screen.height - EPanelMargin * 2.0f));
-    }
-
-    /// <summary>
-    /// 左右キーでEffectを選び、Spaceで個別再生、Backspaceで停止します。
-    /// 画面Panelと同じ操作をKeyboardからも行えます。
-    /// </summary>
-    private void Update()
-    {
-        if (m_effectNames.Count == 0)return;
-
-        if (EffectDebugKeySettings.IsKeyDown(m_previousEffectKey))
-        {
-            SelectRelative(-1);
-        }
-        if (EffectDebugKeySettings.IsKeyDown(m_nextEffectKey))
-        {
-            SelectRelative(1);
-        }
-        if (EffectDebugKeySettings.IsKeyDown(m_playEffectKey))
-        {
-            PlaySelectedEffect();
-        }
-        if (EffectDebugKeySettings.IsKeyDown(m_stopEffectKey))
-        {
-            m_effectSystem?.StopAllEffects();
-            Debug.Log("Effect確認: すべての演出を停止しました。", this);
-        }
     }
 
     /// <summary>選択、再生、停止を行うスクロール対応の確認Panelを表示します。</summary>
@@ -145,15 +112,7 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
         }
         GUILayout.EndScrollView();
 
-        GUILayout.Label("←/→ 選択  Space 再生  Backspace 停止");
         GUI.DragWindow(new Rect(0.0f, 0.0f, m_panelRect.width, 24.0f));
-    }
-
-    private void SelectRelative(int _offset)
-    {
-        m_selectedIndex = (m_selectedIndex + _offset + m_effectNames.Count)
-            % m_effectNames.Count;
-        LogSelection();
     }
 
     [ContextMenu("Play Selected Effect")]
@@ -178,7 +137,7 @@ public sealed class LiveEffectQuickTester : MonoBehaviour
         Debug.Log(
             $"Effect確認 [{m_selectedIndex + 1}/{m_effectNames.Count}]: "
             + $"{m_effectNames[m_selectedIndex]}  "
-            + "(←/→ 選択, Space 再生, Backspace 停止)",
+            + "(画面パネルから選択)",
             this);
     }
 

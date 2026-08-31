@@ -1,0 +1,283 @@
+============================================================
+エフェクト機能 利用手順書
+更新日: 2026/08/31
+============================================================
+
+1. 今回の変更概要
+------------------------------------------------------------
+エフェクトの再生経路を、次の2種類に限定しました。
+
+1) MusicNodeEditorで各ノードへ設定した成功演出
+2) MusicNodeEditorのConditional Effectsで設定した条件付き演出
+
+従来のランダム再生、個別スクリプトからの直接再生、
+イベント専用の独自クリア演出は使用しません。
+
+EffectSystem.PlayEffect()を直接呼び出しても演出は再生されず、
+Consoleへ警告が表示されます。
+
+
+2. エフェクト本体の登録場所
+------------------------------------------------------------
+エフェクト本体は、Gameplayシーン内の次の場所で管理します。
+
+LiveEffectDeployment
+  └ EffectList
+
+EffectListのEffects配列へ、一つずつエフェクトを登録してください。
+
+主な設定項目:
+
+- Effect Name
+  MusicNodeEditorから選択するときに使用する固有名です。
+  同じ名前を複数登録しないでください。
+
+- Play Delay Seconds
+  EffectSystemへ再生要求が届いてから再生するまでの待ち時間です。
+
+- Particles / Audio Sources / Light Controllers
+  一つのエフェクトとして同時に再生する構成要素です。
+
+- Position Root
+  条件付き演出でWorld Positionを指定した場合に移動するTransformです。
+  複数のParticleやLightをまとめて移動する場合は、共通の親Transformを設定してください。
+  未設定の場合は、登録されているParticleのTransformが指定位置へ移動します。
+
+- Camera Sequence / Timeline / Strobe / Camera Shake
+  必要な機能だけ設定してください。
+
+
+3. ノード成功時の演出設定
+------------------------------------------------------------
+1) Unity上部メニューから次を開きます。
+
+Tools > Effect System > Music Node Editor
+
+2) Sequenceへ次のAssetを指定します。
+
+Assets/EffectSystem/MusicNode/Sequences/NumbMusicNodeSequence.asset
+
+3) Nodes一覧のSuccess Effect欄をクリックします。
+
+4) 検索欄または一覧からエフェクトを選択します。
+
+5) 複数選択した場合は、次のように「|」区切りで保存されます。
+
+EffectBurst_00|Strobe|CameraShake
+
+6) ノードのポーズ判定が成功すると、登録されている演出がすべて再生されます。
+
+注意:
+
+- 演出を未設定にしたノードでは、エフェクトは再生されません。
+- 未設定時のランダムエフェクト再生は削除されています。
+- 選択済みの名前を再度クリックすると、その名前が選択から外れます。
+- CSVを使用する場合、SuccessEffectNames列へ「|」区切りで保存されます。
+
+
+4. 条件付き演出の設定
+------------------------------------------------------------
+Music Node Editor下部の「Conditional Effects」を使用します。
+
+タイムライン上へ配置する場合:
+
+1) 波形の上にある「Conditional Effect」モードを選択します。
+2) 波形上の再生したい時刻をクリックします。
+3) オレンジ色のEFFECTマーカーと条件付き演出設定が追加されます。
+4) マーカーをドラッグすると配置時刻を変更できます。
+
+配置時刻はCondition欄の条件とANDで評価されます。
+例えば30秒地点へ配置してConditionを「score >= 10000」にすると、
+30秒を過ぎ、かつスコアが10000以上になった時点で再生します。
+
+Conditional Effectsはポーズ判定やノード成功処理を経由しません。
+Gameplay中はConditionalEffectManagerが毎フレーム条件を評価し、
+条件を満たした時点で独立してエフェクトを再生します。
+
+ポーズと無関係にBGMの50秒地点で演出を出す例:
+
+time >= 50
+
+この設定でTrigger OnceをONにすると、50秒を超えた最初の一回だけ再生します。
+
+1) Add Conditional Effectを押します。
+
+2) Event Nameへ、設定を識別する名前を入力します。
+
+3) Conditionへ条件式を入力します。
+
+例:
+
+time > 50
+score > 10000 & voltage > 50
+(time > 50 | score > 10000) & voltage > 50
+
+4) Trigger Onceを設定します。
+
+- ON
+  条件を満たした最初の一回だけ再生します。
+
+- OFF
+  条件を満たしている間、Repeat Intervalごとに再生できます。
+
+5) Add Effectを押し、条件成立時に再生するエフェクトを追加します。
+
+6) 一つの条件へ、必要な数だけエフェクトを追加できます。
+
+
+5. 条件式の書き方
+------------------------------------------------------------
+使用できる比較演算子:
+
+>    より大きい
+>=   以上
+<    より小さい
+<=   以下
+==   等しい
+!=   等しくない
+
+使用できる論理演算子:
+
+&    AND（両方を満たす）
+|    OR（どちらかを満たす）
+( )  優先して評価する範囲
+
+評価順序:
+
+1) 括弧内
+2) &
+3) |
+
+標準で使用できる値:
+
+- time
+  BGMの現在再生位置（秒）です。
+  BGMが見つからない場合はシーン開始後の時間を使用します。
+
+- score
+  現在のゲームスコアです。
+
+- voltage
+  現在の会場ボルテージ（0～100）です。
+
+条件式には半角の演算子を使用してください。
+
+
+6. 任意の条件値を追加する方法
+------------------------------------------------------------
+ConditionalEffectManagerへ、コードから任意の名前と数値を登録できます。
+
+登録または更新:
+
+conditionalEffectManager.RegisterValue("combo", 10.0f);
+conditionalEffectManager.SetValue("audience", 75.0f);
+
+加算:
+
+conditionalEffectManager.AddValue("combo", 1.0f);
+
+取得:
+
+float combo = conditionalEffectManager.GetValue("combo");
+
+登録確認を伴う取得:
+
+if (conditionalEffectManager.TryGetValue("combo", out float combo))
+{
+    // comboを使用する処理
+}
+
+登録後は、Music Node Editorで次のように使用できます。
+
+combo >= 10 & audience > 50
+
+
+7. 条件付きエフェクトの個別設定
+------------------------------------------------------------
+各Effectには次の設定があります。
+
+- Delay Seconds
+  条件成立後、そのエフェクトだけ追加で待つ時間です。
+  EffectList側のPlay Delay Secondsも設定されている場合は、両方の待ち時間が適用されます。
+
+- Override Position
+  ONにするとWorld Positionを使用します。
+
+- World Position
+  エフェクトを表示するワールド座標です。
+
+複数エフェクトへ異なるDelay Secondsを設定すると、
+同じ条件から順番に演出を開始できます。
+
+例:
+
+Effect 1: Delay 0.0
+Effect 2: Delay 0.5
+Effect 3: Delay 1.0
+
+
+8. Gameplayシーンの管理クラス
+------------------------------------------------------------
+GameplayシーンのLiveEffectDeploymentには、次のComponentが設定されています。
+
+- EffectList
+  エフェクト本体の一覧です。
+
+- EffectSystem
+  登録名を実際のParticle、Audio、Light、Cameraなどへ接続します。
+
+- ConditionalEffectManager
+  条件値の登録、条件式の評価、条件付き演出の発火を管理します。
+
+- EffectDebugKeySettings
+  デバッグ用キーをまとめて管理します。
+
+ConditionalEffectManagerのSequenceには、
+NumbMusicNodeSequenceを設定してください。
+
+
+9. DebugKey
+------------------------------------------------------------
+DebugKeyはEffectDebugKeySettingsへ集約されています。
+Inspectorからキーを変更できます。
+
+初期設定:
+
+F5  現在のシーンをリスタート
+F6  すべて成功判定のON/OFF切り替え
+F8  Voltageデバッグパネルの表示切り替え
+F9  カメラのフォーカス対象を再設定
+F10 Resultへ強制遷移
+
+F6の全成功判定は、通常ノードとAudience Choiceの両方へ適用されます。
+F5でリスタートした場合、全成功判定はOFFへ戻ります。
+
+
+10. エフェクトが再生されない場合の確認項目
+------------------------------------------------------------
+1) Gameplayシーン内にEffectListが存在するか
+2) Effect Nameが空欄または重複していないか
+3) MusicNodeEditorで正しいSequenceを選択しているか
+4) Success EffectまたはConditional Effectsへ名前が設定されているか
+5) 条件式で使用している値が登録されているか
+6) 条件式の演算子が半角になっているか
+7) Conditional EffectがEnabledになっているか
+8) Trigger Onceですでに一度発火していないか
+9) Position RootまたはParticleがEffectListへ設定されているか
+10) Consoleに「登録されていない条件値」や「演出がありません」の警告が出ていないか
+
+
+11. 現在使用しない機能
+------------------------------------------------------------
+次の経路は使用しません。
+
+- EffectSystem.PlayEffect()の直接呼び出し
+- ランダムエフェクト再生
+- Voltage値によるランダム再生数の変更
+- Audience Choice固有のF4強制成功
+- PoseCameraDirector固有のP/Oデバッグキー
+
+エフェクトを追加するときは、EffectListへ本体を登録した後、
+MusicNodeEditorのSuccess EffectまたはConditional Effectsから設定してください。
+
+============================================================

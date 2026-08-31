@@ -112,18 +112,7 @@ public sealed class PoseCameraDirector : MonoBehaviour
     private int m_testSequenceIndex; //選択中の確認用Sequence番号
 
     
-    [Tooltip("テスト再生キー")]
-    [SerializeField]
-    [FormerlySerializedAs("testPlayKey")]
-    private KeyCode m_testPlayKey = KeyCode.P; //テスト再生キー
-
-    [Tooltip("演出停止キー")]
-    [SerializeField]
-    [FormerlySerializedAs("stopKey")]
-    private KeyCode m_stopKey = KeyCode.O; //演出停止キー
-    
-
-    [Tooltip("テスト再生キー")]
+    [Tooltip("InspectorまたはButtonからテスト再生を要求します。")]
     [SerializeField]
     [FormerlySerializedAs("testPlayKey")]
     private bool m_SetPlay = false; //テスト再生キー
@@ -152,6 +141,24 @@ public sealed class PoseCameraDirector : MonoBehaviour
 
     public bool IsPlaying => m_playRoutine != null;
 
+    /// <summary>
+    /// 現在登録されているCharacter注視点をGameplay CameraとPose Cameraへ再設定します。
+    /// </summary>
+    public void RetargetCurrentFocus()
+    {
+        if (m_chestTarget == null)return;
+
+        CenterGameplayCameraOnCharacter();
+        if (m_poseCamera == null)return;
+
+        CameraTarget cameraTarget = m_poseCamera.Target;
+        cameraTarget.TrackingTarget = m_chestTarget;
+        cameraTarget.LookAtTarget = m_chestTarget;
+        cameraTarget.CustomLookAtTarget = true;
+        m_poseCamera.Target = cameraTarget;
+        m_poseCamera.PreviousStateIsValid = false;
+    }
+
     //Cinemachineの時間停止対応と初期カメラを設定
     private void Awake()
     {
@@ -165,18 +172,15 @@ public sealed class PoseCameraDirector : MonoBehaviour
         SetGameplayCameraActive();
     }
 
-    //テスト用の再生キーと停止キーを確認
+    //InspectorまたはButtonからのテスト再生要求を確認
     private void Update()
     {
-        //テスト用のキー入力で再生・停止を切り替え
-        if (m_SetPlay || CameraInputUtility.IsKeyDown(m_testPlayKey))
+        if (m_SetPlay)
         {
             if (IsPlaying) { StopSequence(); }
             else { PlayTestSequences(); }
             m_SetPlay = false;
         }
-        
-        if (CameraInputUtility.IsKeyDown(m_stopKey)) { StopSequence(); }
     }
 
     //通常カメラが有効な間もプレイヤーを画面中央に保つ

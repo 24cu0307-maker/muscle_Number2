@@ -62,10 +62,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
     [SerializeField] private float m_minimumSuccessSoundPitch = EMinimumSoundPitch;
     [SerializeField] private float m_maximumSuccessSoundPitch = EMaximumSoundPitch;
 
-    [Header("Success Effect Amount")]
-    [SerializeField, Min(0)] private int m_minimumSuccessEffectCount = 1;
-    [SerializeField, Min(0)] private int m_maximumSuccessEffectCount = 4;
-
     [Header("Effect Light Intensity")]
     [SerializeField, Range(0.0f, EMaximumLightIntensityMultiplier)]
     private float m_minimumLightIntensityMultiplier = 0.7f;
@@ -164,8 +160,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         m_scoreGainUnit = Mathf.Max(1.0f, m_scoreGainUnit);
         m_maximumScoreBonus = Mathf.Max(0.0f, m_maximumScoreBonus);
         m_failureVoltageLoss = Mathf.Max(0.0f, m_failureVoltageLoss);
-        m_minimumSuccessEffectCount = Mathf.Max(0, m_minimumSuccessEffectCount);
-        m_maximumSuccessEffectCount = Mathf.Max(m_minimumSuccessEffectCount, m_maximumSuccessEffectCount);
         m_minimumLightIntensityMultiplier = Mathf.Clamp(
             m_minimumLightIntensityMultiplier,
             0.0f,
@@ -258,18 +252,6 @@ public sealed class VenueVoltageSystem : MonoBehaviour
         m_presentedVoltage = m_voltage;
         m_comboCount = 0;
         m_lastSuccessTime = Time.unscaledTime;
-    }
-
-    /// <summary>
-    /// 現在のボルテージを、成功時に同時再生するEffect数へ変換します。
-    /// Inspectorで設定した最小・最大数の間を0～1の正規化値で補間します。
-    /// </summary>
-    public int GetSuccessEffectCount()
-    {
-        return Mathf.RoundToInt(Mathf.Lerp(
-            m_minimumSuccessEffectCount,
-            m_maximumSuccessEffectCount,
-            NormalizedVoltage));
     }
 
     /// <summary>

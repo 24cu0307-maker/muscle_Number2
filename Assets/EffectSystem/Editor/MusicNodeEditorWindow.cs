@@ -22,6 +22,12 @@ using UnityEngine;
 /// </summary>
 public sealed class MusicNodeEditorWindow : EditorWindow
 {
+    private enum ETimelinePlacementMode
+    {
+        PoseNode,
+        ConditionalEffect
+    }
+
     private const string ECsvPath = "Assets/Resources/PoseTimeFlow.csv"; //既存CSV
     private const float ETimelineHeight = 180.0f; //波形領域高さ
     private const float ENodeWidth = 2.0f; //Node線の表示幅
@@ -45,6 +51,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private int m_selectedIndex = -1; //選択Node番号
     private Vector2 m_mainScrollPosition; //編集領域全体のScroll位置
     private Vector2 m_nodeListScrollPosition; //Node一覧Scroll位置
+    private bool b_m_nodeListFoldout = true; //Node一覧の展開状態
     private AudioClip m_cachedWaveformClip; //波形Cache対象
     private float[] m_waveformSamples; //WAVから取得した波形Cache
     private double m_previewPositionSeconds; //Editor試聴位置
@@ -53,6 +60,15 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private readonly List<int> m_eventSelectedIndicesList = new List<int>(); //Event別選択Node
     private readonly List<Vector2> m_eventScrollPositionsList = new List<Vector2>(); //Event別一覧Scroll
     private readonly List<bool> b_m_eventFoldoutsList = new List<bool>(); //Event別展開状態
+    private bool b_m_conditionalEffectsFoldout = true; //条件付き演出一覧の展開状態
+    private readonly Dictionary<ConditionalEffectEvent, bool>
+        b_m_conditionalEventFoldouts =
+            new Dictionary<ConditionalEffectEvent, bool>(); //条件Event別展開状態
+    private readonly Dictionary<ConditionalEffectEntry, bool>
+        b_m_conditionalEntryFoldouts =
+            new Dictionary<ConditionalEffectEntry, bool>(); //Effect別展開状態
+    private ETimelinePlacementMode m_timelinePlacementMode; //Timeline配置対象
+    private int m_selectedConditionalEffectIndex = -1; //選択中の条件付き演出
 
     /// <summary>
     /// Music Node Editorを開きます。
@@ -143,12 +159,16 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         }
 
         DrawPreviewControls();
+        m_timelinePlacementMode = (ETimelinePlacementMode)GUILayout.Toolbar(
+            (int)m_timelinePlacementMode,
+            new[] { "Pose Node", "Conditional Effect" });
         Rect timelineRect = GUILayoutUtility.GetRect(
             100.0f,
             ETimelineHeight,
             GUILayout.ExpandWidth(true)); //波形表示範囲
         DrawTimeline(timelineRect);
         HandleTimelineInput(timelineRect);
+        DrawConditionalEffectList();
         DrawNodeList();
         DrawEventSceneList();
 
@@ -170,6 +190,224 @@ public sealed class MusicNodeEditorWindow : EditorWindow
 
         GUILayout.EndHorizontal();
         EditorGUILayout.EndScrollView();
+    }
+
+    /// <summary>
+    /// 条件式、複数Effect、個別の待ち時間とWorld座標をまとめて編集します。
+    /// </summary>
+    private void DrawConditionalEffectList()
+    {
+        EditorGUILayout.Space();
+        b_m_conditionalEffectsFoldout = EditorGUILayout.Foldout(
+            b_m_conditionalEffectsFoldout,
+            $"Conditional Effects ({m_sequence.ConditionalEffectsList.Count})",
+            true);
+        if (!b_m_conditionalEffectsFoldout)return;
+
+        EditorGUILayout.HelpBox(
+            "Conditional Effectsはポーズ成功とは無関係に、毎フレーム条件を評価します。\n"
+            + "上のConditional Effectモードを選び、Timelineをクリックして配置できます。\n"
+            + "使用可能: >, >=, <, <=, ==, !=, &, |, ( )\n"
+            + "例: (time > 50 | score > 10000) & voltage > 50\n"
+            + "time / score / voltage のほか、管理クラスへ登録した任意の値も使用できます。",
+            MessageType.Info);
+
+        int deleteEventIndex = -1;
+        for (int i = 0; i < m_sequence.ConditionalEffectsList.Count; ++i)
+        {
+            ConditionalEffectEvent effectEvent =
+                m_sequence.ConditionalEffectsList[i]; //編集対象条件
+            if (effectEvent == null)continue;
+
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.BeginHorizontal();
+            Color previousBackgroundColor = GUI.backgroundColor;
+            if (i == m_selectedConditionalEffectIndex)
+            {
+                GUI.backgroundColor = Color.yellow;
+            }
+            if (GUILayout.Button("●", GUILayout.Width(28.0f)))
+            {
+                m_selectedConditionalEffectIndex = i;
+                m_timelinePlacementMode = ETimelinePlacementMode.ConditionalEffect;
+            }
+            GUI.backgroundColor = previousBackgroundColor;
+            bool b_eventFoldout = GetConditionalEventFoldout(effectEvent);
+            b_eventFoldout = EditorGUILayout.Foldout(
+                b_eventFoldout,
+                string.IsNullOrWhiteSpace(effectEvent.m_eventName)
+                    ? $"Conditional Effect {i + 1}"
+                    : effectEvent.m_eventName,
+                true);
+            b_m_conditionalEventFoldouts[effectEvent] = b_eventFoldout;
+            EditorGUI.BeginChangeCheck();
+            effectEvent.b_m_enabled = EditorGUILayout.Toggle(
+                effectEvent.b_m_enabled,
+                GUILayout.Width(20.0f));
+            if (GUILayout.Button("×", GUILayout.Width(28.0f)))
+            {
+                deleteEventIndex = i;
+            }
+            GUILayout.EndHorizontal();
+
+            if (b_eventFoldout)
+            {
+                effectEvent.m_eventName = EditorGUILayout.TextField(
+                    "Event Name",
+                    effectEvent.m_eventName);
+                effectEvent.b_m_useTimelineTime = EditorGUILayout.Toggle(
+                    "Use Timeline Time",
+                    effectEvent.b_m_useTimelineTime);
+                using (new EditorGUI.DisabledScope(!effectEvent.b_m_useTimelineTime))
+                {
+                    effectEvent.m_timelineTime = Mathf.Max(
+                        0.0f,
+                        EditorGUILayout.FloatField(
+                            "Timeline Time",
+                            effectEvent.m_timelineTime));
+                }
+                effectEvent.m_conditionExpression = EditorGUILayout.TextField(
+                    "Condition",
+                    effectEvent.m_conditionExpression);
+                effectEvent.b_m_triggerOnce = EditorGUILayout.Toggle(
+                    "Trigger Once",
+                    effectEvent.b_m_triggerOnce);
+                using (new EditorGUI.DisabledScope(effectEvent.b_m_triggerOnce))
+                {
+                    effectEvent.m_repeatIntervalSeconds = Mathf.Max(
+                        0.0f,
+                        EditorGUILayout.FloatField(
+                            "Repeat Interval",
+                            effectEvent.m_repeatIntervalSeconds));
+                }
+
+                DrawConditionalEffectEntries(effectEvent);
+            }
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(m_sequence, "Edit Conditional Effect");
+                EditorUtility.SetDirty(m_sequence);
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        if (deleteEventIndex >= 0)
+        {
+            Undo.RecordObject(m_sequence, "Delete Conditional Effect");
+            m_sequence.ConditionalEffectsList.RemoveAt(deleteEventIndex);
+            if (m_selectedConditionalEffectIndex == deleteEventIndex)
+            {
+                m_selectedConditionalEffectIndex = -1;
+            }
+            else if (m_selectedConditionalEffectIndex > deleteEventIndex)
+            {
+                --m_selectedConditionalEffectIndex;
+            }
+            EditorUtility.SetDirty(m_sequence);
+        }
+
+        if (GUILayout.Button("Add Conditional Effect"))
+        {
+            Undo.RecordObject(m_sequence, "Add Conditional Effect");
+            ConditionalEffectEvent effectEvent = new ConditionalEffectEvent();
+            effectEvent.m_effectsList.Add(new ConditionalEffectEntry());
+            m_sequence.ConditionalEffectsList.Add(effectEvent);
+            EditorUtility.SetDirty(m_sequence);
+        }
+    }
+
+    /// <summary>一つの条件に紐づく複数Effectを編集します。</summary>
+    private void DrawConditionalEffectEntries(ConditionalEffectEvent _effectEvent)
+    {
+        EditorGUILayout.LabelField("Effects", EditorStyles.boldLabel);
+        int deleteEffectIndex = -1;
+        for (int i = 0; i < _effectEvent.m_effectsList.Count; ++i)
+        {
+            ConditionalEffectEntry entry = _effectEvent.m_effectsList[i];
+            if (entry == null)continue;
+
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.BeginHorizontal();
+            bool b_entryFoldout = GetConditionalEntryFoldout(entry);
+            string effectLabel = string.IsNullOrWhiteSpace(entry.m_effectName)
+                ? $"Effect {i + 1}"
+                : $"Effect {i + 1}: {entry.m_effectName}";
+            b_entryFoldout = EditorGUILayout.Foldout(
+                b_entryFoldout,
+                effectLabel,
+                true);
+            b_m_conditionalEntryFoldouts[entry] = b_entryFoldout;
+            if (GUILayout.Button("×", GUILayout.Width(28.0f)))
+            {
+                deleteEffectIndex = i;
+            }
+            GUILayout.EndHorizontal();
+
+            if (b_entryFoldout)
+            {
+                int effectIndex = i;
+                DrawSuccessEffectSelector(
+                    entry.m_effectName,
+                    selectedEffectName =>
+                    {
+                        Undo.RecordObject(m_sequence, "Select Conditional Effect");
+                        _effectEvent.m_effectsList[effectIndex].m_effectName =
+                            selectedEffectName;
+                        EditorUtility.SetDirty(m_sequence);
+                    });
+
+                entry.m_delaySeconds = Mathf.Max(
+                    0.0f,
+                    EditorGUILayout.FloatField(
+                        "Delay Seconds",
+                        entry.m_delaySeconds));
+                entry.b_m_overridePosition = EditorGUILayout.Toggle(
+                    "Override Position",
+                    entry.b_m_overridePosition);
+                using (new EditorGUI.DisabledScope(!entry.b_m_overridePosition))
+                {
+                    entry.m_position = EditorGUILayout.Vector3Field(
+                        "World Position",
+                        entry.m_position);
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        if (deleteEffectIndex >= 0)
+        {
+            Undo.RecordObject(m_sequence, "Delete Conditional Effect Entry");
+            _effectEvent.m_effectsList.RemoveAt(deleteEffectIndex);
+            EditorUtility.SetDirty(m_sequence);
+        }
+        if (GUILayout.Button("Add Effect", GUILayout.Width(120.0f)))
+        {
+            Undo.RecordObject(m_sequence, "Add Conditional Effect Entry");
+            _effectEvent.m_effectsList.Add(new ConditionalEffectEntry());
+            EditorUtility.SetDirty(m_sequence);
+        }
+    }
+
+    /// <summary>条件Eventの展開状態を取得します。</summary>
+    private bool GetConditionalEventFoldout(ConditionalEffectEvent _effectEvent)
+    {
+        if (b_m_conditionalEventFoldouts.TryGetValue(
+            _effectEvent,
+            out bool b_foldout))return b_foldout;
+
+        b_m_conditionalEventFoldouts.Add(_effectEvent, true);
+        return true;
+    }
+
+    /// <summary>個別Effectの展開状態を取得します。</summary>
+    private bool GetConditionalEntryFoldout(ConditionalEffectEntry _entry)
+    {
+        if (b_m_conditionalEntryFoldouts.TryGetValue(
+            _entry,
+            out bool b_foldout))return b_foldout;
+
+        b_m_conditionalEntryFoldouts.Add(_entry, true);
+        return true;
     }
 
     /// <summary>
@@ -412,6 +650,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         }
 
         DrawEventSceneMarkers(_rect, duration);
+        DrawConditionalEffectMarkers(_rect, duration);
 
         GUI.Label(
             new Rect(_rect.x + 5.0f, _rect.yMax - 22.0f, 150.0f, 20.0f),
@@ -423,6 +662,30 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         EditorGUI.DrawRect(
             new Rect(playheadX - 1.0f, _rect.y, 2.0f, _rect.height),
             Color.white);
+    }
+
+    /// <summary>条件付き演出の配置時刻をTimeline上へ表示します。</summary>
+    private void DrawConditionalEffectMarkers(Rect _rect, float _duration)
+    {
+        for (int i = 0; i < m_sequence.ConditionalEffectsList.Count; ++i)
+        {
+            ConditionalEffectEvent effectEvent =
+                m_sequence.ConditionalEffectsList[i];
+            if (effectEvent == null || !effectEvent.b_m_useTimelineTime)continue;
+
+            float x = _rect.x
+                + Mathf.Clamp01(effectEvent.m_timelineTime / _duration)
+                * _rect.width;
+            Color markerColor = i == m_selectedConditionalEffectIndex
+                ? Color.yellow
+                : new Color(1.0f, 0.45f, 0.1f);
+            EditorGUI.DrawRect(
+                new Rect(x - ENodeWidth, _rect.y, ENodeWidth * 2.0f, _rect.height),
+                markerColor);
+            GUI.Label(
+                new Rect(x + 4.0f, _rect.y + 44.0f, 180.0f, 20.0f),
+                $"EFFECT: {effectEvent.m_eventName}");
+        }
     }
 
     /// <summary>
@@ -634,6 +897,13 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             (currentEvent.mousePosition.x - _rect.x) / _rect.width) * duration;
         if (currentEvent.type == EventType.MouseDown)
         {
+            if (m_timelinePlacementMode == ETimelinePlacementMode.ConditionalEffect)
+            {
+                HandleConditionalEffectMouseDown(time, duration);
+                currentEvent.Use();
+                return;
+            }
+
             m_selectedIndex = FindNearestNode(time, duration);
             if (m_selectedIndex < 0)
             {
@@ -652,6 +922,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             currentEvent.Use();
         }
         else if (currentEvent.type == EventType.MouseDrag
+            && m_timelinePlacementMode == ETimelinePlacementMode.PoseNode
             && m_selectedIndex >= 0)
         {
             Undo.RecordObject(m_sequence, "Move Music Node");
@@ -663,6 +934,64 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             Repaint();
             currentEvent.Use();
         }
+        else if (currentEvent.type == EventType.MouseDrag
+            && m_timelinePlacementMode == ETimelinePlacementMode.ConditionalEffect
+            && m_selectedConditionalEffectIndex >= 0)
+        {
+            Undo.RecordObject(m_sequence, "Move Conditional Effect");
+            ConditionalEffectEvent effectEvent =
+                m_sequence.ConditionalEffectsList[m_selectedConditionalEffectIndex];
+            effectEvent.m_timelineTime = time;
+            EditorUtility.SetDirty(m_sequence);
+            Repaint();
+            currentEvent.Use();
+        }
+    }
+
+    /// <summary>既存Markerを選択し、空き位置なら条件付き演出を追加します。</summary>
+    private void HandleConditionalEffectMouseDown(float _time, float _duration)
+    {
+        m_selectedConditionalEffectIndex = FindNearestConditionalEffect(
+            _time,
+            _duration);
+        if (m_selectedConditionalEffectIndex >= 0)return;
+
+        Undo.RecordObject(m_sequence, "Add Conditional Effect On Timeline");
+        ConditionalEffectEvent effectEvent = new ConditionalEffectEvent
+        {
+            m_eventName = "Effect Event",
+            b_m_useTimelineTime = true,
+            m_timelineTime = _time,
+            m_conditionExpression = "time >= 0"
+        };
+        effectEvent.m_effectsList.Add(new ConditionalEffectEntry());
+        m_sequence.ConditionalEffectsList.Add(effectEvent);
+        m_selectedConditionalEffectIndex =
+            m_sequence.ConditionalEffectsList.Count - 1;
+        EditorUtility.SetDirty(m_sequence);
+        Repaint();
+    }
+
+    /// <summary>指定時刻の近くにある条件付き演出Markerを検索します。</summary>
+    private int FindNearestConditionalEffect(float _time, float _duration)
+    {
+        float hitSeconds = ENodeHitWidth / Mathf.Max(1.0f, position.width)
+            * _duration;
+        int nearestIndex = -1;
+        float nearestDistance = float.MaxValue;
+        for (int i = 0; i < m_sequence.ConditionalEffectsList.Count; ++i)
+        {
+            ConditionalEffectEvent effectEvent =
+                m_sequence.ConditionalEffectsList[i];
+            if (effectEvent == null || !effectEvent.b_m_useTimelineTime)continue;
+
+            float distance = Mathf.Abs(effectEvent.m_timelineTime - _time);
+            if (distance > hitSeconds || distance >= nearestDistance)continue;
+            nearestIndex = i;
+            nearestDistance = distance;
+        }
+
+        return nearestIndex;
     }
 
     /// <summary>
@@ -671,9 +1000,12 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private void DrawNodeList()
     {
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField(
+        b_m_nodeListFoldout = EditorGUILayout.Foldout(
+            b_m_nodeListFoldout,
             $"Nodes ({m_sequence.EventsList.Count})",
-            EditorStyles.boldLabel);
+            true);
+        if (!b_m_nodeListFoldout)return;
+
         GUILayout.BeginHorizontal();
         GUILayout.Label(string.Empty, GUILayout.Width(ENodeSelectColumnWidth));
         GUILayout.Label("No.", GUILayout.Width(ENodeNumberColumnWidth));

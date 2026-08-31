@@ -26,6 +26,35 @@ public struct SMusicNodeEvent
     public string m_successEffectNames; //成功時に固定再生する演出名。複数指定は|区切り
 }
 
+/// <summary>
+/// 条件成立時に再生する一つのEffectと、その配置設定です。
+/// </summary>
+[Serializable]
+public sealed class ConditionalEffectEntry
+{
+    public string m_effectName; //EffectListに登録されている演出名
+    public bool b_m_overridePosition; //Node Editor指定位置を使用するか
+    public Vector3 m_position; //演出のWorld座標
+    [Min(0.0f)] public float m_delaySeconds; //条件成立後の追加待ち時間
+}
+
+/// <summary>
+/// 条件式と、成立時にまとめて開始するEffect一覧です。
+/// </summary>
+[Serializable]
+public sealed class ConditionalEffectEvent
+{
+    public string m_eventName = "Effect Event"; //Editor上の識別名
+    public bool b_m_enabled = true; //条件評価を有効にするか
+    public bool b_m_useTimelineTime; //Timeline上の配置時刻を発火条件に含めるか
+    [Min(0.0f)] public float m_timelineTime; //BGM開始からの配置秒数
+    public string m_conditionExpression = "time >= 0"; //発火条件
+    public bool b_m_triggerOnce = true; //一度だけ発火するか
+    [Min(0.0f)] public float m_repeatIntervalSeconds = 1.0f; //再発火の最短間隔
+    public List<ConditionalEffectEntry> m_effectsList =
+        new List<ConditionalEffectEntry>(); //同時に予約するEffect一覧
+}
+
 public enum EMusicEventType
 {
     AudienceChoice,
@@ -140,6 +169,8 @@ public sealed class MusicNodeSequence : ScriptableObject
         new List<SMusicNodeEvent>(); //Node一覧
     [SerializeField] private List<MusicEventSceneData> m_eventScenesList =
         new List<MusicEventSceneData>(); //Event Scene設定一覧
+    [SerializeField] private List<ConditionalEffectEvent> m_conditionalEffectsList =
+        new List<ConditionalEffectEvent>(); //条件で発火する演出一覧
 
     public AudioClip BgmClip
     {
@@ -188,6 +219,18 @@ public sealed class MusicNodeSequence : ScriptableObject
         get
         {
             return m_eventScenesList;
+        }
+    }
+
+    public List<ConditionalEffectEvent> ConditionalEffectsList
+    {
+        get
+        {
+            if (m_conditionalEffectsList == null)
+            {
+                m_conditionalEffectsList = new List<ConditionalEffectEvent>();
+            }
+            return m_conditionalEffectsList;
         }
     }
 }

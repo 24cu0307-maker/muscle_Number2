@@ -37,6 +37,10 @@ public struct SEffectData
     [FormerlySerializedAs("lc_mlightControllers")]
     [SerializeField] private LightController[] m_lightControllers;   //同時再生するライト制御群
 
+    [Header("Placement (Optional)")]
+    [Tooltip("条件付き演出の位置指定で移動するRoot。未設定時はParticleのTransformを移動します。")]
+    [SerializeField] private Transform m_positionRoot;               //位置指定時に移動するRoot
+
     [Header("Camera")]
     [Tooltip("このエフェクトと同時に再生するカメラシーケンス。不要な場合は未設定にします。")]
     [FormerlySerializedAs("m_cameraSequence")]
@@ -104,6 +108,14 @@ public struct SEffectData
         }
     }
 
+    public Transform PositionRoot
+    {
+        get
+        {
+            return m_positionRoot;
+        }
+    }
+
     public CameraSequence CameraSequence
     {
         get
@@ -146,7 +158,6 @@ public class EffectSystem : MonoBehaviour
 {
     private const float EMinimumDelaySeconds = 0.0f;                 //待ち時間の最小値
     private const double ETimelineStartSeconds = 0.0;                //Timelineの再生開始位置
-    private const int EEmptyEffectCount = 0;                         //演出が未登録の状態
 
     [Header("Effects")]
     [Tooltip("個別エフェクトを一元管理するEffectList。")]
@@ -173,8 +184,6 @@ public class EffectSystem : MonoBehaviour
         new HashSet<PlayableDirector>(); //現在再生中のDirector一覧
 
     private string m_nowplayEffectName = ""; //旧APIの再生状態確認で照合する、最後に要求されたEffect名
-    private readonly HashSet<int> m_reservedRandomEffectIndices =
-        new HashSet<int>(); //抽選済みで開始待機中または再生中のEffect番号
     private Coroutine m_strobeCoroutine;
     private Coroutine m_cameraShakeCoroutine;
     private Image m_strobeImage;
@@ -229,9 +238,40 @@ public class EffectSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// 指定された名前の演出を再生します。
+    /// 旧再生入口です。演出経路を限定するため、現在は再生しません。
     /// </summary>
     public void PlayEffect(string _effectname)
+    {
+        Debug.LogWarning(
+            $"「{_effectname}」の直接再生を停止しました。"
+            + "MusicNodeまたはConditionalEffectManagerから設定してください。",
+            this);
+    }
+
+    /// <summary>MusicNodeEditorで設定した|区切りの演出だけを再生します。</summary>
+    public void PlayMusicNodeEffects(string _effectNames)
+    {
+        if (string.IsNullOrWhiteSpace(_effectNames))return;
+
+        string[] effectNames = _effectNames.Split('|');
+        for (int i = 0; i < effectNames.Length; ++i)
+        {
+            string effectName = effectNames[i].Trim();
+            if (!string.IsNullOrEmpty(effectName))
+            {
+                PlayNamedEffect(effectName);
+            }
+        }
+    }
+
+    /// <summary>条件付き演出管理クラスから指定された演出を再生します。</summary>
+    public void PlayConditionalEffect(string _effectName)
+    {
+        PlayNamedEffect(_effectName);
+    }
+
+    /// <summary>許可された経路から渡された名前付き演出を再生します。</summary>
+    private void PlayNamedEffect(string _effectname)
     {
         SEffectData[] effectDatas = GetEffectDatas();
         if (effectDatas == null)return;
@@ -250,59 +290,46 @@ public class EffectSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// 登録済みの演出からランダムに一つ再生します。
+    /// 指定したWorld座標へ演出を配置して再生します。
     /// </summary>
-    public void PlayRandomEffect()
+    public void PlayConditionalEffectAt(string _effectname, Vector3 _position)
     {
         SEffectData[] effectDatas = GetEffectDatas();
-        if (effectDatas == null || effectDatas.Length == EEmptyEffectCount)return;
+        if (effectDatas == null)return;
 
-        List<int> availableIndices = new List<int>();
         for (int i = 0; i < effectDatas.Length; ++i)
         {
-            if (m_reservedRandomEffectIndices.Contains(i))continue;
-            if (HasPlayingEffect(effectDatas[i]))continue;
+            if (effectDatas[i].EffectName != _effectname)continue;
 
-            availableIndices.Add(i);
-        }
-
-        if (availableIndices.Count == 0)
-        {
-            Debug.Log("再生可能な未使用Effectがないため、今回のランダム抽選を見送ります。", this);
+            ApplyEffectPosition(effectDatas[i], _position);
+            ScheduleEffect(effectDatas[i]);
+            m_nowplayEffectName = effectDatas[i].EffectName;
             return;
         }
 
-        int randomIndex = availableIndices[
-            Random.Range(0, availableIndices.Count)]; //未再生候補から抽選
-        m_reservedRandomEffectIndices.Add(randomIndex);
-        ScheduleEffect(effectDatas[randomIndex]);
-        StartCoroutine(ReleaseRandomReservation(
-            randomIndex,
-            effectDatas[randomIndex]));
-
-        m_nowplayEffectName = effectDatas[randomIndex].EffectName;
+        Debug.LogWarning($"EffectSystemに「{_effectname}」という名前の演出がありません。", this);
     }
 
-    /// <summary>
-    /// 開始待機と再生が終わるまで抽選対象から除外します。
-    /// </summary>
-    private IEnumerator ReleaseRandomReservation(
-        int _effectindex,
-        SEffectData _effect)
+    /// <summary>専用Rootを優先し、未設定時はParticle群の位置を揃えます。</summary>
+    private static void ApplyEffectPosition(
+        SEffectData _effect,
+        Vector3 _position)
     {
-        float delay = _effect.PlayDelay;
-        if (delay > EMinimumDelaySeconds)
+        if (_effect.PositionRoot != null)
         {
-            yield return new WaitForSeconds(delay);
+            _effect.PositionRoot.position = _position;
+            return;
         }
 
-        yield return null; //再生Componentの状態が反映されるFrameを待つ
-        while (HasPlayingEffect(_effect))
+        ParticleSystem[] particles = _effect.Particles;
+        if (particles == null)return;
+        for (int i = 0; i < particles.Length; ++i)
         {
-            yield return null;
+            if (particles[i] != null)
+            {
+                particles[i].transform.position = _position;
+            }
         }
-
-        m_reservedRandomEffectIndices.Remove(_effectindex);
     }
 
     /// <summary>

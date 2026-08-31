@@ -16280,8 +16280,6 @@ MonoBehaviour:
   m_testSequenceList:
   - {fileID: 11400000, guid: 96bf2a4a3ee7eb04589f2c8a0fe05491, type: 2}
   m_testSequenceIndex: 0
-  m_testPlayKey: 112
-  m_stopKey: 111
   m_SetPlay: 1
 --- !u!4 &2075913571
 Transform:
@@ -49839,8 +49837,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74dc04df4efc7654f9ba0c6d2208886e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
-  m_liveEffectToggleKey: 288
   m_voltageToggleKey: 289
+  m_exitDebugKey: 291
+  m_restartKey: 286
+  m_forceSuccessToggleKey: 287
+  m_cameraRetargetKey: 290
 --- !u!95 &8730352577438428718
 Animator:
   serializedVersion: 7
