@@ -12,13 +12,6 @@ public class UIManager : MonoBehaviour
     public Action<int> PoseJudgeFrame; //判定可能時間中に対象PoseIDを判定側へ通知するCallback
     public Action<InGameState> setState; //UI進行に応じた次状態をInGameManagerへ通知するCallback
 
-    private void Awake()
-    {
-        
-    }
-
- 
-
     /// <summary>
     /// InGame状態に合わせてPose UIの生成、縮小Animation、表示時間終了を進行します。
     /// BGM同期済みの現在時刻を受け取るため、Frame数ではなく秒数を基準に動作します。
@@ -94,7 +87,6 @@ public class UIManager : MonoBehaviour
         CSVDataPoseFlow _pose,
         float _currenttimeseconds)
     {
-        Debug.Log("{END0}");
         if ((m_keepGameTimeSeconds + _pose.time) < _currenttimeseconds)
         {
             setState?.Invoke(InGameState.End);
