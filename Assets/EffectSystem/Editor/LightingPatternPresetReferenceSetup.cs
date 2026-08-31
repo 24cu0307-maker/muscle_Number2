@@ -32,7 +32,6 @@ public static class LightingPatternPresetReferenceSetup
     }
 
     /// <summary>必要に応じて手動でも全参照を再設定できます。</summary>
-    [MenuItem("Tools/Effect System/Repair Lighting Pattern References")]
     public static void RepairReferencesIfNeeded()
     {
         GameObject rigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ERigPrefabPath);
