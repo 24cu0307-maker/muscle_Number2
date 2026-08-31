@@ -22,7 +22,6 @@ public static class StageMaterialSetup
     private const string EMaterialFolderPath = "Assets/Stage/Materials"; //外部Material格納先
     private const string EUrpLitShaderName = "Universal Render Pipeline/Lit"; //URP用Shader
     private const string EStandardShaderName = "Standard"; //Shader取得失敗時の予備
-    private const string EMenuPath = "Tools/Effect System/Fix Stage Materials"; //手動実行Menu
     private const float EDefaultMetallic = 0.08f; //青い環境反射を抑える金属度
     private const float EDefaultSmoothness = 0.28f; //青い環境反射を抑える光沢
     private const float EMinimumNeutralBrightness = 0.45f; //無Texture Materialの最低明度

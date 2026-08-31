@@ -1,11 +1,11 @@
 ============================================================
-エフェクト・Music Node Editor 簡易利用手順
+Music & Effect Editor 簡易利用手順
 更新日: 2026/09/01
 ============================================================
 
 【Editorを開く】
 
-- Unity上部メニューの Tools > Effect System > Music Node Editor を開く。
+- Unity上部メニューの Music & Effect Editor > Open Editor を押して開く。
 - Sequenceに Assets/EffectSystem/MusicNode/Sequences/NumbMusicNodeSequence.asset を設定する。
 - Audio Clipにゲームで使用するBGMを設定する。
 - Play、Pause / Resume、StopでBGMとTimelineを確認できる。
@@ -16,7 +16,7 @@
 - Effectsへエフェクトを一つずつ追加し、Effect Nameに重複しない名前を付ける。
 - Particle、Audio、Light、Strobe、Camera Shakeなど必要な項目だけ設定する。
 - World Positionを使う場合は、必要に応じてPosition Rootを設定する。
-- Music Node EditorにはEffectListへ登録した名前が選択肢として表示される。
+- Music & Effect EditorにはEffectListへ登録した名前が選択肢として表示される。
 
 【ポーズノードを配置する】
 
@@ -85,7 +85,7 @@
 【再生されない場合】
 
 - EffectListにEffect Nameが登録されているか確認する。
-- Music Node Editorで正しいSequenceを開いているか確認する。
+- Music & Effect Editorで正しいSequenceを開いているか確認する。
 - Success EffectまたはConditional Effectsに演出名が設定されているか確認する。
 - Conditional EffectのEnabled、条件式、Trigger Onceの発火状態を確認する。
 - BGM停止中は、BGMなしで時間を進める設定を確認する。

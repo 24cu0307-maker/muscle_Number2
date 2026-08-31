@@ -1,6 +1,6 @@
 /*━━━━━━━━━*
 *@file MusicNodeEditorWindow.cs*
-*@brief BGM波形上でPose Nodeの時間とIDを視覚編集する*
+*@brief BGM波形上でPose NodeとEffectの再生条件を視覚編集する*
 *@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
@@ -18,7 +18,7 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 /// <summary>
-/// Audio波形上へPose Nodeを配置、移動、編集します。
+/// Audio波形上へPose NodeとEffectを配置、移動、編集します。
 /// </summary>
 public sealed class MusicNodeEditorWindow : EditorWindow
 {
@@ -73,12 +73,12 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private int m_selectedConditionalEffectIndex = -1; //選択中の条件付き演出
 
     /// <summary>
-    /// Music Node Editorを開きます。
+    /// Music & Effect Editorを開きます。
     /// </summary>
-    [MenuItem("Tools/Effect System/Music Node Editor", priority = 150)]
+    [MenuItem("Music & Effect Editor/Open Editor", priority = 1)]
     private static void OpenWindow()
     {
-        GetWindow<MusicNodeEditorWindow>("Music Node Editor");
+        GetWindow<MusicNodeEditorWindow>("Music & Effect Editor");
     }
 
     /// <summary>

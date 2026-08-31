@@ -22,11 +22,8 @@ public static class EffectWorkToGameplaySync
         "Assets/Scenes/GameFlow/Gameplay_EffectWork.unity"; //編集元Scene
     private const string ETargetScenePath =
         "Assets/Scenes/GameFlow/Gameplay.unity"; //本番反映先Scene
-    private const string EMenuPath =
-        "Tools/Effect System/Apply EffectWork To Gameplay"; //本番用Menu
     private const string ETemporaryBundleName =
         "__EffectWorkSyncBundle"; //複製用一時Root
-    private const int EMenuPriority = 1; //Menu表示順
 
     private static readonly string[] EEffectRootNames =
     {
@@ -47,7 +44,6 @@ public static class EffectWorkToGameplaySync
     /// <summary>
     /// EffectWorkの演出所有ObjectとEffectSystem設定をGameplayへ反映します。
     /// </summary>
-    [MenuItem(EMenuPath, priority = EMenuPriority)]
     private static void ApplyToGameplay()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())return;

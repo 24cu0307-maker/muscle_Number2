@@ -13,7 +13,6 @@ public static class EffectDebugSceneGenerator
     private const string DebugScene =
         "Assets/Scenes/GameFlow/Gameplay_EffectDebug.unity";
 
-    [MenuItem("Tools/Effect System/Generate Camera-Free Debug Scene")]
     public static void Generate()
     {
         if (!AssetDatabase.LoadAssetAtPath<SceneAsset>(SourceScene))

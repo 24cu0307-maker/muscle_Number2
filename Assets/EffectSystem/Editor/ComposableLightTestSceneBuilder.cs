@@ -49,7 +49,6 @@ public static class ComposableLightTestSceneBuilder
     }
 
     /// <summary>Tools MenuからTest対象へScene Viewを戻せます。</summary>
-    [MenuItem("Tools/Effect System/Focus Composable Light Test Objects")]
     public static void FocusTestSceneIfOpen()
     {
         Scene activeScene = SceneManager.GetActiveScene();
@@ -79,7 +78,6 @@ public static class ComposableLightTestSceneBuilder
     }
 
     /// <summary>Tools Menuから確認後にTest Sceneを作り直せます。</summary>
-    [MenuItem("Tools/Effect System/Rebuild Composable Light Test Scene")]
     public static void RebuildTestScene()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

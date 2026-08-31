@@ -28,9 +28,6 @@ public static class LiveEffectDeploymentBuilder
     private const string EDeploymentName = "LiveEffectDeployment"; //展開Root名
     private const string EDirectorRootName = "LiveShowDirectors"; //Director親名
     private const int EShowCount = 5; //登録演出数
-    private const int EMenuPriority = 134; //メニュー表示順
-    private const int EDeployMenuPriority = 135; //Hierarchy展開メニュー表示順
-    private const int ERebindMenuPriority = 136; //Binding修復メニュー表示順
 
     private static readonly string[] m_effectRootNames =
     {
@@ -74,9 +71,6 @@ public static class LiveEffectDeploymentBuilder
     /// <summary>
     /// 現在の配置とBindingから展開用Prefabを生成します。
     /// </summary>
-    [MenuItem(
-        "Tools/Effect System/Build Deployment Prefab",
-        priority = EMenuPriority)]
     private static void Build()
     {
         EnsureFolder();
@@ -147,9 +141,6 @@ public static class LiveEffectDeploymentBuilder
     /// <summary>
     /// 展開用Prefabを現在のシーンへ通常のHierarchy Objectとして展開します。
     /// </summary>
-    [MenuItem(
-        "Tools/Effect System/Deploy Live Effects To Current Scene",
-        priority = EDeployMenuPriority)]
     private static void DeployToCurrentScene()
     {
         Scene scene = SceneManager.GetActiveScene(); //展開先シーン
@@ -205,9 +196,6 @@ public static class LiveEffectDeploymentBuilder
     /// <summary>
     /// 現在のシーンへ展開済みのDirector Bindingを作り直します。
     /// </summary>
-    [MenuItem(
-        "Tools/Effect System/Rebind Deployed Live Effects",
-        priority = ERebindMenuPriority)]
     private static void RebindCurrentDeployment()
     {
         Scene scene = SceneManager.GetActiveScene(); //現在のシーン

@@ -40,7 +40,6 @@ public static class LiveShowTimelineBuilder
     private const int EDefaultRotationCycles = 1; //標準往復回数
     private const int EFastRotationCycles = 3; //高速往復回数
     private const int EShowCount = 5; //生成する演出数
-    private const int EMenuPriority = 131; //メニュー表示順
 
     private static readonly string[] m_showNames =
     {
@@ -54,9 +53,6 @@ public static class LiveShowTimelineBuilder
     /// <summary>
     /// InGameの現在配置から5種類のライブ演出を生成します。
     /// </summary>
-    [MenuItem(
-        "Tools/Effect System/Build Live Show Timelines",
-        priority = EMenuPriority)]
     private static void Build()
     {
         Scene scene = GetInGameScene(); //対象シーン
