@@ -29,6 +29,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     }
 
     private const string ECsvPath = "Assets/Resources/PoseTimeFlow.csv"; //既存CSV
+    private const string EUnifiedCsvPath =
+        "Assets/Resources/MusicTimeline.csv"; //Poseと条件付き演出の統一CSV
     private const float ETimelineHeight = 180.0f; //波形領域高さ
     private const float ENodeWidth = 2.0f; //Node線の表示幅
     private const float ENodeHitWidth = 10.0f; //Nodeを選択できる幅
@@ -171,13 +173,38 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         DrawConditionalEffectList();
         DrawNodeList();
         DrawEventSceneList();
+        DrawDataControls();
+        EditorGUILayout.EndScrollView();
+    }
 
-        GUILayout.BeginHorizontal();
+    /// <summary>並び替えとCSV入出力を用途別に整列して表示します。</summary>
+    private void DrawDataControls()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.LabelField("Data Controls", EditorStyles.boldLabel);
         if (GUILayout.Button("Sort By Time"))
         {
             SortEvents();
         }
 
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("MusicTimeline.csv (Pose + Effect)");
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Import MusicTimeline.csv"))
+        {
+            ImportUnifiedCsv();
+        }
+
+        if (GUILayout.Button("Export MusicTimeline.csv"))
+        {
+            ExportUnifiedCsv();
+        }
+        GUILayout.EndHorizontal();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("PoseTimeFlow.csv (Legacy Pose Only)");
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Import PoseTimeFlow.csv"))
         {
             ImportCsv();
@@ -189,7 +216,155 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         }
 
         GUILayout.EndHorizontal();
-        EditorGUILayout.EndScrollView();
+        EditorGUILayout.EndVertical();
+    }
+
+    /// <summary>Poseと条件付き演出をBGM絶対時刻の統一CSVへ保存します。</summary>
+    private void ExportUnifiedCsv()
+    {
+        SortEvents();
+        StringBuilder csv = new StringBuilder();
+        csv.AppendLine(
+            "Type,Group,Time,NodeNumber,PoseID,EventName,SuccessEffects,"
+            + "Condition,TriggerOnce,RepeatInterval,EffectName,Delay,"
+            + "OverridePosition,PositionX,PositionY,PositionZ");
+        for (int i = 0; i < m_sequence.EventsList.Count; ++i)
+        {
+            SMusicNodeEvent node = m_sequence.EventsList[i];
+            csv.Append("Pose,,");
+            csv.Append(node.m_time.ToString("0.###", CultureInfo.InvariantCulture));
+            csv.Append($",{node.m_nodeNumber},{node.m_poseId},");
+            csv.Append(EscapeCsv(node.m_eventName));
+            csv.Append(',');
+            csv.Append(EscapeCsv(node.m_successEffectNames));
+            csv.AppendLine(",,,,,,,,,");
+        }
+
+        for (int i = 0; i < m_sequence.ConditionalEffectsList.Count; ++i)
+        {
+            ConditionalEffectEvent effectEvent =
+                m_sequence.ConditionalEffectsList[i];
+            if (effectEvent == null)continue;
+            int entryCount = Mathf.Max(1, effectEvent.m_effectsList.Count);
+            for (int j = 0; j < entryCount; ++j)
+            {
+                ConditionalEffectEntry entry = j < effectEvent.m_effectsList.Count
+                    ? effectEvent.m_effectsList[j]
+                    : null;
+                csv.Append($"Effect,{i},");
+                csv.Append(effectEvent.m_timelineTime.ToString(
+                    "0.###", CultureInfo.InvariantCulture));
+                csv.Append(",,,");
+                csv.Append(EscapeCsv(effectEvent.m_eventName));
+                csv.Append(",,");
+                csv.Append(EscapeCsv(effectEvent.m_conditionExpression));
+                csv.Append(effectEvent.b_m_triggerOnce ? ",1," : ",0,");
+                csv.Append(effectEvent.m_repeatIntervalSeconds.ToString(
+                    "0.###", CultureInfo.InvariantCulture));
+                csv.Append(',');
+                csv.Append(EscapeCsv(entry?.m_effectName));
+                csv.Append(',');
+                csv.Append((entry?.m_delaySeconds ?? 0.0f).ToString(
+                    "0.###", CultureInfo.InvariantCulture));
+                csv.Append(entry != null && entry.b_m_overridePosition
+                    ? ",1," : ",0,");
+                Vector3 position = entry?.m_position ?? Vector3.zero;
+                csv.Append(position.x.ToString("0.###", CultureInfo.InvariantCulture));
+                csv.Append(',');
+                csv.Append(position.y.ToString("0.###", CultureInfo.InvariantCulture));
+                csv.Append(',');
+                csv.AppendLine(position.z.ToString("0.###", CultureInfo.InvariantCulture));
+            }
+        }
+
+        File.WriteAllText(EUnifiedCsvPath, csv.ToString(), new UTF8Encoding(false));
+        AssetDatabase.ImportAsset(EUnifiedCsvPath);
+        Debug.Log($"統一Timelineを{EUnifiedCsvPath}へ書き出しました。");
+    }
+
+    /// <summary>統一CSVからPoseと条件付き演出をSequenceへ読み込みます。</summary>
+    private void ImportUnifiedCsv()
+    {
+        if (!File.Exists(EUnifiedCsvPath))
+        {
+            Debug.LogWarning($"{EUnifiedCsvPath}が見つかりません。");
+            return;
+        }
+
+        List<SMusicNodeEvent> nodes = new List<SMusicNodeEvent>();
+        Dictionary<string, ConditionalEffectEvent> effects =
+            new Dictionary<string, ConditionalEffectEvent>();
+        string[] lines = File.ReadAllLines(EUnifiedCsvPath);
+        for (int i = 1; i < lines.Length; ++i)
+        {
+            if (string.IsNullOrWhiteSpace(lines[i]))continue;
+            List<string> columns = ParseCsvLine(lines[i]);
+            if (columns.Count < 16)continue;
+            if (string.Equals(columns[0], "Pose", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!TryParseFloat(columns[2], out float time)
+                    || !int.TryParse(columns[3], out int number)
+                    || !int.TryParse(columns[4], out int poseId))continue;
+                nodes.Add(new SMusicNodeEvent
+                {
+                    m_time = Mathf.Max(0.0f, time),
+                    m_nodeNumber = Mathf.Max(1, number),
+                    m_poseId = poseId,
+                    m_eventName = columns[5],
+                    m_successEffectNames = columns[6]
+                });
+                continue;
+            }
+            if (!string.Equals(columns[0], "Effect", StringComparison.OrdinalIgnoreCase))continue;
+
+            string group = columns[1];
+            if (!effects.TryGetValue(group, out ConditionalEffectEvent effectEvent))
+            {
+                TryParseFloat(columns[2], out float time);
+                TryParseFloat(columns[9], out float repeat);
+                effectEvent = new ConditionalEffectEvent
+                {
+                    m_eventName = columns[5],
+                    b_m_enabled = true,
+                    b_m_useTimelineTime = true,
+                    m_timelineTime = Mathf.Max(0.0f, time),
+                    m_conditionExpression = string.IsNullOrWhiteSpace(columns[7])
+                        ? "time >= 0" : columns[7],
+                    b_m_triggerOnce = columns[8] != "0",
+                    m_repeatIntervalSeconds = Mathf.Max(0.0f, repeat)
+                };
+                effects.Add(group, effectEvent);
+            }
+            if (string.IsNullOrWhiteSpace(columns[10]))continue;
+            TryParseFloat(columns[11], out float delay);
+            TryParseFloat(columns[13], out float x);
+            TryParseFloat(columns[14], out float y);
+            TryParseFloat(columns[15], out float z);
+            effectEvent.m_effectsList.Add(new ConditionalEffectEntry
+            {
+                m_effectName = columns[10],
+                m_delaySeconds = Mathf.Max(0.0f, delay),
+                b_m_overridePosition = columns[12] != "0",
+                m_position = new Vector3(x, y, z)
+            });
+        }
+
+        Undo.RecordObject(m_sequence, "Import Unified Music Timeline");
+        m_sequence.EventsList.Clear();
+        m_sequence.EventsList.AddRange(nodes);
+        m_sequence.ConditionalEffectsList.Clear();
+        m_sequence.ConditionalEffectsList.AddRange(effects.Values);
+        SortEvents();
+        EditorUtility.SetDirty(m_sequence);
+    }
+
+    private static bool TryParseFloat(string _value, out float _result)
+    {
+        return float.TryParse(
+            _value,
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture,
+            out _result);
     }
 
     /// <summary>

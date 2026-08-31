@@ -27,6 +27,9 @@ public sealed class ConditionalEffectManager : MonoBehaviour
     [SerializeField] private MusicNodeSequence m_sequence; //条件付き演出設定
     [SerializeField] private EffectSystem m_effectSystem; //演出再生先
     [SerializeField] private VoltageBgmSystem m_bgmSystem; //BGM基準時刻
+    [SerializeField]
+    [Tooltip("BGMが未再生または存在しない場合、シーン開始からの経過時間で演出条件を判定します。")]
+    private bool b_m_useSceneTimeWithoutBgm = true; //BGMなしでの確認用
     [SerializeField] private ScoreManager m_scoreManager; //現在Score
     [SerializeField] private VenueVoltageSystem m_voltageSystem; //現在Voltage
 
@@ -117,9 +120,19 @@ public sealed class ConditionalEffectManager : MonoBehaviour
 
     private void UpdateBuiltInValues()
     {
+        float timelineTime = 0.0f;
+        if (m_bgmSystem != null && m_bgmSystem.IsPlaying)
+        {
+            timelineTime = m_bgmSystem.CurrentTimeSeconds;
+        }
+        else if (b_m_useSceneTimeWithoutBgm)
+        {
+            timelineTime = Time.timeSinceLevelLoad;
+        }
+
         SetValue(
             ETimeValueName,
-            m_bgmSystem != null ? m_bgmSystem.CurrentTimeSeconds : Time.timeSinceLevelLoad);
+            timelineTime);
         SetValue(
             EScoreValueName,
             m_scoreManager != null ? m_scoreManager.CurrentScore : GameSession.Score);
@@ -176,7 +189,6 @@ public sealed class ConditionalEffectManager : MonoBehaviour
 
     private IEnumerator PlayEffectEntry(ConditionalEffectEntry _entry)
     {
-        Debug.Log("[Effect] Try");
         float delay = Mathf.Max(0.0f, _entry.m_delaySeconds);
         if (delay > 0.0f)
         {

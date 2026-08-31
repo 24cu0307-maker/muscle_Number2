@@ -368,9 +368,6 @@ public class EffectSystem : MonoBehaviour
         foreach (SEffectData effectData in effectDatas)
         {
             if (effectData.EffectName != m_nowplayEffectName) continue;
-            Debug.Log("{+++}" + 
-            HasPlayingEffect(effectData));
-
             b_m_isPlayEffect = HasPlayingEffect(effectData);
             return;
         }

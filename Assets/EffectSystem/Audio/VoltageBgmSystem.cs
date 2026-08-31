@@ -98,6 +98,14 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     }
 
     public bool IsPlaybackReady => GetClockSource() != null;
+    public bool IsPlaying
+    {
+        get
+        {
+            AudioSource source = GetClockSource();
+            return source != null && source.isPlaying;
+        }
+    }
     public float DurationSeconds
     {
         get
