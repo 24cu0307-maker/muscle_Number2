@@ -176,6 +176,7 @@ public sealed class ConditionalEffectManager : MonoBehaviour
 
     private IEnumerator PlayEffectEntry(ConditionalEffectEntry _entry)
     {
+        Debug.Log("[Effect] Try");
         float delay = Mathf.Max(0.0f, _entry.m_delaySeconds);
         if (delay > 0.0f)
         {

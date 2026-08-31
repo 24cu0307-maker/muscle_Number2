@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &20701792
 RectTransform:
   m_ObjectHideFlags: 0
@@ -629,9 +629,9 @@ PlayableDirector:
   - key: {fileID: -3666591540783683759, guid: 94bcce0cd9b577a4db45b270bebbe447, type: 2}
     value: {fileID: 1467593056}
   - key: {fileID: 2326359239811455678, guid: 94bcce0cd9b577a4db45b270bebbe447, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 509341375}
   - key: {fileID: -8760388691948388602, guid: 94bcce0cd9b577a4db45b270bebbe447, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 509341377}
   - key: {fileID: -8516453406159448923, guid: 94bcce0cd9b577a4db45b270bebbe447, type: 2}
     value: {fileID: 168228992}
   - key: {fileID: -7463305621732141958, guid: 94bcce0cd9b577a4db45b270bebbe447, type: 2}
@@ -1313,7 +1313,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c62170e5b049b244092729006f6081e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4bb8df693bd82ef4fa2ea9b5a2414dfc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3797,7 +3797,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 4a5bc26110f81a54488e705cb98edbaa, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -4156,6 +4156,10 @@ PlayableDirector:
     value: {fileID: 1467593054}
   - key: {fileID: -3666591540783683759, guid: 4a5bc26110f81a54488e705cb98edbaa, type: 2}
     value: {fileID: 1467593056}
+  - key: {fileID: 2326359239811455678, guid: 4a5bc26110f81a54488e705cb98edbaa, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -8760388691948388602, guid: 4a5bc26110f81a54488e705cb98edbaa, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &751059376
