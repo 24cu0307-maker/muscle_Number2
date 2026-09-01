@@ -66,7 +66,8 @@ public class PoseFlowDataManager : MonoBehaviour
             PoseID = poseId,
             PoseName = node.m_eventName,
             time = duration,
-            SuccessEffectNames = node.m_successEffectNames
+            SuccessEffectNames = node.m_successEffectNames,
+            FailureEffectNames = node.m_failureEffectNames
         };
     }
 

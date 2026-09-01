@@ -39,7 +39,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private const float ENodeNumberColumnWidth = 55.0f; //番号列幅
     private const float ENodeTimeColumnWidth = 75.0f; //時間列幅
     private const float ENodePoseColumnWidth = 65.0f; //Pose ID列幅
-    private const float ESuccessEffectColumnWidth = 420.0f; //成功演出列幅
+    private const float EEffectColumnWidth = 300.0f; //成功・失敗演出列幅
     private const float ENodeDeleteColumnWidth = 28.0f; //削除Button列幅
     private const float ECompactWindowHeight = 82.0f; //簡易表示時の高さ
     private const float EMinimumRestoreHeight = 520.0f; //通常表示へ戻す最低高さ
@@ -225,7 +225,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         SortEvents();
         StringBuilder csv = new StringBuilder();
         csv.AppendLine(
-            "Type,Group,Time,NodeNumber,PoseID,EventName,SuccessEffects,"
+            "Type,Group,Time,NodeNumber,PoseID,EventName,SuccessEffects,FailureEffects,"
             + "Condition,TriggerOnce,RepeatInterval,EffectName,Delay,"
             + "OverridePosition,PositionX,PositionY,PositionZ");
         for (int i = 0; i < m_sequence.EventsList.Count; ++i)
@@ -237,6 +237,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             csv.Append(EscapeCsv(node.m_eventName));
             csv.Append(',');
             csv.Append(EscapeCsv(node.m_successEffectNames));
+            csv.Append(',');
+            csv.Append(EscapeCsv(node.m_failureEffectNames));
             csv.AppendLine(",,,,,,,,,");
         }
 
@@ -256,7 +258,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                     "0.###", CultureInfo.InvariantCulture));
                 csv.Append(",,,");
                 csv.Append(EscapeCsv(effectEvent.m_eventName));
-                csv.Append(",,");
+                csv.Append(",,,");
                 csv.Append(EscapeCsv(effectEvent.m_conditionExpression));
                 csv.Append(effectEvent.b_m_triggerOnce ? ",1," : ",0,");
                 csv.Append(effectEvent.m_repeatIntervalSeconds.ToString(
@@ -300,6 +302,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             if (string.IsNullOrWhiteSpace(lines[i]))continue;
             List<string> columns = ParseCsvLine(lines[i]);
             if (columns.Count < 16)continue;
+            int effectColumnOffset = columns.Count >= 17 ? 1 : 0;
             if (string.Equals(columns[0], "Pose", StringComparison.OrdinalIgnoreCase))
             {
                 if (!TryParseFloat(columns[2], out float time)
@@ -311,7 +314,10 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                     m_nodeNumber = Mathf.Max(1, number),
                     m_poseId = poseId,
                     m_eventName = columns[5],
-                    m_successEffectNames = columns[6]
+                    m_successEffectNames = columns[6],
+                    m_failureEffectNames = effectColumnOffset > 0
+                        ? columns[7]
+                        : string.Empty
                 });
                 continue;
             }
@@ -321,30 +327,31 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             if (!effects.TryGetValue(group, out ConditionalEffectEvent effectEvent))
             {
                 TryParseFloat(columns[2], out float time);
-                TryParseFloat(columns[9], out float repeat);
+                TryParseFloat(columns[9 + effectColumnOffset], out float repeat);
                 effectEvent = new ConditionalEffectEvent
                 {
                     m_eventName = columns[5],
                     b_m_enabled = true,
                     b_m_useTimelineTime = true,
                     m_timelineTime = Mathf.Max(0.0f, time),
-                    m_conditionExpression = string.IsNullOrWhiteSpace(columns[7])
-                        ? "time >= 0" : columns[7],
-                    b_m_triggerOnce = columns[8] != "0",
+                    m_conditionExpression = string.IsNullOrWhiteSpace(
+                        columns[7 + effectColumnOffset])
+                        ? "time >= 0" : columns[7 + effectColumnOffset],
+                    b_m_triggerOnce = columns[8 + effectColumnOffset] != "0",
                     m_repeatIntervalSeconds = Mathf.Max(0.0f, repeat)
                 };
                 effects.Add(group, effectEvent);
             }
-            if (string.IsNullOrWhiteSpace(columns[10]))continue;
-            TryParseFloat(columns[11], out float delay);
-            TryParseFloat(columns[13], out float x);
-            TryParseFloat(columns[14], out float y);
-            TryParseFloat(columns[15], out float z);
+            if (string.IsNullOrWhiteSpace(columns[10 + effectColumnOffset]))continue;
+            TryParseFloat(columns[11 + effectColumnOffset], out float delay);
+            TryParseFloat(columns[13 + effectColumnOffset], out float x);
+            TryParseFloat(columns[14 + effectColumnOffset], out float y);
+            TryParseFloat(columns[15 + effectColumnOffset], out float z);
             effectEvent.m_effectsList.Add(new ConditionalEffectEntry
             {
-                m_effectName = columns[10],
+                m_effectName = columns[10 + effectColumnOffset],
                 m_delaySeconds = Mathf.Max(0.0f, delay),
-                b_m_overridePosition = columns[12] != "0",
+                b_m_overridePosition = columns[12 + effectColumnOffset] != "0",
                 m_position = new Vector3(x, y, z)
             });
         }
@@ -1189,7 +1196,10 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         GUILayout.Label("Event Name");
         GUILayout.Label(
             "Success Effect",
-            GUILayout.Width(ESuccessEffectColumnWidth));
+            GUILayout.Width(EEffectColumnWidth));
+        GUILayout.Label(
+            "Failure Effect",
+            GUILayout.Width(EEffectColumnWidth));
         GUILayout.Label(string.Empty, GUILayout.Width(ENodeDeleteColumnWidth));
         GUILayout.EndHorizontal();
 
@@ -1240,6 +1250,19 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                         m_sequence.EventsList[nodeIndex];
                     editedNode.m_successEffectNames = ToggleEffectName(
                         editedNode.m_successEffectNames,
+                        _effectName);
+                    m_sequence.EventsList[nodeIndex] = editedNode;
+                    EditorUtility.SetDirty(m_sequence);
+                });
+            DrawSuccessEffectSelector(
+                node.m_failureEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Failure Effect");
+                    SMusicNodeEvent editedNode =
+                        m_sequence.EventsList[nodeIndex];
+                    editedNode.m_failureEffectNames = ToggleEffectName(
+                        editedNode.m_failureEffectNames,
                         _effectName);
                     m_sequence.EventsList[nodeIndex] = editedNode;
                     EditorUtility.SetDirty(m_sequence);
@@ -1540,6 +1563,19 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                     _eventData.m_eventNodesList[nodeIndex] = editedNode;
                     EditorUtility.SetDirty(m_sequence);
                 });
+            DrawSuccessEffectSelector(
+                node.m_failureEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Event Failure Effect");
+                    SMusicNodeEvent editedNode =
+                        _eventData.m_eventNodesList[nodeIndex];
+                    editedNode.m_failureEffectNames = ToggleEffectName(
+                        editedNode.m_failureEffectNames,
+                        _effectName);
+                    _eventData.m_eventNodesList[nodeIndex] = editedNode;
+                    EditorUtility.SetDirty(m_sequence);
+                });
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(m_sequence, "Edit Event Node");
@@ -1702,7 +1738,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     {
         SortEvents();
         StringBuilder csv = new StringBuilder(); //CSV内容
-        csv.AppendLine("PoseFlow,PoseID,EventName,time,SuccessEffectNames");
+        csv.AppendLine(
+            "PoseFlow,PoseID,EventName,time,SuccessEffectNames,FailureEffectNames");
         float previousTime = 0.0f; //直前Nodeの絶対時間
         for (int i = 0; i < m_sequence.EventsList.Count; ++i)
         {
@@ -1719,7 +1756,9 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 "0.###",
                 CultureInfo.InvariantCulture));
             csv.Append(',');
-            csv.AppendLine(EscapeCsv(node.m_successEffectNames));
+            csv.Append(EscapeCsv(node.m_successEffectNames));
+            csv.Append(',');
+            csv.AppendLine(EscapeCsv(node.m_failureEffectNames));
             previousTime = node.m_time;
         }
 
@@ -1766,6 +1805,9 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 m_eventName = columnsList[2],
                 m_successEffectNames = columnsList.Count >= 5
                     ? columnsList[4]
+                    : string.Empty,
+                m_failureEffectNames = columnsList.Count >= 6
+                    ? columnsList[5]
                     : string.Empty
             });
         }
@@ -1859,7 +1901,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         if (!GUILayout.Button(
             label,
             EditorStyles.popup,
-            GUILayout.Width(ESuccessEffectColumnWidth)))return;
+            GUILayout.Width(EEffectColumnWidth)))return;
 
         EffectList effectList = UnityEngine.Object.FindFirstObjectByType<EffectList>(
             FindObjectsInactive.Include);

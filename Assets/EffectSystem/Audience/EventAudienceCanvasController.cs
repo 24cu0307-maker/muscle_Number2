@@ -44,6 +44,13 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     }; //画像未設定時の色
     [SerializeField] private Vector3 m_worldHeadOffset = new Vector3(0.0f, 2.3f, 0.0f); //頭上位置補正
     [SerializeField] private Vector2 m_nodeSize = new Vector2(650.0f, 650.0f); //Node基本寸法
+    [Header("Speech Bubble")]
+    [SerializeField] private Sprite m_speechBubbleSprite; //Pose画像の背面に表示する吹き出し
+    [SerializeField] private Vector2 m_speechBubbleSize =
+        new Vector2(820.0f, 760.0f); //吹き出し寸法
+    [SerializeField] private Vector2 m_speechBubbleOffset =
+        new Vector2(0.0f, 20.0f); //Pose画像からの表示位置補正
+    [SerializeField] private Color m_speechBubbleColor = Color.white; //吹き出し色
     [SerializeField] private bool b_m_showPercentage; //Node内に好み割合を表示するか
     [SerializeField] private Color m_nodeOutlineColor =
         new Color(1.0f, 0.92f, 0.05f, 1.0f); //三Node共通の強調枠色
@@ -279,6 +286,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         worldCanvas.worldCamera = m_eventCamera;
         worldCanvas.overrideSorting = true;
         worldCanvas.sortingOrder = 50;
+        CreateSpeechBubble(root);
         CreateNode(
             root,
             _preferenceIndex,
@@ -291,6 +299,29 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
             m_audience = _audience,
             m_root = root
         });
+    }
+
+    /// <summary>Inspector設定を使用してPose画像の背面へ吹き出しを生成します。</summary>
+    private void CreateSpeechBubble(RectTransform _parent)
+    {
+        if (m_speechBubbleSprite == null)return;
+
+        GameObject bubbleObject = new GameObject(
+            "SpeechBubble",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image));
+        RectTransform bubbleRect = bubbleObject.GetComponent<RectTransform>();
+        bubbleRect.SetParent(_parent, false);
+        bubbleRect.sizeDelta = m_speechBubbleSize;
+        bubbleRect.anchoredPosition = m_speechBubbleOffset;
+
+        Image bubbleImage = bubbleObject.GetComponent<Image>();
+        bubbleImage.sprite = m_speechBubbleSprite;
+        bubbleImage.color = m_speechBubbleColor;
+        bubbleImage.preserveAspect = true;
+        bubbleImage.raycastTarget = false;
+        bubbleRect.SetAsFirstSibling();
     }
 
     /// <summary>

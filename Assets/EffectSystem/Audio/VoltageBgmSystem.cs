@@ -45,6 +45,8 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     private const double ERestartToleranceSeconds = 0.5d; //停止判定猶予
 
     [SerializeField] private VenueVoltageSystem m_voltageSystem; //Voltage参照元
+    [Tooltip("Music & Effect Editorで設定したBGMを空のLayerへ使用します。")]
+    [SerializeField] private MusicNodeSequence m_musicNodeSequence; //Editor共通BGM
     [SerializeField] private SVoltageBgmLayer[] m_layers; //同期BGM Layer一覧
     [SerializeField] private AnimationCurve m_volumeCurve =
         AnimationCurve.Linear(0.0f, 0.9f, 1.0f, 1.0f); //全体音量変化
@@ -75,6 +77,8 @@ public sealed class VoltageBgmSystem : MonoBehaviour
             EMaximumChorusWetMix); //Voltage別Chorus
     [SerializeField] private bool b_m_playOnStart = true; //開始時自動再生
     [SerializeField] private bool b_m_playAfterOpeningCamera = true; //最初のCamera演出後に再生
+    [Min(0.0f)]
+    [SerializeField] private float m_openingCameraMaximumWaitSeconds = 3.0f; //Camera未開始時の最大待機
     [SerializeField] private PoseCameraDirector m_cameraDirector; //開始待機対象Camera演出
 
     private AudioSource[] m_audioSources; //生成した同期音源一覧
@@ -86,6 +90,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     private bool b_m_shouldBePlaying; //BGMを継続再生するか
     private bool b_m_observedCameraPlaying; //Camera演出開始を確認したか
     private bool b_m_completedAutoStart; //自動再生処理が完了したか
+    private float m_openingCameraWaitStartTime; //Camera開始待機を始めた時刻
 
     public float CurrentTimeSeconds
     {
@@ -132,6 +137,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         }
 
         CreateAudioSources();
+        m_openingCameraWaitStartTime = Time.unscaledTime;
         if (b_m_playOnStart && !b_m_playAfterOpeningCamera)
         {
             Play();
@@ -182,16 +188,17 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         if (m_cameraDirector == null)
         {
             m_cameraDirector = FindFirstObjectByType<PoseCameraDirector>();
-            return;
         }
 
-        if (m_cameraDirector.IsPlaying)
+        if (m_cameraDirector != null && m_cameraDirector.IsPlaying)
         {
             b_m_observedCameraPlaying = true;
             return;
         }
 
-        if (!b_m_observedCameraPlaying)return;
+        float waitSeconds = Time.unscaledTime - m_openingCameraWaitStartTime;
+        if (!b_m_observedCameraPlaying
+            && waitSeconds < m_openingCameraMaximumWaitSeconds)return;
 
         Play();
         b_m_completedAutoStart = true;
@@ -255,7 +262,12 @@ public sealed class VoltageBgmSystem : MonoBehaviour
             layerObject.transform.SetParent(transform, false);
             AudioSource audioSource =
                 layerObject.AddComponent<AudioSource>(); //同期音源
-            audioSource.clip = m_layers[i].m_clip;
+            AudioClip layerClip = m_layers[i].m_clip;
+            if (layerClip == null && m_musicNodeSequence != null)
+            {
+                layerClip = m_musicNodeSequence.BgmClip;
+            }
+            audioSource.clip = layerClip;
             audioSource.loop = true;
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0.0f;

@@ -15,6 +15,8 @@ Music & Effect Editor 簡易利用手順
 - Gameplayシーンの LiveEffectDeployment > EffectList を選択する。
 - Effectsへエフェクトを一つずつ追加し、Effect Nameに重複しない名前を付ける。
 - Particle、Audio、Light、Strobe、Camera Shakeなど必要な項目だけ設定する。
+- Voltage ConnectをONにすると、Voltage Multiplier CurveでVoltage 0～1に対する演出強度を調整できる。
+- Voltage ConnectはParticleの発生量、Audio音量、Light強度、Strobe濃度、Camera Shake強度へ反映される。
 - World Positionを使う場合は、必要に応じてPosition Rootを設定する。
 - Music & Effect EditorにはEffectListへ登録した名前が選択肢として表示される。
 
@@ -33,6 +35,12 @@ Music & Effect Editor 簡易利用手順
 - 同じ項目を再度クリックすると選択解除になる。
 - 一つのノードへ複数設定でき、名前は「|」区切りで保存される。
 - ポーズ失敗時、またはSuccess Effectが空の場合は再生されない。
+
+【ポーズ失敗時のエフェクト】
+
+- NodesのSuccess Effect隣にあるFailure Effect欄をクリックする。
+- Success Effectと同じ操作で、一つのノードへ複数設定できる。
+- ポーズ失敗時だけFailure Effectに設定した演出が再生される。
 
 【条件付きエフェクト】
 
@@ -86,7 +94,7 @@ Music & Effect Editor 簡易利用手順
 
 - EffectListにEffect Nameが登録されているか確認する。
 - Music & Effect Editorで正しいSequenceを開いているか確認する。
-- Success EffectまたはConditional Effectsに演出名が設定されているか確認する。
+- Success Effect、Failure EffectまたはConditional Effectsに演出名が設定されているか確認する。
 - Conditional EffectのEnabled、条件式、Trigger Onceの発火状態を確認する。
 - BGM停止中は、BGMなしで時間を進める設定を確認する。
 - Consoleに未登録エフェクトや条件式エラーの警告がないか確認する。
@@ -101,7 +109,7 @@ Music & Effect Editor 簡易利用手順
 
 【注意】
 
-- エフェクトはSuccess EffectまたはConditional Effectsから設定する。
+- エフェクトはSuccess Effect、Failure EffectまたはConditional Effectsから設定する。
 - EffectSystem.PlayEffect()の直接呼び出しやランダム再生は使わない。
 - 設定後はSceneとNumbMusicNodeSequence.assetを保存する。
 

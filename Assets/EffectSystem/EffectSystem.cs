@@ -68,6 +68,12 @@ public struct SEffectData
     [Min(0.0f)] [SerializeField] private float m_cameraShakeStrength;
     [Min(0.1f)] [SerializeField] private float m_cameraShakeFrequency;
 
+    [Header("Voltage Connect (Optional)")]
+    [Tooltip("ONにすると、会場Voltageに応じてParticle・Audio・Light・Strobe・Camera Shakeの強さを変化させます。")]
+    [SerializeField] private bool b_m_voltageConnect;
+    [Tooltip("横軸がVoltage（0～1）、縦軸が演出強度の倍率です。")]
+    [SerializeField] private AnimationCurve m_voltageMultiplierCurve;
+
     public string EffectName
     {
         get
@@ -149,6 +155,20 @@ public struct SEffectData
     public float CameraShakeDuration => Mathf.Max(0.05f, m_cameraShakeDurationSeconds);
     public float CameraShakeStrength => Mathf.Max(0.0f, m_cameraShakeStrength);
     public float CameraShakeFrequency => Mathf.Max(0.1f, m_cameraShakeFrequency);
+    public bool UsesVoltageConnect => b_m_voltageConnect;
+
+    public float EvaluateVoltageMultiplier(float _normalizedVoltage)
+    {
+        if (!b_m_voltageConnect)return 1.0f;
+        if (m_voltageMultiplierCurve == null)
+        {
+            return Mathf.Lerp(0.5f, 1.5f, Mathf.Clamp01(_normalizedVoltage));
+        }
+
+        return Mathf.Max(
+            0.0f,
+            m_voltageMultiplierCurve.Evaluate(Mathf.Clamp01(_normalizedVoltage)));
+    }
 }
 
 /// <summary>
@@ -179,6 +199,10 @@ public class EffectSystem : MonoBehaviour
     [Tooltip("揺らすCamera。未設定時はMain Camera、次にScene内Cameraを自動取得します。")]
     [SerializeField] private Camera m_cameraShakeTarget;
 
+    [Header("Voltage")]
+    [Tooltip("Voltage Connectで参照する会場Voltage。未設定時はSceneから自動取得します。")]
+    [SerializeField] private VenueVoltageSystem m_venueVoltageSystem;
+
     private bool b_m_isPlayEffect = true;                            //対象演出が再生を完了したか
     private readonly HashSet<PlayableDirector> m_playingDirectors =
         new HashSet<PlayableDirector>(); //現在再生中のDirector一覧
@@ -193,6 +217,12 @@ public class EffectSystem : MonoBehaviour
     private bool b_m_projectionOffsetApplied;
     private CinemachineBrain m_activeShakeBrain;
     private Vector3 m_appliedCinemachineShakeOffset;
+    private readonly Dictionary<ParticleSystem, float> m_particleRateOverTimeBaselines =
+        new Dictionary<ParticleSystem, float>();
+    private readonly Dictionary<ParticleSystem, float> m_particleRateOverDistanceBaselines =
+        new Dictionary<ParticleSystem, float>();
+    private readonly Dictionary<AudioSource, float> m_audioVolumeBaselines =
+        new Dictionary<AudioSource, float>();
 
     /// <summary>
     /// Scene読込時に自動再生された演出用Particleを、最初の描画前に停止します。
@@ -489,8 +519,9 @@ public class EffectSystem : MonoBehaviour
     /// </summary>
     private void EffectPlay(SEffectData _effects)
     {
-        PlayStrobe(_effects);
-        PlayCameraShake(_effects);
+        float voltageMultiplier = GetVoltageMultiplier(_effects);
+        PlayStrobe(_effects, voltageMultiplier);
+        PlayCameraShake(_effects, voltageMultiplier);
 
         if (_effects.Timeline != null)
         {
@@ -499,10 +530,24 @@ public class EffectSystem : MonoBehaviour
             return;
         }
 
-        PlayParticles(_effects.Particles);
-        PlayAudioSources(_effects.AudioSources);
-        PlayLights(_effects.LightControllers);
+        PlayParticles(_effects.Particles, voltageMultiplier);
+        PlayAudioSources(_effects.AudioSources, voltageMultiplier);
+        PlayLights(_effects.LightControllers, voltageMultiplier);
         PlayCamera(_effects.CameraSequence);
+    }
+
+    private float GetVoltageMultiplier(SEffectData _effects)
+    {
+        if (!_effects.UsesVoltageConnect)return 1.0f;
+        if (m_venueVoltageSystem == null)
+        {
+            m_venueVoltageSystem = FindFirstObjectByType<VenueVoltageSystem>();
+        }
+
+        float normalizedVoltage = m_venueVoltageSystem != null
+            ? m_venueVoltageSystem.NormalizedVoltage
+            : 0.0f;
+        return _effects.EvaluateVoltageMultiplier(normalizedVoltage);
     }
 
     /// <summary>
@@ -539,13 +584,29 @@ public class EffectSystem : MonoBehaviour
     /// <summary>
     /// 登録されたパーティクル群を再生します。
     /// </summary>
-    private static void PlayParticles(ParticleSystem[] _particles)
+    private void PlayParticles(
+        ParticleSystem[] _particles,
+        float _intensityMultiplier)
     {
         if (_particles == null)return;
 
         foreach (ParticleSystem particle in _particles)
         {
             if (particle == null)continue;
+
+            ParticleSystem.EmissionModule emission = particle.emission;
+            if (!m_particleRateOverTimeBaselines.TryGetValue(particle, out float timeBaseline))
+            {
+                timeBaseline = emission.rateOverTimeMultiplier;
+                m_particleRateOverTimeBaselines.Add(particle, timeBaseline);
+            }
+            if (!m_particleRateOverDistanceBaselines.TryGetValue(particle, out float distanceBaseline))
+            {
+                distanceBaseline = emission.rateOverDistanceMultiplier;
+                m_particleRateOverDistanceBaselines.Add(particle, distanceBaseline);
+            }
+            emission.rateOverTimeMultiplier = timeBaseline * _intensityMultiplier;
+            emission.rateOverDistanceMultiplier = distanceBaseline * _intensityMultiplier;
 
             particle.Play();
         }
@@ -554,13 +615,22 @@ public class EffectSystem : MonoBehaviour
     /// <summary>
     /// 登録された音声群を再生します。
     /// </summary>
-    private static void PlayAudioSources(AudioSource[] _audiosources)
+    private void PlayAudioSources(
+        AudioSource[] _audiosources,
+        float _intensityMultiplier)
     {
         if (_audiosources == null)return;
 
         foreach (AudioSource audioSource in _audiosources)
         {
             if (audioSource == null)continue;
+
+            if (!m_audioVolumeBaselines.TryGetValue(audioSource, out float volumeBaseline))
+            {
+                volumeBaseline = audioSource.volume;
+                m_audioVolumeBaselines.Add(audioSource, volumeBaseline);
+            }
+            audioSource.volume = Mathf.Clamp01(volumeBaseline * _intensityMultiplier);
 
             audioSource.Play();
         }
@@ -569,7 +639,9 @@ public class EffectSystem : MonoBehaviour
     /// <summary>
     /// 登録されたライト制御群を開始します。
     /// </summary>
-    private static void PlayLights(LightController[] _lightcontrollers)
+    private static void PlayLights(
+        LightController[] _lightcontrollers,
+        float _intensityMultiplier)
     {
         if (_lightcontrollers == null)return;
 
@@ -577,7 +649,7 @@ public class EffectSystem : MonoBehaviour
         {
             if (lightController == null)continue;
 
-            lightController.Illumination();
+            lightController.Illumination(_intensityMultiplier);
         }
     }
 
@@ -634,14 +706,17 @@ public class EffectSystem : MonoBehaviour
     }
 
     /// <summary>Effect設定に応じて画面全体のストロボを開始します。</summary>
-    private void PlayStrobe(SEffectData _effects)
+    private void PlayStrobe(
+        SEffectData _effects,
+        float _intensityMultiplier)
     {
         if (!_effects.UsesStrobe)return;
 
         EnsureStrobeImage();
         if (m_strobeImage == null)return;
         if (m_strobeCoroutine != null)StopCoroutine(m_strobeCoroutine);
-        m_strobeCoroutine = StartCoroutine(StrobeRoutine(_effects));
+        m_strobeCoroutine = StartCoroutine(
+            StrobeRoutine(_effects, _intensityMultiplier));
     }
 
     private void EnsureStrobeImage()
@@ -673,7 +748,9 @@ public class EffectSystem : MonoBehaviour
         m_strobeImage.color = Color.clear;
     }
 
-    private IEnumerator StrobeRoutine(SEffectData _effects)
+    private IEnumerator StrobeRoutine(
+        SEffectData _effects,
+        float _intensityMultiplier)
     {
         float elapsed = 0.0f;
         Color color = _effects.StrobeColor;
@@ -683,7 +760,9 @@ public class EffectSystem : MonoBehaviour
             float progress = Mathf.Clamp01(elapsed / _effects.StrobeDuration);
             float pulse = Mathf.Abs(Mathf.Sin(
                 progress * _effects.StrobeFlashCount * Mathf.PI));
-            color.a = pulse * (1.0f - progress) * _effects.StrobeMaximumAlpha;
+            color.a = pulse
+                * (1.0f - progress)
+                * Mathf.Clamp01(_effects.StrobeMaximumAlpha * _intensityMultiplier);
             m_strobeImage.color = color;
             yield return null;
         }
@@ -693,7 +772,9 @@ public class EffectSystem : MonoBehaviour
     }
 
     /// <summary>Effect設定に応じて現在のカメラへ加算式の揺れを開始します。</summary>
-    private void PlayCameraShake(SEffectData _effects)
+    private void PlayCameraShake(
+        SEffectData _effects,
+        float _intensityMultiplier)
     {
         if (!_effects.UsesCameraShake || _effects.CameraShakeStrength <= 0.0f)return;
 
@@ -704,10 +785,13 @@ public class EffectSystem : MonoBehaviour
         Camera.onPreCull -= ApplyCameraProjectionShake;
         Camera.onPostRender -= RestoreCameraProjection;
         RestoreCameraProjection();
-        m_cameraShakeCoroutine = StartCoroutine(CameraShakeRoutine(_effects));
+        m_cameraShakeCoroutine = StartCoroutine(
+            CameraShakeRoutine(_effects, _intensityMultiplier));
     }
 
-    private IEnumerator CameraShakeRoutine(SEffectData _effects)
+    private IEnumerator CameraShakeRoutine(
+        SEffectData _effects,
+        float _intensityMultiplier)
     {
         m_activeShakeCamera = m_cameraShakeTarget != null
             ? m_cameraShakeTarget
@@ -739,7 +823,9 @@ public class EffectSystem : MonoBehaviour
         {
             elapsed += Time.unscaledDeltaTime;
             float progress = Mathf.Clamp01(elapsed / _effects.CameraShakeDuration);
-            float amplitude = _effects.CameraShakeStrength * (1.0f - progress);
+            float amplitude = _effects.CameraShakeStrength
+                * _intensityMultiplier
+                * (1.0f - progress);
             float sampleTime = seed + elapsed * _effects.CameraShakeFrequency;
             m_cameraProjectionOffset = new Vector2(
                 Mathf.PerlinNoise(sampleTime, 0.0f) * 2.0f - 1.0f,

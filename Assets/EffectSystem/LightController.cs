@@ -81,6 +81,7 @@ public class LightController : MonoBehaviour
     private Vector3 m_startPosition;         //Illumination開始時の位置
     private Vector3 m_targetPosition;        //開始位置にm_positionRangeを足した目標位置
     private Color m_startColor;              //Illumination開始時のライト色
+    private float m_baseIntensity;            //Voltage倍率を掛ける前のライト強度
 
     private void Awake()
     {
@@ -88,6 +89,10 @@ public class LightController : MonoBehaviour
         if (m_light == null)
         {
             m_light = GetComponent<Light>();
+        }
+        if (m_light != null)
+        {
+            m_baseIntensity = m_light.intensity;
         }
 
         SetLightEnabled(false);
@@ -116,6 +121,11 @@ public class LightController : MonoBehaviour
 
     public void Illumination()
     {
+        Illumination(1.0f);
+    }
+
+    public void Illumination(float _intensityMultiplier)
+    {
         //EffectSystemから呼ばれる入口。
         //呼ばれた瞬間の角度・位置・色を開始値として保存し、設定された範囲分だけ動かす。
         m_startRotation = GetCurrentRotation();
@@ -126,6 +136,7 @@ public class LightController : MonoBehaviour
         if (m_light != null)
         {
             m_startColor = m_light.color;
+            m_light.intensity = m_baseIntensity * Mathf.Max(0.0f, _intensityMultiplier);
         }
         m_stopTimer = ProgressMin;
         m_rotationTimer = ProgressMin;

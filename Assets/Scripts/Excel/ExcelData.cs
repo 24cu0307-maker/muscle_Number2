@@ -28,5 +28,6 @@ public struct CSVDataPoseFlow
     public string PoseName;
     public float time;
     public string SuccessEffectNames; //成功時に固定再生する演出名。複数指定は|区切り
+    public string FailureEffectNames; //失敗時に固定再生する演出名。複数指定は|区切り
 
 }

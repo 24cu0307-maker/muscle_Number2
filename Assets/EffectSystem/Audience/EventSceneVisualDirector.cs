@@ -432,7 +432,9 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             FlowNumber = candidate.m_nodeNumber,
             PoseID = candidate.m_poseId,
             PoseName = candidate.m_eventName,
-            time = displaySeconds
+            time = displaySeconds,
+            SuccessEffectNames = candidate.m_successEffectNames,
+            FailureEffectNames = candidate.m_failureEffectNames
         };
         m_uiController?.UISet_normal(selectedPose);
 
@@ -505,6 +507,8 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
         else
         {
+            m_effectSystem?.PlayMusicNodeEffects(
+                candidate.m_failureEffectNames);
             m_venueVoltageSystem?.RegisterFailure();
             Debug.Log(
                 $"Audience Choice FAILED: Pose {candidate.m_poseId} "

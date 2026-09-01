@@ -18913,10 +18913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoltageBgmSystem
   m_voltageSystem: {fileID: 1704557581}
+  m_musicNodeSequence: {fileID: 11400000, guid: 2ef020d581829724fab8bfc34038fc4c, type: 2}
   m_layers:
   - m_clip: {fileID: 0}
-    m_startVoltage: 1
-    m_fadeWidth: 1
+    m_startVoltage: 0
+    m_fadeWidth: 0.05
     m_maximumVolume: 1
   m_volumeCurve:
     serializedVersion: 2
@@ -19040,6 +19041,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   b_m_playOnStart: 1
   b_m_playAfterOpeningCamera: 1
+  m_openingCameraMaximumWaitSeconds: 3
   m_cameraDirector: {fileID: 2075913570}
 --- !u!4 &318798708
 Transform:
@@ -116841,6 +116843,10 @@ MonoBehaviour:
   - {r: 1, g: 0.2, b: 0.75, a: 0.95}
   m_worldHeadOffset: {x: 0, y: 2.3, z: 0}
   m_nodeSize: {x: 650, y: 650}
+  m_speechBubbleSprite: {fileID: 21300000, guid: 8f26f4f9ec820ec4191e7260faaaa89e, type: 3}
+  m_speechBubbleSize: {x: 820, y: 760}
+  m_speechBubbleOffset: {x: 0, y: 20}
+  m_speechBubbleColor: {r: 1, g: 1, b: 1, a: 1}
   b_m_showPercentage: 0
   m_nodeOutlineColor: {r: 1, g: 0.92, b: 0.05, a: 1}
   m_nodeOutlineDistance: {x: 8, y: -8}

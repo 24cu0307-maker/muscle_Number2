@@ -68,7 +68,7 @@ public class PoseJudgeManager : MonoBehaviour
 
                 break;
             case InGameState.Failure:
-                Failure();
+                Failure(_pose);
 
                 break;
 
@@ -149,8 +149,14 @@ public class PoseJudgeManager : MonoBehaviour
     }
 
     /// <summary>失敗をボルテージへ通知し、現在Nodeの処理を終了状態へ進めます。</summary>
-    private void Failure()
+    private void Failure(CSVDataPoseFlow _pose)
     {
+        string fixedEffectNames = _pose.FailureEffectNames?.Trim();
+        if (!string.IsNullOrEmpty(fixedEffectNames))
+        {
+            m_effectSystem?.PlayMusicNodeEffects(fixedEffectNames);
+        }
+
         m_venueVoltageSystem.RegisterFailure();
 
         setState?.Invoke(InGameState.End);

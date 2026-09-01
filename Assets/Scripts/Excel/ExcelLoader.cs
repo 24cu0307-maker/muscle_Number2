@@ -152,6 +152,9 @@ public class ExcelPoseTimeFlowLoader
             pose.SuccessEffectNames = cells.Length >= 5
                 ? cells[4].Trim()
                 : string.Empty;
+            pose.FailureEffectNames = cells.Length >= 6
+                ? cells[5].Trim()
+                : string.Empty;
 
             //ポーズを追加
             poseList.Add(pose);

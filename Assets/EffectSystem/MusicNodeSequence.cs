@@ -24,6 +24,7 @@ public struct SMusicNodeEvent
     public string m_eventName; //表示名
     [FormerlySerializedAs("m_successEffectName")]
     public string m_successEffectNames; //成功時に固定再生する演出名。複数指定は|区切り
+    public string m_failureEffectNames; //失敗時に固定再生する演出名。複数指定は|区切り
 }
 
 /// <summary>
