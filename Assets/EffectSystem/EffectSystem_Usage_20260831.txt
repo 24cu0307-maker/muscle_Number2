@@ -52,6 +52,20 @@ Music & Effect Editor 簡易利用手順
 - Add Effectで同じ条件から再生する演出を何個でも追加できる。
 - 条件付きエフェクトはポーズ判定と無関係に再生される。
 
+【BGM分岐】
+
+- Timeline上部でBGM Branchを選び、分岐を開始したい時刻をクリックする。
+- 紫色のBGMマーカーをドラッグすると分岐時刻を変更できる。
+- BGM BranchesのTarget Sequenceへ移動先MusicNodeSequenceを設定する。
+- Node NumberとNameで分岐Nodeを識別する。
+- Transition Conditionへtime、score、voltageを使った条件式を設定する。
+- Only Transition On SuccessがOFFなら、条件の成功・失敗にかかわらずTarget Sequenceへ移動する。
+- Only Transition On SuccessがONなら、条件成功時だけTarget Sequenceへ移動する。
+- Success EffectとFailure Effectには、それぞれ条件成立・不成立時の演出を複数設定できる。
+- Cross Fade Secondsへ現在BGMと移動先BGMを重ねる秒数を設定する。
+- 分岐完了後はBGMだけでなく、Pose Node・条件付き演出・Event Nodeも移動先Sequenceを参照する。
+- Target Sequenceには分岐元とは別のSequenceを設定する。
+
 【条件式】
 
 - 使用可能な値: time、score、voltage。

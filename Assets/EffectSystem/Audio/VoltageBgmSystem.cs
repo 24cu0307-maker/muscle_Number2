@@ -8,6 +8,8 @@
 *━━━━━━━━━*/
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -27,6 +29,7 @@ public struct SVoltageBgmLayer
 /// </summary>
 public sealed class VoltageBgmSystem : MonoBehaviour
 {
+    public event Action<MusicNodeSequence> SequenceChanged;
     private const float EMinimumFadeWidth = 0.01f; //最小Fade幅
     private const float EDefaultPitch = 1.0f; //基準Pitch
     private const float EMinimumCutoffFrequency = 12000.0f; //最低時Low Pass周波数
@@ -80,6 +83,8 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     [Min(0.0f)]
     [SerializeField] private float m_openingCameraMaximumWaitSeconds = 3.0f; //Camera未開始時の最大待機
     [SerializeField] private PoseCameraDirector m_cameraDirector; //開始待機対象Camera演出
+    [SerializeField] private ConditionalEffectManager m_conditionManager;
+    [SerializeField] private EffectSystem m_effectSystem;
 
     private AudioSource[] m_audioSources; //生成した同期音源一覧
     private AudioLowPassFilter[] m_lowPassFilters; //Layer別Low Pass一覧
@@ -91,6 +96,14 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     private bool b_m_observedCameraPlaying; //Camera演出開始を確認したか
     private bool b_m_completedAutoStart; //自動再生処理が完了したか
     private float m_openingCameraWaitStartTime; //Camera開始待機を始めた時刻
+    private bool[] b_m_sequenceDrivenLayers;
+    private readonly HashSet<MusicBranchNode> m_triggeredBranchNodes =
+        new HashSet<MusicBranchNode>();
+    private AudioSource m_branchAudioSource;
+    private Coroutine m_branchCoroutine;
+    private float m_originalBgmVolumeMultiplier = 1.0f;
+
+    public MusicNodeSequence CurrentSequence => m_musicNodeSequence;
 
     public float CurrentTimeSeconds
     {
@@ -135,6 +148,14 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         {
             m_cameraDirector = FindFirstObjectByType<PoseCameraDirector>();
         }
+        if (m_conditionManager == null)
+        {
+            m_conditionManager = FindFirstObjectByType<ConditionalEffectManager>();
+        }
+        if (m_effectSystem == null)
+        {
+            m_effectSystem = FindFirstObjectByType<EffectSystem>();
+        }
 
         CreateAudioSources();
         m_openingCameraWaitStartTime = Time.unscaledTime;
@@ -153,6 +174,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         if (m_audioSources == null)return;
 
         UpdateOpeningCameraWait();
+        EvaluateMusicBranches();
         EnsurePlayback();
         float voltage = m_voltageSystem != null
             ? m_voltageSystem.NormalizedVoltage
@@ -170,11 +192,104 @@ public sealed class VoltageBgmSystem : MonoBehaviour
                     m_layers[i].m_startVoltage,
                     voltage)); //Layer混合率
             m_audioSources[i].volume =
-                masterVolume * layerWeight * m_layers[i].m_maximumVolume;
+                masterVolume
+                * layerWeight
+                * m_layers[i].m_maximumVolume
+                * m_originalBgmVolumeMultiplier;
             m_audioSources[i].pitch = EDefaultPitch;
         }
 
         ApplyAudioEffects(voltage);
+    }
+
+    private void EvaluateMusicBranches()
+    {
+        if (m_branchCoroutine != null || m_musicNodeSequence == null)return;
+        List<MusicBranchNode> branches = m_musicNodeSequence.MusicBranchesList;
+        float currentTime = CurrentTimeSeconds;
+        for (int i = 0; i < branches.Count; ++i)
+        {
+            MusicBranchNode branch = branches[i];
+            if (branch == null
+                || !branch.b_m_enabled
+                || branch.m_targetSequence == null
+                || branch.m_targetSequence == m_musicNodeSequence
+                || m_triggeredBranchNodes.Contains(branch)
+                || currentTime < branch.m_time)continue;
+
+            m_triggeredBranchNodes.Add(branch);
+            bool conditionMet = true;
+            if (m_conditionManager != null
+                && !m_conditionManager.TryEvaluateConditionExpression(
+                    branch.m_conditionExpression,
+                    out conditionMet,
+                    out string error))
+            {
+                Debug.LogWarning(
+                    $"BGM分岐「{branch.m_branchName}」の条件式を評価できません。{error}",
+                    this);
+                conditionMet = false;
+            }
+            if (!conditionMet)
+            {
+                m_effectSystem?.PlayMusicNodeEffects(branch.m_failureEffectNames);
+            }
+            else
+            {
+                m_effectSystem?.PlayMusicNodeEffects(branch.m_successEffectNames);
+            }
+            if (branch.b_m_transitionOnSuccess && !conditionMet)continue;
+            m_branchCoroutine = StartCoroutine(SwitchSequenceRoutine(branch));
+            return;
+        }
+    }
+
+    private IEnumerator SwitchSequenceRoutine(MusicBranchNode _branch)
+    {
+        AudioClip targetClip = _branch.m_targetSequence.BgmClip;
+        if (targetClip == null)
+        {
+            Debug.LogWarning($"BGM分岐「{_branch.m_branchName}」の移動先BGMが未設定です。", this);
+            m_branchCoroutine = null;
+            yield break;
+        }
+
+        m_branchAudioSource = gameObject.AddComponent<AudioSource>();
+        m_branchAudioSource.clip = targetClip;
+        m_branchAudioSource.loop = true;
+        m_branchAudioSource.playOnAwake = false;
+        m_branchAudioSource.spatialBlend = 0.0f;
+        m_branchAudioSource.priority = EHighestAudioPriority;
+        m_branchAudioSource.volume = 0.0f;
+        m_branchAudioSource.Play();
+
+        float duration = Mathf.Max(0.01f, _branch.m_crossFadeSeconds);
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.SmoothStep(0.0f, 1.0f, Mathf.Clamp01(elapsed / duration));
+            m_originalBgmVolumeMultiplier = 1.0f - progress;
+            m_branchAudioSource.volume = progress;
+            yield return null;
+        }
+
+        float targetTime = m_branchAudioSource.time;
+        for (int i = 0; i < m_audioSources.Length; ++i)
+        {
+            if (!b_m_sequenceDrivenLayers[i])continue;
+            m_audioSources[i].Stop();
+            m_audioSources[i].clip = targetClip;
+            m_audioSources[i].time = Mathf.Min(targetTime, targetClip.length);
+            m_audioSources[i].Play();
+        }
+        Destroy(m_branchAudioSource);
+        m_branchAudioSource = null;
+        m_originalBgmVolumeMultiplier = 1.0f;
+        m_musicNodeSequence = _branch.m_targetSequence;
+        m_triggeredBranchNodes.Clear();
+        SequenceChanged?.Invoke(m_musicNodeSequence);
+        m_branchCoroutine = null;
     }
 
     /// <summary>
@@ -252,6 +367,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         }
 
         m_audioSources = new AudioSource[m_layers.Length];
+        b_m_sequenceDrivenLayers = new bool[m_layers.Length];
         m_lowPassFilters = new AudioLowPassFilter[m_layers.Length];
         m_reverbFilters = new AudioReverbFilter[m_layers.Length];
         m_echoFilters = new AudioEchoFilter[m_layers.Length];
@@ -263,6 +379,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
             AudioSource audioSource =
                 layerObject.AddComponent<AudioSource>(); //同期音源
             AudioClip layerClip = m_layers[i].m_clip;
+            b_m_sequenceDrivenLayers[i] = layerClip == null;
             if (layerClip == null && m_musicNodeSequence != null)
             {
                 layerClip = m_musicNodeSequence.BgmClip;

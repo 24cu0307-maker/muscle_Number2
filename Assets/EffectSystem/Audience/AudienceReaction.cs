@@ -39,6 +39,7 @@ public sealed class AudienceReaction : MonoBehaviour
     private Quaternion m_baseLocalRotation; //基準回転
     private Vector3 m_baseLocalScale; //基準Scale
     private Coroutine m_reactionCoroutine; //現在の動作
+    private static AudiencePreferenceSystem s_preferenceSystem; //全観客で共有する好み管理元
 
     /// <summary>
     /// 基準Transformを保存します。
@@ -70,6 +71,18 @@ public sealed class AudienceReaction : MonoBehaviour
         EAudienceReaction _reaction,
         float _strength)
     {
+        if (s_preferenceSystem == null)
+        {
+            s_preferenceSystem = FindFirstObjectByType<AudiencePreferenceSystem>();
+        }
+        if (s_preferenceSystem != null)
+        {
+            s_preferenceSystem.ApplyAmbientPreference(
+                this,
+                ref _reaction,
+                ref _strength);
+        }
+
         if (m_reactionCoroutine != null)
         {
             StopCoroutine(m_reactionCoroutine);

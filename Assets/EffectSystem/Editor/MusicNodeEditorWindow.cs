@@ -25,7 +25,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private enum ETimelinePlacementMode
     {
         PoseNode,
-        ConditionalEffect
+        ConditionalEffect,
+        MusicBranch
     }
 
     private const string ECsvPath = "Assets/Resources/PoseTimeFlow.csv"; //既存CSV
@@ -71,6 +72,8 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             new Dictionary<ConditionalEffectEntry, bool>(); //Effect別展開状態
     private ETimelinePlacementMode m_timelinePlacementMode; //Timeline配置対象
     private int m_selectedConditionalEffectIndex = -1; //選択中の条件付き演出
+    private int m_selectedMusicBranchIndex = -1;
+    private bool b_m_musicBranchesFoldout = true;
 
     /// <summary>
     /// Music & Effect Editorを開きます。
@@ -163,18 +166,98 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         DrawPreviewControls();
         m_timelinePlacementMode = (ETimelinePlacementMode)GUILayout.Toolbar(
             (int)m_timelinePlacementMode,
-            new[] { "Pose Node", "Conditional Effect" });
+            new[] { "Pose Node", "Conditional Effect", "BGM Branch" });
         Rect timelineRect = GUILayoutUtility.GetRect(
             100.0f,
             ETimelineHeight,
             GUILayout.ExpandWidth(true)); //波形表示範囲
         DrawTimeline(timelineRect);
         HandleTimelineInput(timelineRect);
+        DrawMusicBranchList();
         DrawConditionalEffectList();
         DrawNodeList();
         DrawEventSceneList();
         DrawDataControls();
         EditorGUILayout.EndScrollView();
+    }
+
+    private void DrawMusicBranchList()
+    {
+        EditorGUILayout.Space();
+        b_m_musicBranchesFoldout = EditorGUILayout.Foldout(
+            b_m_musicBranchesFoldout,
+            $"BGM Branches ({m_sequence.MusicBranchesList.Count})",
+            true);
+        if (!b_m_musicBranchesFoldout)return;
+
+        int deleteIndex = -1;
+        for (int i = 0; i < m_sequence.MusicBranchesList.Count; ++i)
+        {
+            MusicBranchNode branch = m_sequence.MusicBranchesList[i];
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUI.BeginChangeCheck();
+            branch.b_m_enabled = EditorGUILayout.Toggle("Enabled", branch.b_m_enabled);
+            branch.m_nodeNumber = Mathf.Max(
+                1,
+                EditorGUILayout.IntField("Node Number", branch.m_nodeNumber));
+            branch.m_branchName = EditorGUILayout.TextField("Name", branch.m_branchName);
+            branch.m_time = Mathf.Max(0.0f, EditorGUILayout.FloatField("Time", branch.m_time));
+            branch.m_conditionExpression = EditorGUILayout.TextField(
+                "Transition Condition",
+                branch.m_conditionExpression);
+            branch.b_m_transitionOnSuccess = EditorGUILayout.Toggle(
+                "Only Transition On Success",
+                branch.b_m_transitionOnSuccess);
+            branch.m_targetSequence = EditorGUILayout.ObjectField(
+                "Target Sequence",
+                branch.m_targetSequence,
+                typeof(MusicNodeSequence),
+                false) as MusicNodeSequence;
+            branch.m_crossFadeSeconds = Mathf.Max(
+                0.0f,
+                EditorGUILayout.FloatField("Cross Fade Seconds", branch.m_crossFadeSeconds));
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(m_sequence, "Edit BGM Branch");
+                EditorUtility.SetDirty(m_sequence);
+            }
+            EditorGUILayout.LabelField("Success Effect");
+            DrawSuccessEffectSelector(
+                branch.m_successEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Branch Success Effect");
+                    branch.m_successEffectNames = ToggleEffectName(
+                        branch.m_successEffectNames,
+                        _effectName);
+                    EditorUtility.SetDirty(m_sequence);
+                });
+            EditorGUILayout.LabelField("Failure Effect");
+            DrawSuccessEffectSelector(
+                branch.m_failureEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Branch Failure Effect");
+                    branch.m_failureEffectNames = ToggleEffectName(
+                        branch.m_failureEffectNames,
+                        _effectName);
+                    EditorUtility.SetDirty(m_sequence);
+                });
+            if (GUILayout.Button("Select On Timeline"))
+            {
+                m_selectedMusicBranchIndex = i;
+                m_timelinePlacementMode = ETimelinePlacementMode.MusicBranch;
+            }
+            if (GUILayout.Button("Delete BGM Branch"))deleteIndex = i;
+            EditorGUILayout.EndVertical();
+        }
+        if (deleteIndex >= 0)
+        {
+            Undo.RecordObject(m_sequence, "Delete BGM Branch");
+            m_sequence.MusicBranchesList.RemoveAt(deleteIndex);
+            m_selectedMusicBranchIndex = -1;
+            EditorUtility.SetDirty(m_sequence);
+        }
     }
 
     /// <summary>並び替えとCSV入出力を用途別に整列して表示します。</summary>
@@ -833,6 +916,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
 
         DrawEventSceneMarkers(_rect, duration);
         DrawConditionalEffectMarkers(_rect, duration);
+        DrawMusicBranchMarkers(_rect, duration);
 
         GUI.Label(
             new Rect(_rect.x + 5.0f, _rect.yMax - 22.0f, 150.0f, 20.0f),
@@ -844,6 +928,23 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         EditorGUI.DrawRect(
             new Rect(playheadX - 1.0f, _rect.y, 2.0f, _rect.height),
             Color.white);
+    }
+
+    private void DrawMusicBranchMarkers(Rect _rect, float _duration)
+    {
+        for (int i = 0; i < m_sequence.MusicBranchesList.Count; ++i)
+        {
+            MusicBranchNode branch = m_sequence.MusicBranchesList[i];
+            if (branch == null || !branch.b_m_enabled)continue;
+            float x = _rect.x + Mathf.Clamp01(branch.m_time / _duration) * _rect.width;
+            Color color = i == m_selectedMusicBranchIndex
+                ? Color.yellow
+                : new Color(0.7f, 0.25f, 1.0f);
+            EditorGUI.DrawRect(new Rect(x - 2.0f, _rect.y, 4.0f, _rect.height), color);
+            GUI.Label(
+                new Rect(x + 4.0f, _rect.y + 64.0f, 220.0f, 20.0f),
+                $"BGM: {branch.m_branchName}");
+        }
     }
 
     /// <summary>条件付き演出の配置時刻をTimeline上へ表示します。</summary>
@@ -1085,6 +1186,12 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 currentEvent.Use();
                 return;
             }
+            if (m_timelinePlacementMode == ETimelinePlacementMode.MusicBranch)
+            {
+                HandleMusicBranchMouseDown(time, duration);
+                currentEvent.Use();
+                return;
+            }
 
             m_selectedIndex = FindNearestNode(time, duration);
             if (m_selectedIndex < 0)
@@ -1128,6 +1235,36 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             Repaint();
             currentEvent.Use();
         }
+        else if (currentEvent.type == EventType.MouseDrag
+            && m_timelinePlacementMode == ETimelinePlacementMode.MusicBranch
+            && m_selectedMusicBranchIndex >= 0)
+        {
+            Undo.RecordObject(m_sequence, "Move BGM Branch");
+            m_sequence.MusicBranchesList[m_selectedMusicBranchIndex].m_time = time;
+            EditorUtility.SetDirty(m_sequence);
+            Repaint();
+            currentEvent.Use();
+        }
+    }
+
+    private void HandleMusicBranchMouseDown(float _time, float _duration)
+    {
+        float hitSeconds = ENodeHitWidth / Mathf.Max(1.0f, position.width) * _duration;
+        m_selectedMusicBranchIndex = -1;
+        for (int i = 0; i < m_sequence.MusicBranchesList.Count; ++i)
+        {
+            if (Mathf.Abs(m_sequence.MusicBranchesList[i].m_time - _time) > hitSeconds)continue;
+            m_selectedMusicBranchIndex = i;
+            return;
+        }
+        Undo.RecordObject(m_sequence, "Add BGM Branch");
+        m_sequence.MusicBranchesList.Add(new MusicBranchNode
+        {
+            m_nodeNumber = GetNextNodeNumber(),
+            m_time = _time
+        });
+        m_selectedMusicBranchIndex = m_sequence.MusicBranchesList.Count - 1;
+        EditorUtility.SetDirty(m_sequence);
     }
 
     /// <summary>既存Markerを選択し、空き位置なら条件付き演出を追加します。</summary>

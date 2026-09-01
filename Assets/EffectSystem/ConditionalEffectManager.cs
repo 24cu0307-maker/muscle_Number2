@@ -47,6 +47,26 @@ public sealed class ConditionalEffectManager : MonoBehaviour
         ResolveReferences();
     }
 
+    private void OnEnable()
+    {
+        ResolveReferences();
+        if (m_bgmSystem == null)return;
+        m_bgmSystem.SequenceChanged -= SetSequence;
+        m_bgmSystem.SequenceChanged += SetSequence;
+    }
+
+    private void OnDisable()
+    {
+        if (m_bgmSystem != null)m_bgmSystem.SequenceChanged -= SetSequence;
+    }
+
+    private void SetSequence(MusicNodeSequence _sequence)
+    {
+        if (_sequence == null)return;
+        m_sequence = _sequence;
+        ResetTriggers();
+    }
+
     private void Update()
     {
         UpdateBuiltInValues();
@@ -96,6 +116,20 @@ public sealed class ConditionalEffectManager : MonoBehaviour
         m_triggeredEvents.Clear();
         m_nextTriggerTimes.Clear();
         m_reportedErrors.Clear();
+    }
+
+    /// <summary>BGM分岐など別機能から、共通の条件値と構文で式を評価します。</summary>
+    public bool TryEvaluateConditionExpression(
+        string _expression,
+        out bool _result,
+        out string _error)
+    {
+        ResolveReferences();
+        UpdateBuiltInValues();
+        string expression = string.IsNullOrWhiteSpace(_expression)
+            ? "time >= 0"
+            : _expression;
+        return TryEvaluateCondition(expression, out _result, out _error);
     }
 
     private void ResolveReferences()

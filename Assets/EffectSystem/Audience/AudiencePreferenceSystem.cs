@@ -27,6 +27,35 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
     [SerializeField] private AudienceAreaSpawner m_audienceSpawner; //観客生成元
     [SerializeField] private int m_maximumReactionCount = 1200; //同時Reaction上限
 
+    [Header("Ambient Preference Reactions")]
+    [Tooltip("通常時のReaction種類と強さへ、観客ごとの最も強い好みを反映します。")]
+    [SerializeField] private bool b_m_useAmbientPreference = true;
+    [Tooltip("好み0～1に対応する通常Reaction強度倍率です。")]
+    [SerializeField] private Vector2 m_ambientStrengthMultiplierRange =
+        new Vector2(0.8f, 1.8f);
+    [Tooltip("最も好みの強いNode固有Reactionへ置き換える確率です。")]
+    [SerializeField, Range(0.0f, 1.0f)] private float m_preferredReactionChance = 0.75f;
+
+    [Header("Audience Reaction Comments")]
+    [SerializeField] private bool b_m_showReactionComments = true;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_commentDisplayChance = 0.2f;
+    [SerializeField, Min(0.1f)] private float m_commentDurationSeconds = 1.5f;
+    [SerializeField] private Sprite m_commentBubbleSprite;
+    [SerializeField] private Vector3 m_commentWorldOffset = new Vector3(0.0f, 2.6f, 0.0f);
+    [SerializeField] private Vector2 m_commentBubbleSize = new Vector2(420.0f, 240.0f);
+    [SerializeField, Min(0.0001f)] private float m_commentCanvasScale = 0.004f;
+    [SerializeField] private string[] m_positiveComments =
+    {
+        "いいぞ！",
+        "そのポーズ好き！",
+        "キレてる！"
+    };
+    [SerializeField] private string[] m_disappointedComments =
+    {
+        "惜しい！",
+        "次に期待！"
+    };
+
     private readonly Dictionary<AudienceReaction, Vector3> m_preferences =
         new Dictionary<AudienceReaction, Vector3>(); //観客別好み
     private bool b_m_initialized; //好み作成済みか
@@ -153,6 +182,77 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
             _preferenceIndex,
             averagePreference);
         return averagePreference;
+    }
+
+    /// <summary>通常Reactionへ観客個別の好みを反映し、必要ならコメントを表示します。</summary>
+    public void ApplyAmbientPreference(
+        AudienceReaction _audience,
+        ref EAudienceReaction _reaction,
+        ref float _strength)
+    {
+        if (!b_m_useAmbientPreference || _audience == null)return;
+        if (!TryGetPreferences(_audience, out Vector3 preferences))return;
+
+        int preferredIndex = GetPreferredIndex(preferences);
+        float preference = GetPreference(preferences, preferredIndex);
+        float minimumMultiplier = Mathf.Max(0.0f, m_ambientStrengthMultiplierRange.x);
+        float maximumMultiplier = Mathf.Max(
+            minimumMultiplier,
+            m_ambientStrengthMultiplierRange.y);
+        _strength *= Mathf.Lerp(minimumMultiplier, maximumMultiplier, preference);
+
+        bool positiveReaction = _reaction != EAudienceReaction.Disappointed;
+        if (positiveReaction && Random.value <= m_preferredReactionChance)
+        {
+            _reaction = GetPreferredReaction(preferredIndex);
+        }
+
+        if (!b_m_showReactionComments || Random.value > m_commentDisplayChance)return;
+        string comment = GetRandomComment(positiveReaction);
+        if (string.IsNullOrWhiteSpace(comment))return;
+
+        AudienceReactionCommentBubble bubble =
+            _audience.GetComponent<AudienceReactionCommentBubble>();
+        if (bubble == null)
+        {
+            bubble = _audience.gameObject.AddComponent<AudienceReactionCommentBubble>();
+        }
+        bubble.Show(
+            comment,
+            m_commentBubbleSprite,
+            m_commentWorldOffset,
+            m_commentBubbleSize,
+            m_commentCanvasScale,
+            m_commentDurationSeconds);
+    }
+
+    private static int GetPreferredIndex(Vector3 _preferences)
+    {
+        if (_preferences.x >= _preferences.y && _preferences.x >= _preferences.z)return 0;
+        return _preferences.y >= _preferences.z ? 1 : 2;
+    }
+
+    private static EAudienceReaction GetPreferredReaction(int _preferredIndex)
+    {
+        switch (_preferredIndex)
+        {
+            case 0:
+                return EAudienceReaction.Jump;
+            case 1:
+                return EAudienceReaction.Cheer;
+            default:
+                return EAudienceReaction.Bounce;
+        }
+    }
+
+    private string GetRandomComment(bool _positive)
+    {
+        string[] comments = _positive
+            ? m_positiveComments
+            : m_disappointedComments;
+        if (comments == null || comments.Length == 0)return string.Empty;
+
+        return comments[Random.Range(0, comments.Length)];
     }
 
     /// <summary>

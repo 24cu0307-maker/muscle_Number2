@@ -56,6 +56,21 @@ public sealed class ConditionalEffectEvent
         new List<ConditionalEffectEntry>(); //同時に予約するEffect一覧
 }
 
+[Serializable]
+public sealed class MusicBranchNode
+{
+    public bool b_m_enabled = true;
+    public int m_nodeNumber = 1;
+    [Min(0.0f)] public float m_time;
+    public string m_branchName = "BGM Branch";
+    public string m_conditionExpression = "time >= 0";
+    public bool b_m_transitionOnSuccess = true;
+    public string m_successEffectNames;
+    public string m_failureEffectNames;
+    public MusicNodeSequence m_targetSequence;
+    [Min(0.0f)] public float m_crossFadeSeconds = 2.0f;
+}
+
 public enum EMusicEventType
 {
     AudienceChoice,
@@ -172,6 +187,8 @@ public sealed class MusicNodeSequence : ScriptableObject
         new List<MusicEventSceneData>(); //Event Scene設定一覧
     [SerializeField] private List<ConditionalEffectEvent> m_conditionalEffectsList =
         new List<ConditionalEffectEvent>(); //条件で発火する演出一覧
+    [SerializeField] private List<MusicBranchNode> m_musicBranchesList =
+        new List<MusicBranchNode>(); //別Sequenceへ切り替えるBGM分岐Node一覧
 
     public AudioClip BgmClip
     {
@@ -232,6 +249,18 @@ public sealed class MusicNodeSequence : ScriptableObject
                 m_conditionalEffectsList = new List<ConditionalEffectEvent>();
             }
             return m_conditionalEffectsList;
+        }
+    }
+
+    public List<MusicBranchNode> MusicBranchesList
+    {
+        get
+        {
+            if (m_musicBranchesList == null)
+            {
+                m_musicBranchesList = new List<MusicBranchNode>();
+            }
+            return m_musicBranchesList;
         }
     }
 }

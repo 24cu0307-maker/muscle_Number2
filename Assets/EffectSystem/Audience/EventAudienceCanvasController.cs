@@ -421,9 +421,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
 
     private static int GetCandidatePoseId(int _index)
     {
-        MusicEventSceneData eventData = EventNodeRuntimeContext.CurrentEvent;
-        if (eventData == null
-            || !eventData.TryGetAudienceChoiceCandidate(
+        if (!EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
                 _index,
                 out SMusicNodeEvent candidate))return _index;
 
@@ -432,9 +430,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
 
     private static string GetCandidatePoseName(int _index)
     {
-        MusicEventSceneData eventData = EventNodeRuntimeContext.CurrentEvent;
-        if (eventData == null
-            || !eventData.TryGetAudienceChoiceCandidate(
+        if (!EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
                 _index,
                 out SMusicNodeEvent candidate))
         {

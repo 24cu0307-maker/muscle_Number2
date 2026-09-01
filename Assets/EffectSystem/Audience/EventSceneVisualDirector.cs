@@ -62,6 +62,11 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     public bool TryPlayEvent(int _nodeNumber)
     {
+        VoltageBgmSystem bgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        if (bgmSystem != null && bgmSystem.CurrentSequence != null)
+        {
+            m_musicNodeSequence = bgmSystem.CurrentSequence;
+        }
         if (b_m_isPlaying || m_musicNodeSequence == null)return false;
 
         for (int i = 0; i < m_musicNodeSequence.EventScenesList.Count; ++i)
@@ -412,7 +417,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     {
         m_canvasController?.ClearNodes();
         if (m_currentEvent == null
-            || !m_currentEvent.TryGetAudienceChoiceCandidate(
+            || !EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
                 _preferenceindex,
                 out SMusicNodeEvent candidate))
         {
@@ -533,7 +538,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             || m_preferenceSystem == null)return false;
 
         int candidateIndex = 0;
-        while (m_currentEvent.TryGetAudienceChoiceCandidate(
+        while (EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
             candidateIndex,
             out SMusicNodeEvent candidate))
         {
@@ -568,7 +573,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             || Time.unscaledTime < _nextdiagnostictime)return;
 
         int candidateIndex = 0;
-        while (m_currentEvent.TryGetAudienceChoiceCandidate(
+        while (EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
             candidateIndex,
             out SMusicNodeEvent candidate))
         {
@@ -754,7 +759,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     private int GetAudienceChoicePoseId(int _preferenceindex)
     {
         if (m_currentEvent == null
-            || !m_currentEvent.TryGetAudienceChoiceCandidate(
+            || !EventNodeRuntimeContext.TryGetAudienceChoiceCandidate(
                 _preferenceindex,
                 out SMusicNodeEvent candidate))
         {

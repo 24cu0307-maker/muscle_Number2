@@ -16,6 +16,29 @@ public class PoseFlowDataManager : MonoBehaviour
         ? m_sequence.TimelineDuration
         : 0.0f;
 
+    private void OnEnable()
+    {
+        VoltageBgmSystem bgmSystem = FindFirstObjectByType<VoltageBgmSystem>();
+        if (bgmSystem == null)return;
+        bgmSystem.SequenceChanged -= SetSequence;
+        bgmSystem.SequenceChanged += SetSequence;
+    }
+
+    private void OnDisable()
+    {
+        VoltageBgmSystem bgmSystem = FindFirstObjectByType<VoltageBgmSystem>();
+        if (bgmSystem != null)bgmSystem.SequenceChanged -= SetSequence;
+    }
+
+    public void SetSequence(MusicNodeSequence _sequence)
+    {
+        if (_sequence == null)return;
+        m_sequence = _sequence;
+        m_currentNodeIndex = -1;
+        b_m_hasQueuedPose = false;
+        m_overrideNodeIndex = -1;
+    }
+
     /// <summary>
     /// BGMの絶対時刻から現在の通常Nodeを決定します。
     /// Nodeが切り替わったFrameだけtrueを返します。
