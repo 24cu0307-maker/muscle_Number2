@@ -1,9 +1,11 @@
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class TitleScene : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+
 
     private void Awake()
     {

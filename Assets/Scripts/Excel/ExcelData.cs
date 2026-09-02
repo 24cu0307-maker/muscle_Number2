@@ -31,3 +31,14 @@ public struct CSVDataPoseFlow
     public string FailureEffectNames; //失敗時に固定再生する演出名。複数指定は|区切り
 
 }
+
+/// <summary>
+/// ランキングCSVの1行分を保持します。
+/// </summary>
+public struct RnakingData
+{
+    public int Number;
+    public int Score;
+    public int RankingNumber;
+    public string Texture;
+}
