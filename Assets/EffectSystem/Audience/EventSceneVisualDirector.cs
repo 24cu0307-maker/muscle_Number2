@@ -207,6 +207,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
 
         b_m_audienceSelectionEnabled = false;
         b_m_isPlaying = false;
+        SkipElapsedNormalNodes();
         ResumeNormalFlow();
         EventNodeRuntimeContext.Clear();
         m_currentEvent = null;
@@ -352,6 +353,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
 
         b_m_isPlaying = false;
+        SkipElapsedNormalNodes();
         EventNodeRuntimeContext.Clear();
         m_currentEvent = null;
         m_onEventVisualStopped?.Invoke();
@@ -789,5 +791,13 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
 
         m_gameManager.ResumeFromDirection();
         b_m_normalFlowSuspended = false;
+    }
+
+    /// <summary>
+    /// Event中にBGMが通過した通常Nodeを復帰直後に再表示しないよう、同期位置だけを進めます。
+    /// </summary>
+    private void SkipElapsedNormalNodes()
+    {
+        m_poseFlowDataManager?.SkipElapsedNodesAfterEvent(GetPlaybackClock());
     }
 }

@@ -117,6 +117,30 @@ public class PoseFlowDataManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Event中に通過した通常Nodeを表示済みとして扱い、終了後の遅延表示を防ぎます。
+    /// 予約Poseは、この時刻より後に通常Nodeが存在する場合だけ次Nodeへ引き継ぎます。
+    /// </summary>
+    public void SkipElapsedNodesAfterEvent(float _bgmtimeseconds)
+    {
+        if (m_sequence == null || m_sequence.EventsList.Count == 0)return;
+
+        int elapsedNodeIndex = -1;
+        for (int i = 0; i < m_sequence.EventsList.Count; ++i)
+        {
+            if (m_sequence.EventsList[i].m_time > _bgmtimeseconds)break;
+            elapsedNodeIndex = i;
+        }
+
+        m_currentNodeIndex = elapsedNodeIndex;
+        m_overrideNodeIndex = -1;
+        bool b_hasFutureNode = elapsedNodeIndex + 1 < m_sequence.EventsList.Count;
+        if (!b_hasFutureNode)
+        {
+            b_m_hasQueuedPose = false;
+        }
+    }
+
+    /// <summary>
     /// 現在Nodeから次Nodeまでの時刻差を表示時間として返します。
     /// 最終NodeではBGM末尾までを使用し、BGM未設定なら0秒として安全に終了します。
     /// </summary>
