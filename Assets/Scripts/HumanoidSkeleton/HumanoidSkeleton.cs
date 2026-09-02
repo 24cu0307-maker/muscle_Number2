@@ -21,4 +21,106 @@ public class HumanoidSkeleton : MonoBehaviour
 
     [SerializeField] public Transform[] playerRightLeg = new Transform[2];
 
+    // èâä˙âÒì]Çï€ë∂
+    private Quaternion[] initialLeftHandRotation = new Quaternion[21];
+    private Quaternion[] initialRightHandRotation = new Quaternion[21];
+
+    private Quaternion[] initialLeftArmRotation = new Quaternion[2];
+    private Quaternion[] initialRightArmRotation = new Quaternion[2];
+
+    private Quaternion[] initialSplineRotation = new Quaternion[4];
+
+    private Quaternion[] initialLeftLegRotation = new Quaternion[2];
+    private Quaternion[] initialRightLegRotation = new Quaternion[2];
+
+    public Quaternion[] GetInitialLeftHandRotation()
+    {
+        return initialLeftHandRotation;
+    }
+
+    public Quaternion[] GetInitialRightHandRotation()
+    {
+        return initialRightHandRotation;
+    }
+
+    public Quaternion[] GetInitialLeftArmRotation()
+    {
+        return initialLeftArmRotation;
+    }
+
+    public Quaternion[] GetInitialRightArmRotation()
+    {
+        return initialRightArmRotation;
+    }
+
+    public Quaternion[] GetInitialSplineRotation()
+    {
+        return initialSplineRotation;
+    }
+
+    public Quaternion[] GetInitialLeftLegRotation()
+    {
+        return initialLeftLegRotation;
+    }
+
+    public Quaternion[] GetInitialRightLegRotation()
+    {
+        return initialRightLegRotation;
+    }
+    private void Awake()
+    {
+        Set();
+    }
+
+    private void Set()
+    {
+        // ç∂éË
+        for (int i = 0; i < playerLeftHand.Length; i++)
+        {
+            if (playerLeftHand[i] != null)
+                initialLeftHandRotation[i] = playerLeftHand[i].localRotation;
+        }
+
+        // âEéË
+        for (int i = 0; i < playerRightHand.Length; i++)
+        {
+            if (playerRightHand[i] != null)
+                initialRightHandRotation[i] = playerRightHand[i].localRotation;
+        }
+
+        // ç∂òr
+        for (int i = 0; i < playerLeftArm.Length; i++)
+        {
+            if (playerLeftArm[i] != null)
+                initialLeftArmRotation[i] = playerLeftArm[i].localRotation;
+        }
+
+        // âEòr
+        for (int i = 0; i < playerRightArm.Length; i++)
+        {
+            if (playerRightArm[i] != null)
+                initialRightArmRotation[i] = playerRightArm[i].localRotation;
+        }
+
+        // Spline
+        for (int i = 0; i < playerSpline.Length; i++)
+        {
+            if (playerSpline[i] != null)
+                initialSplineRotation[i] = playerSpline[i].localRotation;
+        }
+
+        // ç∂ë´
+        for (int i = 0; i < playerLeftLeg.Length; i++)
+        {
+            if (playerLeftLeg[i] != null)
+                initialLeftLegRotation[i] = playerLeftLeg[i].localRotation;
+        }
+
+        // âEë´
+        for (int i = 0; i < playerRightLeg.Length; i++)
+        {
+            if (playerRightLeg[i] != null)
+                initialRightLegRotation[i] = playerRightLeg[i].localRotation;
+        }
+    }
 }

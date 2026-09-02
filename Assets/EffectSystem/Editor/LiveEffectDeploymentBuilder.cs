@@ -326,8 +326,16 @@ public static class LiveEffectDeploymentBuilder
     {
         SerializedObject serializedSystem =
             new SerializedObject(_effectsystem); //編集対象EffectSystem
+        EffectList effectList = _effectsystem.GetComponent<EffectList>();
+        if (effectList == null)
+        {
+            effectList = Undo.AddComponent<EffectList>(_effectsystem.gameObject);
+        }
+        serializedSystem.FindProperty("m_effectList").objectReferenceValue = effectList;
+        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
+        SerializedObject serializedList = new SerializedObject(effectList);
         SerializedProperty effects =
-            serializedSystem.FindProperty("m_effectDatas"); //EffectData配列
+            serializedList.FindProperty("m_effects"); //EffectData配列
         effects.arraySize = Mathf.Min(_timelines.Count, _directors.Count);
         for (int i = 0; i < effects.arraySize; ++i)
         {
@@ -338,7 +346,7 @@ public static class LiveEffectDeploymentBuilder
             effect.FindPropertyRelative("m_director").objectReferenceValue = _directors[i];
         }
 
-        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
+        serializedList.ApplyModifiedPropertiesWithoutUndo();
     }
 
     /// <summary>

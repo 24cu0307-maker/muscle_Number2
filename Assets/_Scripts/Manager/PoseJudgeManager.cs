@@ -125,12 +125,28 @@ public class PoseJudgeManager : MonoBehaviour
     private void Success(CSVDataPoseFlow _pose)
     {
         m_gameManager.AddScore((int)m_scoreController.GetScore());
-        int effectCount = m_venueVoltageSystem != null
-            ? m_venueVoltageSystem.GetSuccessEffectCount()
-            : 1;
-        for (int i = 0; i < effectCount; ++i)
+        string fixedEffectNames = _pose.SuccessEffectNames?.Trim();
+        if (!string.IsNullOrEmpty(fixedEffectNames))
         {
-            m_effectSystem?.PlayRandomEffect();
+            string[] effectNames = fixedEffectNames.Split('|');
+            for (int i = 0; i < effectNames.Length; ++i)
+            {
+                string effectName = effectNames[i].Trim();
+                if (!string.IsNullOrEmpty(effectName))
+                {
+                    m_effectSystem?.PlayEffect(effectName);
+                }
+            }
+        }
+        else
+        {
+            int effectCount = m_venueVoltageSystem != null
+                ? m_venueVoltageSystem.GetSuccessEffectCount()
+                : 1;
+            for (int i = 0; i < effectCount; ++i)
+            {
+                m_effectSystem?.PlayRandomEffect();
+            }
         }
 
 

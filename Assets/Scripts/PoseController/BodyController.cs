@@ -11,6 +11,10 @@ public class BodyController : MonoBehaviour
     //データを保存領域
     //[SerializeField] private PositionDataManager dataManager;
 
+    private HumanoidSkeleton skeleton;
+
+    private Quaternion[] initialSplineRotation = new Quaternion[4];
+
     //座標を格納する箱
     [SerializeField] private Vector3[] _Body = new Vector3[37];
 
@@ -42,6 +46,10 @@ public class BodyController : MonoBehaviour
 
         //方向計算クラス
         _DirectionVectorCalculator = new DirectionVectorCalculator();
+
+        skeleton = GameObject.Find("HumanoidSkeleton").GetComponent<HumanoidSkeleton>();
+
+        initialSplineRotation = skeleton.GetInitialSplineRotation();
     }
 
     // Update is called once per frame
@@ -52,7 +60,7 @@ public class BodyController : MonoBehaviour
         //座標を取得
         _Body = PositionDataManager.Instance.positionData.Body;
 
-        if(_camera == null)
+        if (_camera == null)
         {
             _camera = GameObject.Find("Camera");
 
@@ -79,6 +87,37 @@ public class BodyController : MonoBehaviour
         _BodyDirMirrored[4] = _DirectionVectorCalculator.MirroredVector_X(_Body[(int)MediapipeBodyPart.right_shoulder], _Body[(int)MediapipeBodyPart.left_shoulder]);
 
 
+
+
+        Quaternion[] corrections =
+{
+    Quaternion.Euler(70, 0, 0),
+    Quaternion.Euler(70, 0, 0),
+    Quaternion.Euler(70, 0, 0),
+    Quaternion.Euler(45, 0, 0)
+};
+
+        
+        for (int i = 0; i < 4; i++)
+        {
+            Quaternion targetRotation =
+      Quaternion.LookRotation(_BodyDirMirrored[i])
+      * corrections[i];
+
+
+            Vector3 angle = playerBody.playerSpline[i].eulerAngles;
+
+            Debug.Log($"Spline[{i}] Angle = {angle}");
+
+
+            playerBody.playerSpline[i].rotation = targetRotation;
+        }
+        
+
+      
+
+
+        /*
         //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(70, 0, 0)
         playerBody.playerSpline[0].rotation = Quaternion.LookRotation(_BodyDirMirrored[0]) * Quaternion.Euler(70, 0, 0);
         playerBody.playerSpline[1].rotation = Quaternion.LookRotation(_BodyDirMirrored[1]) * Quaternion.Euler(70, 0, 0);
@@ -87,6 +126,8 @@ public class BodyController : MonoBehaviour
 
         playerBody.playerSpline[1].rotation = Quaternion.LookRotation(_BodyDirMirrored[4]) * Quaternion.Euler(0, 90, 0);
         playerBody.playerSpline[2].rotation = Quaternion.LookRotation(_BodyDirMirrored[4]) * Quaternion.Euler(0, 90, 0);
+        */
+
         /*
         //カメラの向きに応じて方向を変更
         if (!(cameraJudge.CameraDirection(_camera)))

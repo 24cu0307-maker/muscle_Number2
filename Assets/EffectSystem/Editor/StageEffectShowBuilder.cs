@@ -525,8 +525,16 @@ public static class StageEffectShowBuilder
 
         SerializedObject serializedSystem =
             new SerializedObject(effectSystem); //EffectSystem設定
+        EffectList effectList = effectSystem.GetComponent<EffectList>();
+        if (effectList == null)
+        {
+            effectList = Undo.AddComponent<EffectList>(effectSystem.gameObject);
+        }
+        serializedSystem.FindProperty("m_effectList").objectReferenceValue = effectList;
+        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
+        SerializedObject serializedList = new SerializedObject(effectList);
         SerializedProperty effects =
-            serializedSystem.FindProperty("m_effectDatas"); //Effect一覧
+            serializedList.FindProperty("m_effects"); //Effect一覧
         int index = -1; //既存登録位置
         for (int i = 0; i < effects.arraySize; ++i)
         {
@@ -557,8 +565,8 @@ public static class StageEffectShowBuilder
             _timeline;
         effect.FindPropertyRelative("m_director").objectReferenceValue =
             _director;
-        serializedSystem.ApplyModifiedPropertiesWithoutUndo();
-        EditorUtility.SetDirty(effectSystem);
+        serializedList.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(effectList);
     }
 
     /// <summary>

@@ -44,21 +44,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93672bdca024d059bbb5b3e7b33f242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BacklightSourceGlow
-  m_glowColor: {r: 1, g: 0.58, b: 0.2, a: 1}
-  m_glowSize: 12
+  m_glowColor: {r: 1, g: 0.8985618, b: 0.8066038, a: 1}
+  m_glowSize: 4.67
   m_glowAspect: {x: 1, y: 1}
   m_glowShape: 0
-  m_glowIntensity: 2.4
-  m_glowOpacity: 0.56
-  m_coreWhiteness: 0.96
+  m_glowIntensity: 0.24
+  m_glowOpacity: 0.281
+  m_coreWhiteness: 0
   m_coreIntensityMultiplier: 5
-  m_ringIntensity: 0.65
-  m_ringRadius: 0.42
-  m_ringWidth: 0.12
-  m_offAxisTiltStrength: 0.15
+  m_ringIntensity: 0.93
+  m_ringRadius: 0.52
+  m_ringWidth: 0.11
+  m_offAxisTiltStrength: 0
   m_maximumTiltAngle: 12
   m_cameraDepthOffset: 0.35
   b_m_renderThroughGeometry: 0
-  m_localOffset: {x: 0, y: 0, z: 0.08}
+  m_localOffset: {x: 0, y: 0, z: 0}
   m_sourceLight: {fileID: 0}
   b_m_haloOnly: 0

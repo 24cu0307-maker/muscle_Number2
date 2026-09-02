@@ -10,6 +10,8 @@ public struct FlameBase
     public GameObject m_currentFrameFailure;
     public GameObject m_currentFrameWating;
 
+
+
     public void SetActive(bool b)
     {
         m_currentFrameSuccess.SetActive(b);
@@ -18,12 +20,12 @@ public struct FlameBase
         m_currentFrameWating.SetActive(b);
     }
 
-    public void SetSize()
+    public void SetSize(Vector3 _position)
     {
-        m_currentFrameSuccess.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
-        m_currentFrameApproaching.transform.localScale = new Vector3(0.17f, 0.17f, 0.17f);
-        m_currentFrameFailure.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
-        m_currentFrameWating.transform.localScale = new Vector3(0.12f, 0.12f, 0.12f);
+        m_currentFrameSuccess.transform.localScale = _position;
+        m_currentFrameApproaching.transform.localScale = _position + new Vector3(0.05f, 0.05f, 0.05f);
+        m_currentFrameFailure.transform.localScale = _position;
+        m_currentFrameWating.transform.localScale = _position;
     }
 
 
@@ -35,11 +37,29 @@ public class UIData : MonoBehaviour
 {
     [SerializeField] private List<FlameBase> ui;
 
+    private Vector3  position = new Vector3(0.12f, 0.12f, 0.12f);
+
+    [Range(-0.1f, 0.1f)]
+    [SerializeField]
+    private float SizeX;
+
+    [Range(-0.1f, 0.1f)]
+    [SerializeField]
+    private float SizeY;
+
+    [Range(-0.1f, 0.1f)]
+    [SerializeField]
+    private float SizeZ;
+
+ 
+
+    public Vector2 Position() { return new Vector2(); }
+
     private void Awake()
     {
         foreach (var ui in ui) ui.SetActive(false);
 
-        foreach (var ui in ui) ui.SetSize();
+        foreach (var ui in ui) ui.SetSize(position + new Vector3(SizeX, SizeY, SizeZ));
     }
 
     public GameObject getUI(string _name, int _number)

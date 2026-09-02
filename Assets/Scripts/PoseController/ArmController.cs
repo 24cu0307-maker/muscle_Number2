@@ -90,6 +90,8 @@ public class ArmController : MonoBehaviour
         //カメラの向きに応じて方向を変更
         if (!(cameraJudge.CameraDirection(_camera)))
         {
+          
+
             //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(90, 90, 90)
             playerArm.playerRightArm[0].rotation = Quaternion.LookRotation(_LeftShoulderRotationDirMirrored.normalized) * Quaternion.Euler(90, 90, 90);
             playerArm.playerRightArm[1].rotation = Quaternion.LookRotation(_LeftElbowRotationDirMirrored.normalized) * Quaternion.Euler(90, 90, 90);

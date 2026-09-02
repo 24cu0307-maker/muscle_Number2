@@ -5317,6 +5317,9 @@ MonoBehaviour:
   m_emissionIntensity: 3
   m_opacity: 0.13
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -5576,6 +5579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
   m_liveEffectToggleKey: 288
   m_voltageToggleKey: 289
+  m_exitDebugKey: 291
 --- !u!114 &130277792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5588,8 +5592,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ae95cdb07c3244888a686034341dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
+  m_previousEffectKey: 276
+  m_nextEffectKey: 275
+  m_playEffectKey: 32
+  m_stopEffectKey: 8
   m_effectSystem: {fileID: 130277793}
-  b_m_showPanel: 1
 --- !u!114 &130277793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5602,7 +5609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d65b251efc42e84e83de5c88fa02ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectSystem
-  m_effectDatas:
+  m_effectList: {fileID: 0}
+  m_legacyEffectDatas:
   - m_effectName: SpotLight_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -5611,6 +5619,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 11400000, guid: b5d8793aac4fda74d9a54ef35829c44b, type: 2}
     m_timeline: {fileID: 11400000, guid: 9eb8e8401579d1b4b9c5d3e2c9b8ddce, type: 2}
     m_director: {fileID: 2040362423}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: SpotLight_01
     m_playDelaySeconds: 0
     m_particles: []
@@ -5619,6 +5636,15 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: 106b8f86c398ddb4197ba53a17734102, type: 2}
     m_director: {fileID: 1421681266}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   - m_effectName: Under_LightWave
     m_playDelaySeconds: 0
     m_particles: []
@@ -5627,8 +5653,18 @@ MonoBehaviour:
     m_cameraSequence: {fileID: 0}
     m_timeline: {fileID: 11400000, guid: 45e21004190778741ab3222400ebdfd2, type: 2}
     m_director: {fileID: 1416467243}
+    b_m_useStrobe: 0
+    m_strobeColor: {r: 0, g: 0, b: 0, a: 0}
+    m_strobeDurationSeconds: 0
+    m_strobeFlashCount: 0
+    m_strobeMaximumAlpha: 0
+    b_m_useCameraShake: 0
+    m_cameraShakeDurationSeconds: 0
+    m_cameraShakeStrength: 0
+    m_cameraShakeFrequency: 0
   m_cameraDirector: {fileID: 2075913570}
   m_effectDirector: {fileID: 0}
+  m_cameraShakeTarget: {fileID: 0}
 --- !u!4 &130277794
 Transform:
   m_ObjectHideFlags: 0
@@ -16232,7 +16268,7 @@ Light:
   m_InnerSpotAngle: 5.4257793
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -17237,6 +17273,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -27116,6 +27155,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.2
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -32279,6 +32321,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.4
   m_opacity: 0.1
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -38024,6 +38069,9 @@ MonoBehaviour:
   m_emissionIntensity: 5
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -44074,7 +44122,7 @@ Light:
   m_InnerSpotAngle: 5.9169335
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -49540,6 +49588,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.5
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -49694,6 +49745,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -50186,6 +50240,9 @@ MonoBehaviour:
   m_emissionIntensity: 5.5
   m_opacity: 0.19
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -70498,6 +70555,9 @@ MonoBehaviour:
   m_emissionIntensity: 4
   m_opacity: 0.14
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -70751,6 +70811,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.5
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -71174,6 +71237,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.8
   m_opacity: 0.14
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -71606,6 +71672,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.2
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -82008,6 +82077,9 @@ MonoBehaviour:
   m_emissionIntensity: 100
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -82469,6 +82541,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158597543}
   m_Mesh: {fileID: 0}
+--- !u!1 &1170660998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1170660999}
+  m_Layer: 0
+  m_Name: effect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1170660999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170660998}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1356760023}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1174451316
 GameObject:
   m_ObjectHideFlags: 0
@@ -87607,6 +87710,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.2
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -93243,6 +93349,9 @@ MonoBehaviour:
   m_emissionIntensity: 4
   m_opacity: 0.17
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -93575,6 +93684,7 @@ Transform:
   - {fileID: 863614127}
   - {fileID: 1352203419}
   - {fileID: 1416467244}
+  - {fileID: 1170660999}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1361414506
@@ -105293,6 +105403,9 @@ MonoBehaviour:
   m_emissionIntensity: 5.5
   m_opacity: 0.19
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -105424,6 +105537,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.8
   m_opacity: 0.18
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -105726,6 +105842,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.2
   m_opacity: 0.11
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -105994,6 +106113,9 @@ MonoBehaviour:
   m_emissionIntensity: 1.8
   m_opacity: 0.12
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -116240,6 +116362,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.2
   m_opacity: 0.17
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -122201,6 +122326,9 @@ MonoBehaviour:
   m_emissionIntensity: 3.7
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -127767,6 +127895,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.5
   m_opacity: 0.15
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -133670,6 +133801,9 @@ MonoBehaviour:
   m_emissionIntensity: 4.8
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -134471,6 +134605,9 @@ MonoBehaviour:
   m_emissionIntensity: 100
   m_opacity: 0.16
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5
@@ -145420,6 +145557,9 @@ MonoBehaviour:
   m_emissionIntensity: 2.4
   m_opacity: 0.1
   m_volumeFill: 0.35
+  m_glowIntensity: 0.35
+  m_glowSpread: 0.08
+  m_glowSoftness: 2.5
   m_outerStreakIntensity: 0
   m_outerStreakCount: 8
   m_outerStreakSharpness: 5

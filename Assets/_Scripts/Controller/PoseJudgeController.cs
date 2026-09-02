@@ -38,7 +38,7 @@ public class PoseJudgeController : MonoBehaviour
 
     [Header("ƒ|[ƒY‚Ì”»’è")]
 
-    private bool[] isPose = new bool[3];
+    private bool isPose = false;
 
 
 
@@ -56,9 +56,7 @@ public class PoseJudgeController : MonoBehaviour
 
     public bool GetisPose(int PoseID)
     {
-        return PoseID >= 0
-            && PoseID < isPose.Length
-            && isPose[PoseID];
+        return isPose;
     }
 
 
@@ -103,7 +101,7 @@ public class PoseJudgeController : MonoBehaviour
         if (poseDatas == null
             || poseID < 0
             || poseID >= poseDatas.Count
-            || poseID >= isPose.Length)
+            )
         {
             Debug.LogWarning($"[PoseJudge] Invalid PoseID: {poseID}");
             return;
@@ -134,7 +132,7 @@ public class PoseJudgeController : MonoBehaviour
             )
 
         {
-            isPose[poseID] = true;
+            isPose = true;
             Score?.Invoke(poseID);
 
 
@@ -142,7 +140,7 @@ public class PoseJudgeController : MonoBehaviour
 
         else
         {
-            isPose[poseID] = false;
+            isPose = false;
 
 
         }

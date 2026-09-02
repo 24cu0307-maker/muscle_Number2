@@ -7,12 +7,14 @@
 *@remarks PoseTimeFlow.csvへ書き出して既存Gameと接続*
 *━━━━━━━━━*/
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 /// <summary>
@@ -29,6 +31,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     private const float ENodeNumberColumnWidth = 55.0f; //番号列幅
     private const float ENodeTimeColumnWidth = 75.0f; //時間列幅
     private const float ENodePoseColumnWidth = 65.0f; //Pose ID列幅
+    private const float ESuccessEffectColumnWidth = 420.0f; //成功演出列幅
     private const float ENodeDeleteColumnWidth = 28.0f; //削除Button列幅
     private const float ECompactWindowHeight = 82.0f; //簡易表示時の高さ
     private const float EMinimumRestoreHeight = 520.0f; //通常表示へ戻す最低高さ
@@ -677,6 +680,9 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         GUILayout.Label("Time", GUILayout.Width(ENodeTimeColumnWidth));
         GUILayout.Label("Pose ID", GUILayout.Width(ENodePoseColumnWidth));
         GUILayout.Label("Event Name");
+        GUILayout.Label(
+            "Success Effect",
+            GUILayout.Width(ESuccessEffectColumnWidth));
         GUILayout.Label(string.Empty, GUILayout.Width(ENodeDeleteColumnWidth));
         GUILayout.EndHorizontal();
 
@@ -686,6 +692,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         int deleteIndex = -1; //削除対象のNode番号
         for (int i = 0; i < m_sequence.EventsList.Count; ++i)
         {
+            int nodeIndex = i; //Dropdown選択後も維持するNode番号
             SMusicNodeEvent node = m_sequence.EventsList[i]; //現在行のNode
             Color previousBackgroundColor = GUI.backgroundColor; //元のButton色
             if (i == m_selectedIndex)
@@ -717,6 +724,19 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 node.m_poseId,
                 GUILayout.Width(ENodePoseColumnWidth));
             node.m_eventName = EditorGUILayout.TextField(node.m_eventName);
+            DrawSuccessEffectSelector(
+                node.m_successEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Success Effect");
+                    SMusicNodeEvent editedNode =
+                        m_sequence.EventsList[nodeIndex];
+                    editedNode.m_successEffectNames = ToggleEffectName(
+                        editedNode.m_successEffectNames,
+                        _effectName);
+                    m_sequence.EventsList[nodeIndex] = editedNode;
+                    EditorUtility.SetDirty(m_sequence);
+                });
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(m_sequence, "Edit Music Node");
@@ -979,6 +999,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         int deleteIndex = -1; //削除対象
         for (int i = 0; i < _eventData.m_eventNodesList.Count; ++i)
         {
+            int nodeIndex = i; //Dropdown選択後も維持するNode番号
             SMusicNodeEvent node = _eventData.m_eventNodesList[i]; //編集Node
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("●", GUILayout.Width(ENodeSelectColumnWidth)))
@@ -999,6 +1020,19 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 node.m_poseId,
                 GUILayout.Width(ENodePoseColumnWidth));
             node.m_eventName = EditorGUILayout.TextField(node.m_eventName);
+            DrawSuccessEffectSelector(
+                node.m_successEffectNames,
+                _effectName =>
+                {
+                    Undo.RecordObject(m_sequence, "Select Event Success Effect");
+                    SMusicNodeEvent editedNode =
+                        _eventData.m_eventNodesList[nodeIndex];
+                    editedNode.m_successEffectNames = ToggleEffectName(
+                        editedNode.m_successEffectNames,
+                        _effectName);
+                    _eventData.m_eventNodesList[nodeIndex] = editedNode;
+                    EditorUtility.SetDirty(m_sequence);
+                });
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(m_sequence, "Edit Event Node");
@@ -1161,7 +1195,7 @@ public sealed class MusicNodeEditorWindow : EditorWindow
     {
         SortEvents();
         StringBuilder csv = new StringBuilder(); //CSV内容
-        csv.AppendLine("PoseFlow,PoseID,EventName,time");
+        csv.AppendLine("PoseFlow,PoseID,EventName,time,SuccessEffectNames");
         float previousTime = 0.0f; //直前Nodeの絶対時間
         for (int i = 0; i < m_sequence.EventsList.Count; ++i)
         {
@@ -1174,9 +1208,11 @@ public sealed class MusicNodeEditorWindow : EditorWindow
             csv.Append(',');
             csv.Append(EscapeCsv(node.m_eventName));
             csv.Append(',');
-            csv.AppendLine(duration.ToString(
+            csv.Append(duration.ToString(
                 "0.###",
                 CultureInfo.InvariantCulture));
+            csv.Append(',');
+            csv.AppendLine(EscapeCsv(node.m_successEffectNames));
             previousTime = node.m_time;
         }
 
@@ -1220,7 +1256,10 @@ public sealed class MusicNodeEditorWindow : EditorWindow
                 m_nodeNumber = Mathf.Max(1, nodeNumber),
                 m_time = absoluteTime,
                 m_poseId = poseId,
-                m_eventName = columnsList[2]
+                m_eventName = columnsList[2],
+                m_successEffectNames = columnsList.Count >= 5
+                    ? columnsList[4]
+                    : string.Empty
             });
         }
 
@@ -1298,5 +1337,120 @@ public sealed class MusicNodeEditorWindow : EditorWindow
         if (!_value.Contains(",") && !_value.Contains("\""))return _value;
 
         return $"\"{_value.Replace("\"", "\"\"")}\"";
+    }
+
+    /// <summary>
+    /// Scene内EffectListを検索元にした、検索可能な成功演出メニューを表示します。
+    /// </summary>
+    private void DrawSuccessEffectSelector(
+        string _currentEffectName,
+        Action<string> _onSelected)
+    {
+        string label = string.IsNullOrWhiteSpace(_currentEffectName)
+            ? "(Random)"
+            : _currentEffectName;
+        if (!GUILayout.Button(
+            label,
+            EditorStyles.popup,
+            GUILayout.Width(ESuccessEffectColumnWidth)))return;
+
+        EffectList effectList = UnityEngine.Object.FindFirstObjectByType<EffectList>(
+            FindObjectsInactive.Include);
+        if (effectList == null
+            || effectList.Effects == null
+            || effectList.Effects.Length == 0)
+        {
+            ShowNotification(new GUIContent(
+                "EffectListがScene内にありません。Gameplayシーンを開いてください。"));
+            return;
+        }
+
+        List<string> effectNames = new List<string>();
+        for (int i = 0; i < effectList.Effects.Length; ++i)
+        {
+            string effectName = effectList.Effects[i].EffectName?.Trim();
+            if (string.IsNullOrEmpty(effectName)
+                || effectNames.Contains(effectName))continue;
+            effectNames.Add(effectName);
+        }
+        effectNames.Sort(StringComparer.OrdinalIgnoreCase);
+
+        SearchableEffectDropdown dropdown = new SearchableEffectDropdown(
+            new AdvancedDropdownState(),
+            effectNames,
+            _onSelected);
+        dropdown.Show(GUILayoutUtility.GetLastRect());
+    }
+
+    /// <summary>
+    /// |区切りの演出一覧へクリックされた名前を追加し、登録済みなら解除します。
+    /// Random選択時は全指定を解除します。
+    /// </summary>
+    private static string ToggleEffectName(
+        string _currentEffectNames,
+        string _selectedEffectName)
+    {
+        if (string.IsNullOrWhiteSpace(_selectedEffectName))return string.Empty;
+
+        List<string> selectedNames = new List<string>();
+        if (!string.IsNullOrWhiteSpace(_currentEffectNames))
+        {
+            string[] currentNames = _currentEffectNames.Split('|');
+            for (int i = 0; i < currentNames.Length; ++i)
+            {
+                string currentName = currentNames[i].Trim();
+                if (!string.IsNullOrEmpty(currentName)
+                    && !selectedNames.Contains(currentName))
+                {
+                    selectedNames.Add(currentName);
+                }
+            }
+        }
+
+        if (selectedNames.Contains(_selectedEffectName))
+        {
+            selectedNames.Remove(_selectedEffectName);
+        }
+        else
+        {
+            selectedNames.Add(_selectedEffectName);
+        }
+        return string.Join("|", selectedNames);
+    }
+
+    /// <summary>AdvancedDropdown標準の検索欄を使用するEffect選択メニューです。</summary>
+    private sealed class SearchableEffectDropdown : AdvancedDropdown
+    {
+        private const string ERandomItemName = "(Random / None)";
+        private readonly IReadOnlyList<string> m_effectNames;
+        private readonly Action<string> m_onSelected;
+
+        public SearchableEffectDropdown(
+            AdvancedDropdownState _state,
+            IReadOnlyList<string> _effectNames,
+            Action<string> _onSelected)
+            : base(_state)
+        {
+            m_effectNames = _effectNames;
+            m_onSelected = _onSelected;
+            minimumSize = new Vector2(360.0f, 320.0f);
+        }
+
+        protected override AdvancedDropdownItem BuildRoot()
+        {
+            AdvancedDropdownItem root = new AdvancedDropdownItem("Effects");
+            root.AddChild(new AdvancedDropdownItem(ERandomItemName));
+            for (int i = 0; i < m_effectNames.Count; ++i)
+            {
+                root.AddChild(new AdvancedDropdownItem(m_effectNames[i]));
+            }
+            return root;
+        }
+
+        protected override void ItemSelected(AdvancedDropdownItem _item)
+        {
+            m_onSelected?.Invoke(
+                _item.name == ERandomItemName ? string.Empty : _item.name);
+        }
     }
 }
