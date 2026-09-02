@@ -1,9 +1,12 @@
 Type,Group,Time,NodeNumber,PoseID,EventName,SuccessEffects,FailureEffects,Condition,TriggerOnce,RepeatInterval,EffectName,Delay,OverridePosition,PositionX,PositionY,PositionZ
-Pose,,4.834,2,0,Event,CameraShake|EffectBeam_00,,,,,,,,,,
-Pose,,9.952,4,0,Event,EffectBeam_01,,,,,,,,,,
-Pose,,15.213,3,0,Event,EffectBeam_00,,,,,,,,,,
-Pose,,20.686,5,0,Event,EffectBeam_02,,,,,,,,,,
-Pose,,25.591,1,0,Event,EffectBeam_00|Strobe|CameraShake|EffectBurst_00,,,,,,,,,,
-Pose,,51.34,6,0,Event,EffectLight_KIMI_00,,,,,,,,,,
-Pose,,61.031,7,0,Event,EffectLight_KIMI_01,,,,,,,,,,
-Effect,0,26.835,,,Effect Event,,,time >= 0,1,1,EffectBeam_00,0,0,0,0,0
+Pose,,5.9,2,0,Event,,,,,,,,,,,
+Pose,,12.085,3,1,Event,,,,,,,,,,,
+Pose,,18.696,4,2,Event,,,,,,,,,,,
+Pose,,25.662,5,0,Event,,,,,,,,,,,
+Pose,,34.903,1,0,Event,,,,,,,,,,,
+Pose,,39.106,10,0,Event,,,,,,,,,,,
+Pose,,46.616,6,3,Event,,,,,,,,,,,
+Pose,,52.106,8,4,Event,,,,,,,,,,,
+Pose,,57.367,9,5,Event,,,,,,,,,,,
+Pose,,61.632,7,5,Event,,,,,,,,,,,
+Effect,0,0,,,,,,,0,0,,0,0,0,0,0

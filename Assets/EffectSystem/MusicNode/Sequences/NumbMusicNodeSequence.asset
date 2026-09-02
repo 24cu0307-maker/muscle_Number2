@@ -15,11 +15,66 @@ MonoBehaviour:
   m_bgmClip: {fileID: 8300000, guid: 36db662111e6bb3428bf12f35c77decf, type: 3}
   m_manualTimelineDuration: 120
   m_eventsList:
-  - m_nodeNumber: 1
-    m_time: 29.714285
+  - m_nodeNumber: 2
+    m_time: 5.9001813
     m_poseId: 0
     m_eventName: Event
-    m_successEffectNames:
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 3
+    m_time: 12.084708
+    m_poseId: 1
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 4
+    m_time: 18.695755
+    m_poseId: 2
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 5
+    m_time: 25.662233
+    m_poseId: 0
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 1
+    m_time: 34.903484
+    m_poseId: 0
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 10
+    m_time: 39.10601
+    m_poseId: 0
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 6
+    m_time: 46.615498
+    m_poseId: 3
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 8
+    m_time: 52.106422
+    m_poseId: 4
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 9
+    m_time: 57.36682
+    m_poseId: 5
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
+  - m_nodeNumber: 7
+    m_time: 61.63201
+    m_poseId: 5
+    m_eventName: Event
+    m_successEffectNames: 
+    m_failureEffectNames: 
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
@@ -29,63 +84,79 @@ MonoBehaviour:
     m_maximumBonusScore: 1200
     m_eventNodesList:
     - m_nodeNumber: 1
-      m_time: 3.5238595
+      m_time: 38
       m_poseId: 0
       m_eventName: Front Double Biceps
       m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
+      m_failureEffectNames: 
     - m_nodeNumber: 2
-      m_time: 4.3418984
+      m_time: 39
       m_poseId: 1
       m_eventName: Most Muscular
       m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
+      m_failureEffectNames: 
     - m_nodeNumber: 3
-      m_time: 5.034085
+      m_time: 40
       m_poseId: 2
       m_eventName: Side Pose
       m_successEffectNames: 
+      m_failureEffectNames: 
     - m_nodeNumber: 8
-      m_time: 7.1106453
+      m_time: 42
       m_poseId: 0
       m_eventName: Decision
       m_successEffectNames: 
+      m_failureEffectNames: 
     - m_nodeNumber: 9
-      m_time: 13.214473
+      m_time: 45
       m_poseId: 0
       m_eventName: End
       m_successEffectNames: 
-  - b_m_enabled: 0
-    m_eventName: Special Node Branch
-    m_triggerNodeNumber: 12
-    m_eventType: 1
-    m_minimumBonusScore: 0
-    m_maximumBonusScore: 0
+      m_failureEffectNames: 
+  - b_m_enabled: 1
+    m_eventName: Audience Choice
+    m_triggerNodeNumber: 7
+    m_eventType: 0
+    m_minimumBonusScore: 100
+    m_maximumBonusScore: 1000
     m_eventNodesList:
-    - m_nodeNumber: 101
-      m_time: 42.733
+    - m_nodeNumber: 1
+      m_time: 63.977867
+      m_poseId: 3
+      m_eventName: Event Node
+      m_successEffectNames: 
+      m_failureEffectNames: 
+    - m_nodeNumber: 2
+      m_time: 64.97308
+      m_poseId: 4
+      m_eventName: Event Node
+      m_successEffectNames: 
+      m_failureEffectNames: 
+    - m_nodeNumber: 3
+      m_time: 66.03938
+      m_poseId: 5
+      m_eventName: Event Node
+      m_successEffectNames: 
+      m_failureEffectNames: 
+    - m_nodeNumber: 4
+      m_time: 68.0298
       m_poseId: 0
-      m_eventName: Special Pose A
+      m_eventName: Decision
       m_successEffectNames: 
-    - m_nodeNumber: 102
-      m_time: 44.233
-      m_poseId: 1
-      m_eventName: Special Pose B
-      m_successEffectNames: 
-    - m_nodeNumber: 103
-      m_time: 45.733
-      m_poseId: 2
-      m_eventName: Special Pose C
-      m_successEffectNames: 
-    - m_nodeNumber: 104
-      m_time: 47.233
+      m_failureEffectNames: 
+    - m_nodeNumber: 5
+      m_time: 70.304565
       m_poseId: 0
-      m_eventName: Special Finale
+      m_eventName: End
       m_successEffectNames: 
+      m_failureEffectNames: 
   m_conditionalEffectsList:
-  - m_eventName:
+  - m_eventName: 
     b_m_enabled: 0
     b_m_useTimelineTime: 0
     m_timelineTime: 0
-    m_conditionExpression:
+    m_conditionExpression: 
     b_m_triggerOnce: 0
     m_repeatIntervalSeconds: 0
     m_effectsList: []
+  m_musicBranchesList: []

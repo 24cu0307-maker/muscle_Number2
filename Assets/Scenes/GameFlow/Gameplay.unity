@@ -6183,6 +6183,7 @@ MonoBehaviour:
   m_cameraDirector: {fileID: 2075913570}
   m_effectDirector: {fileID: 0}
   m_cameraShakeTarget: {fileID: 2040577845}
+  m_venueVoltageSystem: {fileID: 0}
 --- !u!4 &130277794
 Transform:
   m_ObjectHideFlags: 0
@@ -6253,6 +6254,31 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.0165596
+        value: 0.0071411133
+        inSlope: 1.0083786
+        outSlope: 1.0083786
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.9917908
+        value: 0.99054337
+        inSlope: 1.0083786
+        outSlope: 1.0083786
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: SpotLight_01
     m_playDelaySeconds: 0
     m_particles: []
@@ -6271,6 +6297,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectBeam_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -6289,6 +6322,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectBeam_01
     m_playDelaySeconds: 0
     m_particles: []
@@ -6307,6 +6347,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectBeam_02
     m_playDelaySeconds: 0
     m_particles: []
@@ -6325,6 +6372,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0.55
     m_cameraShakeStrength: 0.02
     m_cameraShakeFrequency: 32
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectLight_KIMI_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -6343,6 +6397,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectLight_KIMI_01
     m_playDelaySeconds: 0
     m_particles: []
@@ -6361,6 +6422,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectLight_KIMI_02
     m_playDelaySeconds: 0
     m_particles: []
@@ -6379,6 +6447,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectLight_KIMI_03
     m_playDelaySeconds: 0
     m_particles: []
@@ -6397,6 +6472,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectLight_KIMI_04
     m_playDelaySeconds: 0
     m_particles: []
@@ -6415,6 +6497,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectSmoke_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -6433,6 +6522,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectBurst_00
     m_playDelaySeconds: 0
     m_particles: []
@@ -6451,6 +6547,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectBurst_01
     m_playDelaySeconds: 0
     m_particles: []
@@ -6469,6 +6572,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: EffectUI_Perfect
     m_playDelaySeconds: 1.5
     m_particles: []
@@ -6487,6 +6597,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: Strobe
     m_playDelaySeconds: 0
     m_particles: []
@@ -6505,6 +6622,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: CameraShake
     m_playDelaySeconds: 0
     m_particles: []
@@ -6523,6 +6647,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0.55
     m_cameraShakeStrength: 0.02
     m_cameraShakeFrequency: 32
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
 --- !u!114 &130277800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12284,7 +12415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -19043,6 +19174,8 @@ MonoBehaviour:
   b_m_playAfterOpeningCamera: 1
   m_openingCameraMaximumWaitSeconds: 3
   m_cameraDirector: {fileID: 2075913570}
+  m_conditionManager: {fileID: 0}
+  m_effectSystem: {fileID: 0}
 --- !u!4 &318798708
 Transform:
   m_ObjectHideFlags: 0
@@ -19250,7 +19383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -19266,7 +19399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -49874,7 +50007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -66307,7 +66440,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -89155,7 +89288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -89171,7 +89304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -90125,12 +90258,12 @@ MonoBehaviour:
   m_commentBubbleSize: {x: 420, y: 240}
   m_commentCanvasScale: 0.004
   m_positiveComments:
-  - いいぞ！
-  - そのポーズ好き！
-  - キレてる！
+  - "\u3044\u3044\u305E\uFF01"
+  - "\u305D\u306E\u30DD\u30FC\u30BA\u597D\u304D\uFF01"
+  - "\u30AD\u30EC\u3066\u308B\uFF01"
   m_disappointedComments:
-  - 惜しい！
-  - 次に期待！
+  - "\u60DC\u3057\u3044\uFF01"
+  - "\u6B21\u306B\u671F\u5F85\uFF01"
 --- !u!4 &1137925157
 Transform:
   m_ObjectHideFlags: 0
@@ -96925,7 +97058,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -114236,7 +114369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -114376,7 +114509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -114392,7 +114525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -116958,135 +117091,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1600847115
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1600847117}
-  - component: {fileID: 1600847116}
-  m_Layer: 0
-  m_Name: BGM
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!82 &1600847116
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600847115}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 36db662111e6bb3428bf12f35c77decf, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!4 &1600847117
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600847115}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.88038, y: 13.455, z: -6.72023}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1601998755
 GameObject:
   m_ObjectHideFlags: 0
@@ -128584,6 +128588,115 @@ PlayableDirector:
     value: {fileID: 1609309537}
   m_ExposedReferences:
     m_References: []
+--- !u!1001 &1685046728
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: 0.55607176
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: -0.013158679
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 3.1233652
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 3.3088381
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.69928306
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: 'm_BlendShapeWeights.Array.data[0]'
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_Name
+      value: macho_fbx
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
+      propertyPath: m_TagString
+      value: EditorOnly
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fa9478a72e8724942bf749b5c3c3aff9, type: 3}
 --- !u!1 &1691432315
 GameObject:
   m_ObjectHideFlags: 0
@@ -134084,7 +134197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -134100,7 +134213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -141372,7 +141485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -141388,7 +141501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -147707,7 +147820,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -147723,7 +147836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -160857,7 +160970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Intensity
@@ -166490,4 +166603,4 @@ SceneRoots:
   - {fileID: 1510914117}
   - {fileID: 253928186}
   - {fileID: 932883575}
-  - {fileID: 1600847117}
+  - {fileID: 1685046728}
