@@ -32536,6 +32536,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: Live_02_ColorWave
     m_playDelaySeconds: 0
     m_particles: []
@@ -32554,6 +32561,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: Live_03_LaserRush
     m_playDelaySeconds: 0
     m_particles: []
@@ -32572,6 +32586,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: Live_04_ParticleBurst
     m_playDelaySeconds: 0
     m_particles: []
@@ -32590,6 +32611,13 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   - m_effectName: Live_05_Finale
     m_playDelaySeconds: 0
     m_particles: []
@@ -32608,9 +32636,17 @@ MonoBehaviour:
     m_cameraShakeDurationSeconds: 0
     m_cameraShakeStrength: 0
     m_cameraShakeFrequency: 0
+    b_m_voltageConnect: 0
+    m_voltageMultiplierCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   m_cameraDirector: {fileID: 0}
   m_effectDirector: {fileID: 0}
   m_cameraShakeTarget: {fileID: 0}
+  m_venueVoltageSystem: {fileID: 0}
 --- !u!114 &8578914998147924594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32623,10 +32659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ae95cdb07c3244888a686034341dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LiveEffectQuickTester
-  m_previousEffectKey: 276
-  m_nextEffectKey: 275
-  m_playEffectKey: 32
-  m_stopEffectKey: 8
   m_effectSystem: {fileID: 0}
 --- !u!1 &8391950141034844351
 GameObject:
