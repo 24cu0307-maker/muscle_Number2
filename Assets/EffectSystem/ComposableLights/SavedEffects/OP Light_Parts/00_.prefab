@@ -48,11 +48,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80aa2fdc8e3b4784874dbdb95abcead2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeVisualEffect
-  m_color: {r: 0.9811321, g: 0.92448556, b: 0.745105, a: 1}
+  m_color: {r: 1, g: 0.97647065, b: 0.90196085, a: 1}
   m_intensity: 2.9
-  m_opacity: 0.187
+  m_opacity: 0.132
   m_length: 126.44
-  m_endRadius: 11
+  m_endRadius: 7.3
   m_segments: 32
 --- !u!33 &8685254753763720924
 MeshFilter:
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeMesh
   m_length: 126.44
-  m_endRadius: 11
+  m_endRadius: 7.3
   m_segments: 32
   b_m_capEnd: 0
 --- !u!114 &7867223139898081992
@@ -139,9 +139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e77497f61b4f4212a80277ac51dbef73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpotlightConeController
-  m_lightColor: {r: 0.9811321, g: 0.92448556, b: 0.745105, a: 1}
+  m_lightColor: {r: 1, g: 0.97647065, b: 0.90196085, a: 1}
   m_emissionIntensity: 2.9
-  m_opacity: 0.187
+  m_opacity: 0.132
   m_volumeFill: 0.35
   m_glowIntensity: 0.35
   m_glowSpread: 0.08

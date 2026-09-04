@@ -12,6 +12,22 @@ public class ArmController : MonoBehaviour
     //データを保存領域
     //[SerializeField] private PositionDataManager dataManager;
 
+    [Range(-360, 360)]
+    [SerializeField]
+    private int[] Correction1 = new int[3];
+
+    [Range(-360, 360)]
+    [SerializeField]
+    private int[] Correction2 = new int[3];
+
+    [Range(-360, 360)]
+    [SerializeField]
+    private int[] Correction3 = new int[3];
+
+    [Range(-360, 360)]
+    [SerializeField]
+    private int[] Correction4 = new int[3];
+
     //カメラ判定
     [SerializeField] public CameraRelativeMovement cameraJudge;
 
@@ -93,6 +109,31 @@ public class ArmController : MonoBehaviour
           
 
             //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(90, 90, 90)
+            playerArm.playerRightArm[0].rotation = Quaternion.LookRotation(_LeftShoulderRotationDirMirrored.normalized) * Quaternion.Euler(Correction1[0], Correction1[1], Correction1[2]);
+            playerArm.playerRightArm[1].rotation = Quaternion.LookRotation(_LeftElbowRotationDirMirrored.normalized) * Quaternion.Euler(Correction2[0], Correction2[1], Correction2[2]);
+            playerArm.playerLeftArm[0].rotation = Quaternion.LookRotation(_RightShoulderRotationDirMirrored.normalized) * Quaternion.Euler(Correction3[0], Correction3[1], Correction3[2]);
+            playerArm.playerLeftArm[1].rotation = Quaternion.LookRotation(_RightElbowRotationDirMirrored.normalized) * Quaternion.Euler(Correction4[0], Correction4[1], Correction4[2]);
+            //_playerBody[6].rotation = Quaternion.LookRotation(_NeckDirMirrored.normalized) * Quaternion.Euler(45, 0, 0);
+
+        }
+        else
+
+        {
+            //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(90, 90, 90)
+            playerArm.playerRightArm[0].rotation = Quaternion.LookRotation(_RightShoulderRotationDir.normalized) * Quaternion.Euler(Correction1[0], Correction1[1], Correction1[2]);
+            playerArm.playerRightArm[1].rotation = Quaternion.LookRotation(_RightElbowRotationDir.normalized) * Quaternion.Euler(Correction2[0], Correction2[1], Correction2[2]);
+            playerArm.playerLeftArm[0].rotation = Quaternion.LookRotation(_LeftShoulderRotationDir.normalized) * Quaternion.Euler(Correction3[0], Correction3[1], Correction3[2]);
+            playerArm.playerLeftArm[1].rotation = Quaternion.LookRotation(_LeftElbowRotationDir.normalized) * Quaternion.Euler(Correction4[0], Correction4[1], Correction4[2]);
+            //_playerBody[6].rotation = Quaternion.LookRotation(_NeckDir.normalized) * Quaternion.Euler(45, 0, 0);
+        }
+
+        /*
+        //カメラの向きに応じて方向を変更
+        if (!(cameraJudge.CameraDirection(_camera)))
+        {
+
+
+            //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(90, 90, 90)
             playerArm.playerRightArm[0].rotation = Quaternion.LookRotation(_LeftShoulderRotationDirMirrored.normalized) * Quaternion.Euler(90, 90, 90);
             playerArm.playerRightArm[1].rotation = Quaternion.LookRotation(_LeftElbowRotationDirMirrored.normalized) * Quaternion.Euler(90, 90, 90);
             playerArm.playerLeftArm[0].rotation = Quaternion.LookRotation(_RightShoulderRotationDirMirrored.normalized) * Quaternion.Euler(90, 90, 90);
@@ -110,7 +151,7 @@ public class ArmController : MonoBehaviour
             playerArm.playerLeftArm[1].rotation = Quaternion.LookRotation(_LeftElbowRotationDir.normalized) * Quaternion.Euler(90, 0, 0);
             //_playerBody[6].rotation = Quaternion.LookRotation(_NeckDir.normalized) * Quaternion.Euler(45, 0, 0);
         }
-
+        */
 
     }
 }

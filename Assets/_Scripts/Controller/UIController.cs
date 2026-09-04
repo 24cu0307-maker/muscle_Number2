@@ -80,7 +80,7 @@ public class UIController : MonoBehaviour
         playerCharacterSize = renderer.bounds.size;
         */
 
-        playerCharacter = GameObject.Find("Ch36");
+        playerCharacter = GameObject.Find("Macho_Base_CLEAN");
 
         Renderer renderer =
        playerCharacter.GetComponentInChildren<Renderer>();

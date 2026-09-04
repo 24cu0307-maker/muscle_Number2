@@ -88,7 +88,7 @@ public class BodyController : MonoBehaviour
 
 
 
-
+        /*
         Quaternion[] corrections =
 {
     Quaternion.Euler(70, 0, 0),
@@ -112,12 +112,12 @@ public class BodyController : MonoBehaviour
 
             playerBody.playerSpline[i].rotation = targetRotation;
         }
-        
+        */
 
       
 
 
-        /*
+        
         //各ボーンにベクトル方向を与える　※基本補正値Quaternion.Euler(70, 0, 0)
         playerBody.playerSpline[0].rotation = Quaternion.LookRotation(_BodyDirMirrored[0]) * Quaternion.Euler(70, 0, 0);
         playerBody.playerSpline[1].rotation = Quaternion.LookRotation(_BodyDirMirrored[1]) * Quaternion.Euler(70, 0, 0);
@@ -126,7 +126,7 @@ public class BodyController : MonoBehaviour
 
         playerBody.playerSpline[1].rotation = Quaternion.LookRotation(_BodyDirMirrored[4]) * Quaternion.Euler(0, 90, 0);
         playerBody.playerSpline[2].rotation = Quaternion.LookRotation(_BodyDirMirrored[4]) * Quaternion.Euler(0, 90, 0);
-        */
+        
 
         /*
         //カメラの向きに応じて方向を変更
