@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e97d8ea9e9541d0911da3f87b93f29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdditionalSpotLightEffect
-  m_color: {r: 1, g: 1, b: 1, a: 1}
-  m_intensity: 4405.5
-  m_range: 92.07
-  m_spotAngle: 8
-  m_innerAngleRatio: 1
+  m_color: {r: 0.9686275, g: 0.8117648, b: 0.43921572, a: 1}
+  m_intensity: 100000
+  m_range: 94.04
+  m_spotAngle: 18
+  m_innerAngleRatio: 0.5
   b_m_useShadows: 1
-  m_shadowStrength: 1
+  m_shadowStrength: 0.5
 --- !u!108 &7605741564864696428
 Light:
   m_ObjectHideFlags: 0
@@ -63,17 +63,17 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 4405.5
-  m_Range: 92.07
-  m_SpotAngle: 8
-  m_InnerSpotAngle: 8
+  m_Color: {r: 0.9686275, g: 0.8117648, b: 0.43921572, a: 1}
+  m_Intensity: 100000
+  m_Range: 94.04
+  m_SpotAngle: 18
+  m_InnerSpotAngle: 9
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.5
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
