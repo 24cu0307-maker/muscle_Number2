@@ -66,6 +66,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         new Vector2(1.0f, 2.5f); //ReactionŠÔŠu
     [SerializeField] private bool b_m_enableCameraCulling = true; //‰æ–ÊŠO‚ÌŠÏ‹q‚ð–³Œø‰»
     [SerializeField] private Camera m_targetCamera; //‰ÂŽ‹”ÍˆÍ‚ðŽg—p‚·‚éCamera
+    private DroneViewingSystem m_droneViewingSystem; //DroneŽ‹“_‚ÌŠÏ‹q•\Ž¦”»’è
     [SerializeField] private float m_cullingInterval = 0.15f; //‰ÂŽ‹”»’èŠÔŠu
     [SerializeField] private float m_cullingMargin = 0.5f; //‰æ–Ê’[”»’è‚Ì—]”’
     [Header("Voltage Reactions")]
@@ -1082,10 +1083,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         if (!b_m_enableCameraCulling)return;
         if (Time.unscaledTime < m_nextCullingTime)return;
 
-        if (m_targetCamera == null)
-        {
-            m_targetCamera = Camera.main;
-        }
+        m_targetCamera = AudienceOutputCameraResolver.GetCurrent(m_targetCamera);
 
         if (m_targetCamera == null)return;
 
@@ -1119,6 +1117,16 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
                 GeometryUtility.TestPlanesAABB(
                     frustumPlanes,
                     worldBounds); //Camera“à”»’è
+            if (!b_isVisible)
+            {
+                if (m_droneViewingSystem == null)
+                {
+                    m_droneViewingSystem =
+                        FindFirstObjectByType<DroneViewingSystem>();
+                }
+                b_isVisible = m_droneViewingSystem != null
+                    && m_droneViewingSystem.IsVisibleFromDroneCamera(worldBounds);
+            }
             if (audience.gameObject.activeSelf != b_isVisible)
             {
                 audience.gameObject.SetActive(b_isVisible);

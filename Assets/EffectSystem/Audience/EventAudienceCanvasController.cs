@@ -9,7 +9,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,12 +43,17 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     }; //画像未設定時の色
     [SerializeField] private Vector3 m_worldHeadOffset = new Vector3(0.0f, 2.3f, 0.0f); //頭上位置補正
     [SerializeField] private Vector2 m_nodeSize = new Vector2(650.0f, 650.0f); //Node基本寸法
+    [SerializeField] private Vector2 m_poseFrameOffset; //Pose枠の位置補正
+    [SerializeField] private float m_poseFrameRotationDegrees; //Pose枠の画面内角度
+    [SerializeField, Min(0.01f)] private float m_poseFrameScale = 1.0f; //Pose枠の追加倍率
     [Header("Speech Bubble")]
     [SerializeField] private Sprite m_speechBubbleSprite; //Pose画像の背面に表示する吹き出し
     [SerializeField] private Vector2 m_speechBubbleSize =
         new Vector2(820.0f, 760.0f); //吹き出し寸法
     [SerializeField] private Vector2 m_speechBubbleOffset =
         new Vector2(0.0f, 20.0f); //Pose画像からの表示位置補正
+    [SerializeField] private float m_speechBubbleRotationDegrees; //吹き出しの画面内角度
+    [SerializeField, Min(0.01f)] private float m_speechBubbleScale = 1.0f; //吹き出し追加倍率
     [SerializeField] private Color m_speechBubbleColor = Color.white; //吹き出し色
     [SerializeField] private bool b_m_showPercentage; //Node内に好み割合を表示するか
     [SerializeField] private Color m_nodeOutlineColor =
@@ -112,6 +116,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        RefreshEventCamera();
         if (m_eventCamera == null || m_canvas == null)return;
 
         for (int i = 0; i < m_displayedNodesList.Count; ++i)
@@ -315,6 +320,11 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         bubbleRect.SetParent(_parent, false);
         bubbleRect.sizeDelta = m_speechBubbleSize;
         bubbleRect.anchoredPosition = m_speechBubbleOffset;
+        bubbleRect.localRotation = Quaternion.Euler(
+            0.0f,
+            0.0f,
+            m_speechBubbleRotationDegrees);
+        bubbleRect.localScale = Vector3.one * Mathf.Max(0.01f, m_speechBubbleScale);
 
         Image bubbleImage = bubbleObject.GetComponent<Image>();
         bubbleImage.sprite = m_speechBubbleSprite;
@@ -357,12 +367,18 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         nodeRect.sizeDelta = new Vector2(
             Mathf.Max(EMinimumNodePixelSize, m_nodeSize.x),
             Mathf.Max(EMinimumNodePixelSize, m_nodeSize.y));
-        nodeRect.anchoredPosition = Vector2.zero;
+        nodeRect.anchoredPosition = m_poseFrameOffset;
+        nodeRect.localRotation = Quaternion.Euler(
+            0.0f,
+            0.0f,
+            m_poseFrameRotationDegrees);
         float scale = Mathf.Lerp(
             EMinimumNodeScale,
             EMaximumNodeScale,
             _preference); //好みに応じた倍率
-        nodeRect.localScale = Vector3.one * scale;
+        nodeRect.localScale = Vector3.one
+            * scale
+            * Mathf.Max(0.01f, m_poseFrameScale);
 
         Image image = nodeObject.GetComponent<Image>(); //Node画像
         image.sprite = m_nodeSprites != null
@@ -614,16 +630,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
             m_canvas = GetComponent<Canvas>();
         }
 
-        CinemachineBrain brain =
-            FindFirstObjectByType<CinemachineBrain>(); //実際に描画するBrain
-        if (brain != null && brain.GetComponent<Camera>() != null)
-        {
-            m_eventCamera = brain.GetComponent<Camera>();
-        }
-        else if (m_eventCamera == null)
-        {
-            m_eventCamera = Camera.main;
-        }
+        RefreshEventCamera();
 
         if (m_audienceSpawner == null)
         {
@@ -633,6 +640,22 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         if (m_preferenceSystem == null)
         {
             m_preferenceSystem = FindFirstObjectByType<AudiencePreferenceSystem>();
+        }
+    }
+
+    /// <summary>
+    /// Camera切り替え後もGame画面へ出力中のCameraを使用します。
+    /// </summary>
+    private void RefreshEventCamera()
+    {
+        Camera outputCamera =
+            AudienceOutputCameraResolver.GetCurrent(m_eventCamera);
+        if (outputCamera == null || outputCamera == m_eventCamera)return;
+
+        m_eventCamera = outputCamera;
+        if (m_canvas != null)
+        {
+            m_canvas.worldCamera = m_eventCamera;
         }
     }
 }

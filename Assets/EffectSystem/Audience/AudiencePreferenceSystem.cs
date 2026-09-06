@@ -39,17 +39,25 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
     [Header("Audience Reaction Comments")]
     [SerializeField] private bool b_m_showReactionComments = true;
     [SerializeField, Range(0.0f, 1.0f)] private float m_commentDisplayChance = 0.2f;
-    [SerializeField, Min(0.1f)] private float m_commentDurationSeconds = 1.5f;
+    [Tooltip("コメント再生終了後、次回再生を許可するまでの秒数Min/Maxです。")]
+    [SerializeField] private Vector2 m_commentIntervalSecondsRange =
+        new Vector2(2.0f, 5.0f);
+    [Tooltip("一つのコメントを表示する秒数Min/Maxです。")]
+    [SerializeField] private Vector2 m_commentDurationSecondsRange =
+        new Vector2(1.2f, 2.2f);
     [SerializeField] private Sprite m_commentBubbleSprite;
-    [SerializeField] private Vector3 m_commentWorldOffset = new Vector3(0.0f, 2.6f, 0.0f);
-    [SerializeField] private Vector2 m_commentBubbleSize = new Vector2(420.0f, 240.0f);
-    [SerializeField, Min(0.0001f)] private float m_commentCanvasScale = 0.004f;
+    [Tooltip("観客個体ではなく、画面Canvas上で歓声を表示する複数の場所です。")]
+    [SerializeField] private AudienceReactionCommentBubble[] m_commentDisplays;
+    [SerializeField, Min(1)] private int m_minimumCommentWindows = 1;
+    [SerializeField, Min(1)] private int m_maximumCommentWindows = 2;
+    [Tooltip("高評価時にランダム選択されるコメント文の候補です。")]
     [SerializeField] private string[] m_positiveComments =
     {
         "いいぞ！",
         "そのポーズ好き！",
         "キレてる！"
     };
+    [Tooltip("低評価時にランダム選択されるコメント文の候補です。")]
     [SerializeField] private string[] m_disappointedComments =
     {
         "惜しい！",
@@ -61,6 +69,7 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
     private bool b_m_initialized; //好み作成済みか
     private bool b_m_evaluated; //評価済みか
     private Coroutine m_initializeCoroutine;
+    private float m_nextCommentTime; //次のコメント表示を許可する時刻
 
     /// <summary>
     /// Canvas表示用に指定観客の三種類の好みを返します。
@@ -207,23 +216,107 @@ public sealed class AudiencePreferenceSystem : MonoBehaviour
             _reaction = GetPreferredReaction(preferredIndex);
         }
 
-        if (!b_m_showReactionComments || Random.value > m_commentDisplayChance)return;
-        string comment = GetRandomComment(positiveReaction);
-        if (string.IsNullOrWhiteSpace(comment))return;
+        if (!b_m_showReactionComments
+            || Time.unscaledTime < m_nextCommentTime
+            || Random.value > m_commentDisplayChance)return;
 
-        AudienceReactionCommentBubble bubble =
-            _audience.GetComponent<AudienceReactionCommentBubble>();
-        if (bubble == null)
+        if (ShowRandomCanvasComments(
+            positiveReaction,
+            out float longestDurationSeconds))
         {
-            bubble = _audience.gameObject.AddComponent<AudienceReactionCommentBubble>();
+            m_nextCommentTime = Time.unscaledTime
+                + longestDurationSeconds
+                + GetRandomRangeValue(m_commentIntervalSecondsRange, 0.0f);
         }
-        bubble.Show(
-            comment,
-            m_commentBubbleSprite,
-            m_commentWorldOffset,
-            m_commentBubbleSize,
-            m_commentCanvasScale,
-            m_commentDurationSeconds);
+    }
+
+    /// <summary>登録窓から毎回ランダムに一部を選び、候補文も個別に抽選します。</summary>
+    private bool ShowRandomCanvasComments(
+        bool _positive,
+        out float _longestdurationseconds)
+    {
+        _longestdurationseconds = 0.0f;
+        if (m_commentDisplays == null || m_commentDisplays.Length == 0)return false;
+
+        List<int> availableIndexes = new List<int>(); //未表示窓を優先する候補
+        for (int i = 0; i < m_commentDisplays.Length; ++i)
+        {
+            AudienceReactionCommentBubble display = m_commentDisplays[i];
+            if (display != null && !display.IsVisible)availableIndexes.Add(i);
+        }
+
+        if (availableIndexes.Count == 0)
+        {
+            for (int i = 0; i < m_commentDisplays.Length; ++i)
+            {
+                if (m_commentDisplays[i] != null)availableIndexes.Add(i);
+            }
+        }
+        if (availableIndexes.Count == 0)return false;
+
+        for (int i = availableIndexes.Count - 1; i > 0; --i)
+        {
+            int swapIndex = Random.Range(0, i + 1);
+            (availableIndexes[i], availableIndexes[swapIndex]) =
+                (availableIndexes[swapIndex], availableIndexes[i]);
+        }
+
+        int minimumCount = Mathf.Clamp(
+            m_minimumCommentWindows,
+            1,
+            availableIndexes.Count);
+        int maximumCount = Mathf.Clamp(
+            m_maximumCommentWindows,
+            minimumCount,
+            availableIndexes.Count);
+        int displayCount = Random.Range(minimumCount, maximumCount + 1);
+        bool b_displayed = false;
+        for (int i = 0; i < displayCount; ++i)
+        {
+            string comment = GetRandomComment(_positive);
+            if (string.IsNullOrWhiteSpace(comment))continue;
+            float durationSeconds = GetRandomRangeValue(
+                m_commentDurationSecondsRange,
+                0.1f);
+            m_commentDisplays[availableIndexes[i]].Show(
+                comment,
+                m_commentBubbleSprite,
+                durationSeconds);
+            _longestdurationseconds = Mathf.Max(
+                _longestdurationseconds,
+                durationSeconds);
+            b_displayed = true;
+        }
+        return b_displayed;
+    }
+
+    [ContextMenu("Test Positive Canvas Comment")]
+    private void TestPositiveCanvasComment()
+    {
+        if (!Application.isPlaying)return;
+        ShowRandomCanvasComments(true, out _);
+    }
+
+    [ContextMenu("Test Disappointed Canvas Comment")]
+    private void TestDisappointedCanvasComment()
+    {
+        if (!Application.isPlaying)return;
+        ShowRandomCanvasComments(false, out _);
+    }
+
+    public void PreviewRandomComments(bool _positive)
+    {
+        if (Application.isPlaying)ShowRandomCanvasComments(_positive, out _);
+    }
+
+    /// <summary>順序が逆でも安全にMin/Maxを並べ、範囲内の値を返します。</summary>
+    private static float GetRandomRangeValue(
+        Vector2 _range,
+        float _minimumvalue)
+    {
+        float minimum = Mathf.Max(_minimumvalue, Mathf.Min(_range.x, _range.y));
+        float maximum = Mathf.Max(minimum, Mathf.Max(_range.x, _range.y));
+        return Random.Range(minimum, maximum);
     }
 
     private static int GetPreferredIndex(Vector3 _preferences)

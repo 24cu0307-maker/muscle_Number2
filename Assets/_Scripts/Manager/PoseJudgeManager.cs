@@ -2,6 +2,7 @@ using GameFlowTemplate;
 using System;
 using UnityEngine;
 
+/// <summary>Pose判定とゲーム状態遷移を管理し、演出出力は専用Componentへ委譲します。</summary>
 public class PoseJudgeManager : MonoBehaviour
 {
 
@@ -27,7 +28,19 @@ public class PoseJudgeManager : MonoBehaviour
     [Header("gameManager")]
     [SerializeField] private GameManager m_gameManager;
 
+    [Header("一致率による3段階判定")]
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float m_perfectMatchRate = 0.95f;
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float m_greatMatchRate = 0.75f;
+
+    [Header("判定演出出力")]
+    [SerializeField] private PoseJudgementFeedbackPlayer m_feedbackPlayer;
+
     public Action<InGameState> setState; //判定結果に応じた次のInGame状態を管理側へ通知するCallback
+
+    public EPoseMatchGrade LastGrade { get; private set; } = EPoseMatchGrade.Miss;
+    public float LastMatchRate { get; private set; }
 
 
     private void Awake()
@@ -85,46 +98,56 @@ public class PoseJudgeManager : MonoBehaviour
     {
         if (EffectDebugKeySettings.ForceAllSuccess)
         {
-            m_uiController.UIJudgeEnd_normal(_pose);
-            m_uiController.UIForcedQuit(_pose);
-            setState?.Invoke(InGameState.Success);
+            CompleteJudge(_pose, EPoseMatchGrade.Perfect, 1.0f);
             return;
         }
 
-        //通常成功時
-        if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Normal(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
+        bool b_poseMatched = m_poseJudgeController.GetisPose(_pose.PoseID);
+        bool b_inJudgeWindow = m_poseJudgeController.PoseJudge_Normal(
+            m_uiController.GetCurrentApproachingFrame(_pose),
+            m_uiController.GetCurrentWatingFrame(_pose));
+        if (b_poseMatched && b_inJudgeWindow)
+        {
+            float matchRate = m_scoreController.GetMatchRate();
+            CompleteJudge(_pose, GetGrade(matchRate), matchRate);
+            return;
+        }
+
+        if (m_poseJudgeController.PoseJudge_Failure(
+            m_uiController.GetCurrentApproachingFrame(_pose),
+            m_uiController.GetCurrentWatingFrame(_pose)))
+        {
+            CompleteJudge(_pose, EPoseMatchGrade.Miss, 0.0f);
+        }
+    }
+
+    /// <summary>一致率をInspectorで設定した閾値から3段階へ分類します。</summary>
+    private EPoseMatchGrade GetGrade(float _matchrate)
+    {
+        float perfectRate = Mathf.Max(m_perfectMatchRate, m_greatMatchRate);
+        float greatRate = Mathf.Min(m_perfectMatchRate, m_greatMatchRate);
+        if (_matchrate >= perfectRate)return EPoseMatchGrade.Perfect;
+        if (_matchrate >= greatRate)return EPoseMatchGrade.Great;
+        return EPoseMatchGrade.Miss;
+    }
+
+    /// <summary>UIを閉じ、段階に対応するSuccessまたはFailure状態へ一度だけ進めます。</summary>
+    private void CompleteJudge(
+        CSVDataPoseFlow _pose,
+        EPoseMatchGrade _grade,
+        float _matchrate)
+    {
+        LastGrade = _grade;
+        LastMatchRate = Mathf.Clamp01(_matchrate);
+        if (_grade != EPoseMatchGrade.Miss)
         {
             m_uiController.UIJudgeEnd_normal(_pose);
-            m_uiController.UIForcedQuit(_pose);
-            //m_state = InGameState.Success;
-            setState?.Invoke(InGameState.Success);
-
-
         }
-
-        //完璧成功時
-        if (m_poseJudgeController.GetisPose(_pose.PoseID) &&
-            m_poseJudgeController.PoseJudge_Perfect(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
-        {
-            m_uiController.UIJudgeEnd_normal(_pose);
-            m_uiController.UIForcedQuit(_pose);
-            //m_state = InGameState.Success;
-            setState?.Invoke(InGameState.Success);
-
-        }
-
-        //失敗
-        if (m_poseJudgeController.PoseJudge_Failure(m_uiController.GetCurrentApproachingFrame(_pose), m_uiController.GetCurrentWatingFrame(_pose)))
-        {
-            m_uiController.UIForcedQuit(_pose);
-            //m_state = InGameState.Failure;
-            setState?.Invoke(InGameState.Failure);
-
-        }
-
-
-
+        m_uiController.UIForcedQuit(_pose);
+        setState?.Invoke(
+            _grade == EPoseMatchGrade.Miss
+                ? InGameState.Failure
+                : InGameState.Success);
     }
 
     /// <summary>
@@ -133,6 +156,7 @@ public class PoseJudgeManager : MonoBehaviour
     private void Success(CSVDataPoseFlow _pose)
     {
         m_gameManager.AddScore((int)m_scoreController.GetScore());
+        m_feedbackPlayer?.Play(LastGrade);
         string fixedEffectNames = _pose.SuccessEffectNames?.Trim();
         if (!string.IsNullOrEmpty(fixedEffectNames))
         {
@@ -151,6 +175,7 @@ public class PoseJudgeManager : MonoBehaviour
     /// <summary>失敗をボルテージへ通知し、現在Nodeの処理を終了状態へ進めます。</summary>
     private void Failure(CSVDataPoseFlow _pose)
     {
+        m_feedbackPlayer?.Play(EPoseMatchGrade.Miss);
         string fixedEffectNames = _pose.FailureEffectNames?.Trim();
         if (!string.IsNullOrEmpty(fixedEffectNames))
         {

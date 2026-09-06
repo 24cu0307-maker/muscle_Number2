@@ -16,6 +16,7 @@ using GameFlowTemplate;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public sealed class InGameManager : MonoBehaviour
@@ -43,6 +44,11 @@ public sealed class InGameManager : MonoBehaviour
     [SerializeField, Min(0.0f)] private float m_loadingScreenFadeSeconds = 0.25f;
     [Tooltip("ロード中にTimeline、Particle、Animator、通常のUpdateを停止します。")]
     [SerializeField] private bool b_m_pauseSceneDuringStartup = true;
+
+    [Header("Startup Timeline")]
+    [Tooltip("ロード完了後、ゲーム開始前にTimelineを再生します。")]
+    [SerializeField] private bool b_m_playStartupTimeline;
+    [SerializeField] private PlayableDirector m_startupTimelineDirector;
 
 
     private InGameState m_inGameState = InGameState.Start;
@@ -183,9 +189,29 @@ public sealed class InGameManager : MonoBehaviour
         // Timeline、Particle、Animatorの最初のフレームは、この次の描画から始まります。
         ReleaseStartupPause();
 
-        // すべての準備が揃い、ロード画面が消えた時点で時計を0秒から開始します。
+        // ゲーム時間を開始する前に、専用Timelineの終了を待ちます。
+        yield return PlayStartupTimeline();
+
+        // すべての準備と開始演出が完了してから時計を0秒で開始します。
         m_gameManager?.StartGame();
         b_m_gameStarted = true;
+    }
+
+    /// <summary>ロード完了後の開始Timelineを終了まで再生します。</summary>
+    private IEnumerator PlayStartupTimeline()
+    {
+        if (!b_m_playStartupTimeline || m_startupTimelineDirector == null
+            || m_startupTimelineDirector.playableAsset == null)yield break;
+
+        m_startupTimelineDirector.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
+        m_startupTimelineDirector.extrapolationMode = DirectorWrapMode.Hold;
+        m_startupTimelineDirector.time = 0.0d;
+        m_startupTimelineDirector.Evaluate();
+        m_startupTimelineDirector.Play();
+        while (m_startupTimelineDirector.state == PlayState.Playing)
+        {
+            yield return null;
+        }
     }
 
     /// <summary>

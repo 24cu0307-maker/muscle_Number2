@@ -1,0 +1,141 @@
+ポーズ判定演出・観客コメント 簡易説明
+
+対象シーン
+GameplayEffect_kuba
+
+
+【Perfect / Great / Missの基準】
+
+選択場所
+Hierarchy > PoseJudgeManager
+
+設定項目
+- Perfect Match Rate：Perfectになる最低一致率
+- Great Match Rate：Greatになる最低一致率
+- Great未満、または時間切れ：Miss
+
+現在値
+- Perfect：95%以上
+- Great：75%以上
+- Miss：75%未満
+
+
+【判定時の音・Particle】
+
+選択場所
+Hierarchy > PoseJudgeManager
+> Pose Judgement Feedback Player
+
+Perfect / Great / Missごとに設定する。
+
+- Sound：効果音
+- Volume：音量（0～1）
+- Particles：再生するParticleSystem一覧
+- Particle Prefab：ParticleSystemプレハブ
+- Local Position：プレイヤー基準の位置
+- Local Euler Angles：プレイヤー基準の角度
+- Local Scale：大きさ
+- Follow Player：再生中もプレイヤーへ追従
+- Destroy After Seconds：自動削除までの時間
+
+確認方法
+Play Mode中にInspector下部のボタンを押す。
+- Test Perfect
+- Test Great
+- Test Miss
+
+Sceneビューの生成位置Gizmo
+- 黄色：Perfect
+- 水色：Great
+- 赤色：Miss
+
+
+【三人称イベントのポーズ枠】
+
+選択場所
+Hierarchy > EventAudienceCanvas
+
+- Node Size：基本サイズ
+- Pose Frame Offset：位置
+- Pose Frame Rotation Degrees：角度
+- Pose Frame Scale：大きさ
+- Node Anchors：三つの候補を置くWorld位置
+
+
+【三人称イベントの吹き出し】
+
+選択場所
+Hierarchy > EventAudienceCanvas
+> Speech Bubble
+
+- Speech Bubble Sprite：吹き出し画像
+- Speech Bubble Size：縦横サイズ
+- Speech Bubble Offset：位置
+- Speech Bubble Rotation Degrees：角度
+- Speech Bubble Scale：大きさ
+- Speech Bubble Color：色
+
+
+【観客コメントの設定】
+
+選択場所
+Hierarchy > AudiencePreferenceSystem
+
+- Show Reaction Comments：表示のオン・オフ
+- Comment Display Chance：コメントを出す確率（0～1）
+- Comment Interval Seconds Range：表示終了後の休止時間
+  X = Min / Y = Max
+- Comment Duration Seconds Range：表示時間
+  X = Min / Y = Max
+- Comment Bubble Sprite：吹き出し画像
+- Minimum Comment Windows：同時表示する最小窓数
+- Maximum Comment Windows：同時表示する最大窓数
+- Positive Comments：高評価コメント候補
+- Disappointed Comments：低評価コメント候補
+
+コメント候補は配列のSizeを増やして追加する。
+表示窓とコメント文は毎回ランダムに選ばれる。
+
+確認方法
+Play Mode中にInspector下部のボタンを押す。
+- Test Positive Comments
+- Test Disappointed Comments
+
+
+【コメント窓の位置・見た目】
+
+選択場所
+Hierarchy > AudienceCommentCanvas
+
+現在の表示窓
+- AudienceCommentDisplay_Left
+- AudienceCommentDisplay_Center
+- AudienceCommentDisplay
+
+RectTransform
+- Position：画面上の位置
+- Rotation：窓全体の角度
+- Width / Height：窓のサイズ
+
+Audience Reaction Comment Bubble
+- Font Size：文字サイズ
+- Text Rotation Degrees：文字の角度
+- Text Color：文字色
+- Text Anchor Min / Max：文字の表示範囲・余白
+
+
+【現在の確認用設定】
+
+- Perfect：紙吹雪＋火花＋拍手
+- Great：小さな火花＋小音量の拍手
+- Miss：煙＋短い効果音
+- コメント窓：左・中央・右の3か所
+- 同時表示：1～2か所
+- 表示時間：1.2～2.2秒
+- 表示終了後の休止：2.5～5秒
+
+
+注意
+- 判定演出はAudioClipとParticleSystemを直接設定する。
+- Node EditorのSuccess / Failure EffectはNode固有演出用の別機能。
+- テストボタンはPlay Mode中のみ使用できる。

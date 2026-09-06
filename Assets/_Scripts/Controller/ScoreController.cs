@@ -6,6 +6,7 @@ using UnityEngine.SocialPlatforms.Impl;
 [DefaultExecutionOrder(-0)]
 public class ScoreController : MonoBehaviour
 {
+    private const float EMaximumPoseScore = 10000.0f;
 
     [Header("gameManager")]
     [SerializeField] private GameManager m_gameManager;
@@ -26,6 +27,12 @@ public class ScoreController : MonoBehaviour
     [SerializeField] private PoseJudgeController m_poseJudgeController;
 
     public float GetScore() { return m_score; }
+
+    /// <summary>現在Poseの角度差Scoreを0～1の一致率として返します。</summary>
+    public float GetMatchRate()
+    {
+        return Mathf.Clamp01(m_score / EMaximumPoseScore);
+    }
 
     private void Start()
     {
