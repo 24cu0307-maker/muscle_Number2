@@ -1085,7 +1085,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &140991102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4848,7 +4848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919993686534638677, guid: fde56bac33262da41b70fd90611bff28, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3311309557722280864, guid: fde56bac33262da41b70fd90611bff28, type: 3}
       propertyPath: m_Name
@@ -6454,7 +6454,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1075100301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6498,6 +6498,7 @@ MonoBehaviour:
   b_m_enableCameraCulling: 1
   m_targetCamera: {fileID: 140991104}
   m_cullingInterval: 0.15
+  m_cullingBatchSize: 64
   m_cullingMargin: 0.5
   m_voltageSystem: {fileID: 0}
   b_m_useVoltageReactions: 1
@@ -6510,6 +6511,8 @@ MonoBehaviour:
   b_m_enablePenlights: 1
   m_minimumPenlightIntensity: 1.5
   m_maximumPenlightIntensity: 8
+  b_m_enablePenlightDistanceLod: 1
+  m_penlightDetailDistance: 35
   m_cheerVoiceClips: []
   m_disappointedVoiceClips: []
   m_minimumVoiceVolume: 0.2
@@ -7575,7 +7578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1407550801
 Transform:
   m_ObjectHideFlags: 0
@@ -9893,7 +9896,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1562268574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10409,7 +10412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919993686534638677, guid: fde56bac33262da41b70fd90611bff28, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3311309557722280864, guid: fde56bac33262da41b70fd90611bff28, type: 3}
       propertyPath: m_Name
