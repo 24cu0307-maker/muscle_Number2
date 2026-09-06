@@ -19,62 +19,62 @@ MonoBehaviour:
     m_time: 5.9001813
     m_poseId: 0
     m_eventName: Event
-    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_03|EffectLight_KIMI_02|EffectBeam_02|EffectBeam_01
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_03|EffectLight_KIMI_02|EffectBeam_02|EffectBeam_01|EffectUI_Perfect
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 3
     m_time: 12.084708
     m_poseId: 1
     m_eventName: Event
-    m_successEffectNames: EffectBeam_00|EffectLight_KIMI_00|CameraShake|Strobe
-    m_failureEffectNames: 
+    m_successEffectNames: EffectBeam_00|EffectLight_KIMI_00|CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 4
     m_time: 18.695755
     m_poseId: 2
     m_eventName: Event
-    m_successEffectNames: CameraShake|Strobe|EffectBurst_00|EffectBurst_01|EffectBeam_01
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|Strobe|EffectBurst_00|EffectBurst_01|EffectBeam_01|EffectUI_Perfect
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 5
-    m_time: 25.662233
+    m_time: 27.137463
     m_poseId: 0
     m_eventName: Event
-    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_01|EffectBeam_00
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_01|EffectBeam_00|EffectUI_Perfect
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 1
     m_time: 34.903484
     m_poseId: 0
     m_eventName: Event
     m_successEffectNames: EffectBurst_01|CameraShake|Strobe|EffectBeam_01
-    m_failureEffectNames: 
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 10
     m_time: 39.10601
-    m_poseId: 0
+    m_poseId: 1
     m_eventName: Event
-    m_successEffectNames: CameraShake
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|EffectBeam_01|EffectLight_KIMI_03
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 6
     m_time: 46.615498
     m_poseId: 3
     m_eventName: Event
-    m_successEffectNames: 
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|EffectBeam_01|EffectBurst_00
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 8
     m_time: 52.106422
     m_poseId: 4
     m_eventName: Event
-    m_successEffectNames: 
-    m_failureEffectNames: 
+    m_successEffectNames: EffectBurst_01|CameraShake|Strobe|EffectLight_KIMI_03|EffectLight_KIMI_04
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 9
     m_time: 57.36682
     m_poseId: 5
     m_eventName: Event
-    m_successEffectNames: 
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|Strobe|EffectBeam_00|EffectBurst_00
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 7
     m_time: 61.63201
     m_poseId: 5
     m_eventName: Event
-    m_successEffectNames: 
-    m_failureEffectNames: 
+    m_successEffectNames: EffectLight_KIMI_00|Strobe|CameraShake|EffectLight_KIMI_03
+    m_failureEffectNames: EffectUI_Miss
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
