@@ -182,6 +182,7 @@ public sealed class AudiencePenlight : MonoBehaviour
         Color penlightColor =
             EPenlightColors[Random.Range(0, EPenlightColors.Length)];
         controller.LaserColor = penlightColor;
+        controller.SetContinuousUpdate(false);
         m_beamControllers.Add(controller);
 
         if (b_m_enableTipGlow)
@@ -308,7 +309,22 @@ public sealed class AudiencePenlight : MonoBehaviour
             name = "Audience Penlight Shared Material",
             hideFlags = HideFlags.HideAndDontSave
         };
+        s_sharedBeamMaterial.enableInstancing = true;
         return s_sharedBeamMaterial;
+    }
+
+    /// <summary>
+    /// 遠距離では外側GlowとPoint Lightだけを停止し、ペンライト本体は維持します。
+    /// </summary>
+    public void SetDetailVisible(bool _bvisible)
+    {
+        for (int i = 0; i < m_tipGlows.Count; ++i)
+        {
+            PenlightGlow glow = m_tipGlows[i];
+            if (glow == null || glow.gameObject.activeSelf == _bvisible)continue;
+
+            glow.gameObject.SetActive(_bvisible);
+        }
     }
 
     private void SubscribeVoltageEvents()

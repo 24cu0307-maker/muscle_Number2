@@ -103985,7 +103985,8 @@ MonoBehaviour:
   m_reactionIntervalRange: {x: 1, y: 2.5}
   b_m_enableCameraCulling: 1
   m_targetCamera: {fileID: 2040577845}
-  m_cullingInterval: 0.0001
+  m_cullingInterval: 0.1
+  m_cullingBatchSize: 64
   m_cullingMargin: 0.01
   m_voltageSystem: {fileID: 1704557581}
   b_m_useVoltageReactions: 1
@@ -103998,6 +103999,8 @@ MonoBehaviour:
   b_m_enablePenlights: 1
   m_minimumPenlightIntensity: 1.5
   m_maximumPenlightIntensity: 8
+  b_m_enablePenlightDistanceLod: 1
+  m_penlightDetailDistance: 35
   m_cheerVoiceClips:
   - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}
   - {fileID: 8300000, guid: 9d49d3f04999e904bac9c7c877a94209, type: 3}

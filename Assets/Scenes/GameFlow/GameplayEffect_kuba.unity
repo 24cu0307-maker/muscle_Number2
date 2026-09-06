@@ -102961,9 +102961,18 @@ MonoBehaviour:
   m_cameraCullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_excludedCameraLayers:
+    serializedVersion: 2
+    m_Bits: 32
+  b_m_disablePostProcessing: 1
+  b_m_disableShadows: 1
+  b_m_allowHdr: 0
+  b_m_allowMsaa: 0
   m_monitorMaterialKeyword: moniter
-  m_textureWidth: 1280
-  m_textureHeight: 720
+  m_textureWidth: 640
+  m_textureHeight: 360
+  b_m_renderOneCameraPerFrame: 1
+  b_m_disableUnusedCameras: 1
   b_m_enableEmission: 1
   m_emissionIntensity: 1.5
   b_m_createDroneVisual: 0

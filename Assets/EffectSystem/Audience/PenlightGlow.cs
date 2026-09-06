@@ -119,6 +119,7 @@ public sealed class PenlightGlow : MonoBehaviour
             name = "Penlight Glow Sphere Shared Material",
             hideFlags = HideFlags.HideAndDontSave
         };
+        s_sharedGlowMaterial.enableInstancing = true;
         return s_sharedGlowMaterial;
     }
 

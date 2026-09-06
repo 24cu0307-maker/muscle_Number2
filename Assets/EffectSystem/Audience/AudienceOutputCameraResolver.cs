@@ -7,9 +7,11 @@ using UnityEngine;
 public static class AudienceOutputCameraResolver
 {
     private const int EGameDisplayIndex = 0;
+    private const float ECameraRefreshIntervalSeconds = 0.25f;
 
     private static Camera m_cachedCamera;
     private static int m_cachedFrame = -1;
+    private static float m_nextCameraRefreshTime;
 
     public static Camera GetCurrent(Camera _fallback = null)
     {
@@ -18,7 +20,16 @@ public static class AudienceOutputCameraResolver
             return m_cachedCamera;
         }
 
+        if (IsGameOutputCamera(m_cachedCamera)
+            && Time.unscaledTime < m_nextCameraRefreshTime)
+        {
+            m_cachedFrame = Time.frameCount;
+            return m_cachedCamera;
+        }
+
         m_cachedFrame = Time.frameCount;
+        m_nextCameraRefreshTime =
+            Time.unscaledTime + ECameraRefreshIntervalSeconds;
         m_cachedCamera = FindCinemachineOutputCamera();
         if (m_cachedCamera == null && IsGameOutputCamera(Camera.main))
         {

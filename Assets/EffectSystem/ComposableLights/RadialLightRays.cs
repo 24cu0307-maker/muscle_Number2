@@ -64,8 +64,7 @@ public sealed class RadialLightRays : LightEffectBase
     private void LateUpdate()
     {
         if (m_quadTransform == null)return;
-        Camera outputCamera = Camera.main;
-        if (outputCamera == null)outputCamera = FindFirstObjectByType<Camera>();
+        Camera outputCamera = AudienceOutputCameraResolver.GetCurrent();
         if (outputCamera == null)return;
         Vector3 direction = m_quadTransform.position - outputCamera.transform.position;
         if (direction.sqrMagnitude <= Mathf.Epsilon)return;
