@@ -48,6 +48,7 @@ public sealed class LaserBeamController : LightEffectBase
 
     private Renderer m_targetRenderer;                      //表示対象Renderer
     private MaterialPropertyBlock m_propertyBlock;          //個別マテリアル設定
+    private bool b_m_applyEveryFrame = true;                //Timeline操作を毎Frame反映するか
 
     /// <summary>レーザーの表示色を取得・変更します。</summary>
     public Color LaserColor
@@ -98,6 +99,18 @@ public sealed class LaserBeamController : LightEffectBase
     /// </summary>
     private void LateUpdate()
     {
+        if (!b_m_applyEveryFrame)return;
+
+        Apply();
+    }
+
+    /// <summary>
+    /// Timelineで連続変化しないEffectの毎Frame更新を停止します。
+    /// 値をSetterから変更した場合は、停止中でも即時反映されます。
+    /// </summary>
+    public void SetContinuousUpdate(bool _benabled)
+    {
+        b_m_applyEveryFrame = _benabled;
         Apply();
     }
 

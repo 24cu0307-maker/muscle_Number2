@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 /// <summary>
 /// 会場上空を飛ぶDrone Cameraの映像を、Stage内のMonitor Materialへ表示します。
@@ -17,6 +18,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
     private const string EDroneCameraName = "DroneCamera";
     private const int EMinimumTextureSize = 256;
     private const int ESplineSamplesPerSegment = 24;
+    private const int ERenderTextureDepthBits = 16;
+    private const int EUiLayerIndex = 5;
 
     [Header("Drone Flight")]
     [SerializeField, Range(1, 3)] private int m_droneCount = 3;
@@ -47,11 +50,21 @@ public sealed class DroneViewingSystem : MonoBehaviour
     [SerializeField, Min(0.01f)] private float m_nearClipPlane = 0.1f;
     [SerializeField, Min(1.0f)] private float m_farClipPlane = 300.0f;
     [SerializeField] private LayerMask m_cameraCullingMask = ~0;
+    [Tooltip("Drone映像へ不要なLayerを除外します。初期値ではUIを除外します。")]
+    [SerializeField] private LayerMask m_excludedCameraLayers = 1 << EUiLayerIndex;
+    [SerializeField] private bool b_m_disablePostProcessing = true;
+    [SerializeField] private bool b_m_disableShadows = true;
+    [SerializeField] private bool b_m_allowHdr;
+    [SerializeField] private bool b_m_allowMsaa;
 
     [Header("Monitor Output")]
     [SerializeField] private string m_monitorMaterialKeyword = EDefaultMonitorKeyword;
-    [SerializeField, Min(EMinimumTextureSize)] private int m_textureWidth = 1280;
-    [SerializeField, Min(EMinimumTextureSize)] private int m_textureHeight = 720;
+    [SerializeField, Min(EMinimumTextureSize)] private int m_textureWidth = 640;
+    [SerializeField, Min(EMinimumTextureSize)] private int m_textureHeight = 360;
+    [Tooltip("複数Cameraをフレームごとに交代描画し、映像はRenderTextureへ保持します。")]
+    [SerializeField] private bool b_m_renderOneCameraPerFrame = true;
+    [Tooltip("Monitorへ割り当てられていないDrone Cameraを停止します。")]
+    [SerializeField] private bool b_m_disableUnusedCameras = true;
     [SerializeField] private bool b_m_enableEmission = true;
     [SerializeField, Min(0.0f)] private float m_emissionIntensity = 1.5f;
 
@@ -67,6 +80,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
     private readonly List<DroneSplineRoute> m_droneRoutes =
         new List<DroneSplineRoute>();
     private readonly List<Camera> m_droneCameras = new List<Camera>();
+    private readonly List<Plane[]> m_droneFrustumPlanes =
+        new List<Plane[]>();
     private readonly List<RenderTexture> m_monitorTextures =
         new List<RenderTexture>();
     private Material m_droneMaterial;
@@ -79,6 +94,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
     private float m_splineDistance;
     private float m_splineTotalDistance;
     private bool b_m_splineCacheDirty = true;
+    private int m_activeDroneFrustumCount;
+    private int m_usedDroneCameraCount;
 
     [Serializable]
     private struct MonitorMaterialSlot
@@ -96,6 +113,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         CreateMonitorTextures();
         FindMonitorMaterialSlots();
         ApplyMonitorTexture();
+        UpdateCameraRenderSchedule();
         SubscribeCameraRendering();
     }
 
@@ -126,6 +144,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
                     Vector3.up);
             }
         }
+
+        UpdateCameraRenderSchedule();
     }
 
     private void UpdateOrbitFlightPositions(Vector3 _targetPosition)
@@ -329,10 +349,15 @@ public sealed class DroneViewingSystem : MonoBehaviour
             droneCamera.fieldOfView = m_fieldOfView;
             droneCamera.nearClipPlane = m_nearClipPlane;
             droneCamera.farClipPlane = m_farClipPlane;
-            droneCamera.cullingMask = m_cameraCullingMask;
+            droneCamera.cullingMask =
+                m_cameraCullingMask.value & ~m_excludedCameraLayers.value;
             droneCamera.depth = -10.0f - i;
-            droneCamera.allowHDR = true;
-            droneCamera.allowMSAA = true;
+            droneCamera.allowHDR = b_m_allowHdr;
+            droneCamera.allowMSAA = b_m_allowMsaa;
+            UniversalAdditionalCameraData cameraData =
+                droneCamera.GetUniversalAdditionalCameraData();
+            cameraData.renderPostProcessing = !b_m_disablePostProcessing;
+            cameraData.renderShadows = !b_m_disableShadows;
             m_droneCameras.Add(droneCamera);
 
             if (b_m_createDroneVisual)
@@ -351,7 +376,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
             RenderTexture monitorTexture = new RenderTexture(
                 width,
                 height,
-                24,
+                ERenderTextureDepthBits,
                 RenderTextureFormat.ARGB32)
             {
                 name = $"DroneVenueView_{i + 1}",
@@ -421,6 +446,9 @@ public sealed class DroneViewingSystem : MonoBehaviour
 
     private void ApplyMonitorTexture()
     {
+        m_usedDroneCameraCount = b_m_disableUnusedCameras
+            ? Mathf.Min(m_droneCameras.Count, m_monitorSlotsList.Count)
+            : m_droneCameras.Count;
         for (int i = 0; i < m_monitorSlotsList.Count; ++i)
         {
             MonitorMaterialSlot slot = m_monitorSlotsList[i];
@@ -467,6 +495,30 @@ public sealed class DroneViewingSystem : MonoBehaviour
             slot.Renderer.sharedMaterials = materials;
             slot.RuntimeMaterial = runtimeMaterial;
             m_monitorSlotsList[i] = slot;
+        }
+    }
+
+    /// <summary>
+    /// 使用中Cameraだけを有効化し、複数台はフレームごとに交代描画します。
+    /// RenderTextureには前回映像が残るため、未描画フレームもMonitor表示を維持します。
+    /// </summary>
+    private void UpdateCameraRenderSchedule()
+    {
+        int usedCameraCount = Mathf.Clamp(
+            m_usedDroneCameraCount,
+            0,
+            m_droneCameras.Count);
+        int cameraToRender = usedCameraCount > 0
+            ? Time.frameCount % usedCameraCount
+            : -1;
+        for (int i = 0; i < m_droneCameras.Count; ++i)
+        {
+            Camera droneCamera = m_droneCameras[i];
+            if (droneCamera == null)continue;
+
+            bool b_isUsed = i < usedCameraCount;
+            droneCamera.enabled = b_isUsed
+                && (!b_m_renderOneCameraPerFrame || i == cameraToRender);
         }
     }
 
@@ -549,16 +601,62 @@ public sealed class DroneViewingSystem : MonoBehaviour
         return _camera != null && m_droneCameras.Contains(_camera);
     }
 
-    public bool IsVisibleFromDroneCamera(Bounds _worldBounds)
+    /// <summary>
+    /// 一回の観客カリングで使用する全Drone Cameraの視錐台をまとめて更新します。
+    /// 観客ごとの再計算と配列生成を避けるため、判定前に一度だけ呼び出します。
+    /// </summary>
+    public void RefreshVisibilityFrustums()
     {
-        for (int i = 0; i < m_droneCameras.Count; ++i)
+        m_activeDroneFrustumCount = 0;
+        int cameraCount = Mathf.Min(
+            m_usedDroneCameraCount,
+            m_droneCameras.Count);
+        for (int i = 0; i < cameraCount; ++i)
         {
             Camera droneCamera = m_droneCameras[i];
-            if (droneCamera == null || !droneCamera.isActiveAndEnabled)continue;
-            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(droneCamera);
-            if (GeometryUtility.TestPlanesAABB(planes, _worldBounds))return true;
+            if (droneCamera == null
+                || !droneCamera.gameObject.activeInHierarchy)continue;
+
+            while (m_droneFrustumPlanes.Count <= m_activeDroneFrustumCount)
+            {
+                m_droneFrustumPlanes.Add(new Plane[6]);
+            }
+
+            GeometryUtility.CalculateFrustumPlanes(
+                droneCamera,
+                m_droneFrustumPlanes[m_activeDroneFrustumCount]);
+            m_activeDroneFrustumCount++;
+        }
+    }
+
+    public bool IsVisibleFromDroneCamera(Bounds _worldBounds)
+    {
+        for (int i = 0; i < m_activeDroneFrustumCount; ++i)
+        {
+            if (GeometryUtility.TestPlanesAABB(
+                m_droneFrustumPlanes[i],
+                _worldBounds))return true;
         }
         return false;
+    }
+
+    /// <summary>使用中Drone Cameraから指定位置までの最短距離二乗を返します。</summary>
+    public float GetMinimumCameraSqrDistance(Vector3 _worldPosition)
+    {
+        float minimumSqrDistance = float.PositiveInfinity;
+        int cameraCount = Mathf.Min(
+            m_usedDroneCameraCount,
+            m_droneCameras.Count);
+        for (int i = 0; i < cameraCount; ++i)
+        {
+            Camera droneCamera = m_droneCameras[i];
+            if (droneCamera == null)continue;
+
+            float sqrDistance =
+                (droneCamera.transform.position - _worldPosition).sqrMagnitude;
+            minimumSqrDistance = Mathf.Min(minimumSqrDistance, sqrDistance);
+        }
+        return minimumSqrDistance;
     }
 
     private void HideMonitorRenderers()

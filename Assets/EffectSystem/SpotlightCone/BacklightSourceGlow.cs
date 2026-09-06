@@ -166,13 +166,8 @@ public sealed class BacklightSourceGlow : LightEffectBase
         }
         if (!shouldRender)return;
 
-        Camera outputCamera = Camera.main; //現在のGame画面を描画するCamera
-        if (outputCamera == null)
-        {
-            //Gameplayの出力CameraにはMainCamera Tagがない場合があるため、
-            //Cinemachineへ依存せずScene内の実Cameraを直接取得します。
-            outputCamera = FindFirstObjectByType<Camera>();
-        }
+        Camera outputCamera =
+            AudienceOutputCameraResolver.GetCurrent(); //現在のGame出力Cameraを共有取得
         if (outputCamera == null)return;
 
         //Quadの表面が出力Cameraを向くよう、Cameraから光源へ向かう方向をforwardへ設定します。

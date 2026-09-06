@@ -68,6 +68,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private Camera m_targetCamera; //可視範囲を使用するCamera
     private DroneViewingSystem m_droneViewingSystem; //Drone視点の観客表示判定
     [SerializeField] private float m_cullingInterval = 0.15f; //可視判定間隔
+    [SerializeField, Min(1)] private int m_cullingBatchSize = 64;
     [SerializeField] private float m_cullingMargin = 0.5f; //画面端判定の余白
     [Header("Voltage Reactions")]
     [SerializeField] private VenueVoltageSystem m_voltageSystem; //成功失敗通知元
@@ -89,6 +90,8 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private bool b_m_enablePenlights = true;
     [SerializeField, Min(0.0f)] private float m_minimumPenlightIntensity = 1.5f;
     [SerializeField, Min(0.0f)] private float m_maximumPenlightIntensity = 8.0f;
+    [SerializeField] private bool b_m_enablePenlightDistanceLod = true;
+    [SerializeField, Min(1.0f)] private float m_penlightDetailDistance = 35.0f;
 
     [Header("Audience Voices")]
     [SerializeField] private AudioClip[] m_cheerVoiceClips;
@@ -125,8 +128,13 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     }
     private readonly List<Bounds> m_audienceBounds =
         new List<Bounds>(); //観客ごとの基準Bounds
+    private readonly List<AudiencePenlight> m_audiencePenlights =
+        new List<AudiencePenlight>();
+    private readonly Plane[] m_outputCameraFrustumPlanes = new Plane[6];
     private float m_nextReactionTime; //次回Reaction時刻
     private float m_nextCullingTime; //次回可視判定時刻
+    private int m_nextCullingAudienceIndex;
+    private bool b_m_cullingCycleActive;
     private Coroutine m_sequentialCheerCoroutine; //Audience Choice成功中に歓声Clipを順番再生する処理
     private Coroutine m_spawnCoroutine;
 
@@ -553,10 +561,10 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         // 観客モデル生成後にBoundsが確定してから、手元へペンライトを装着します。
         // PrefabとMesh直接生成のどちらを選んでも同じ処理を共有できます。
+        AudiencePenlight penlight = null;
         if (b_m_enablePenlights)
         {
-            AudiencePenlight penlight =
-                audienceObject.GetComponent<AudiencePenlight>();
+            penlight = audienceObject.GetComponent<AudiencePenlight>();
             if (penlight == null)
             {
                 penlight = audienceObject.AddComponent<AudiencePenlight>();
@@ -569,6 +577,7 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
 
         m_audiences.Add(reaction);
         m_audienceBounds.Add(CreateAudienceBounds(audienceObject));
+        m_audiencePenlights.Add(penlight);
     }
 
     private void FaceAudienceTowardTarget(GameObject _audienceobject)
@@ -1061,6 +1070,9 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     {
         m_audiences.Clear();
         m_audienceBounds.Clear();
+        m_audiencePenlights.Clear();
+        m_nextCullingAudienceIndex = 0;
+        b_m_cullingCycleActive = false;
         for (int i = transform.childCount - 1; i >= 0; --i)
         {
             GameObject child = transform.GetChild(i).gameObject; //削除対象
@@ -1081,20 +1093,36 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     private void UpdateAudienceVisibility()
     {
         if (!b_m_enableCameraCulling)return;
-        if (Time.unscaledTime < m_nextCullingTime)return;
+        if (!b_m_cullingCycleActive)
+        {
+            if (Time.unscaledTime < m_nextCullingTime)return;
 
-        m_targetCamera = AudienceOutputCameraResolver.GetCurrent(m_targetCamera);
+            m_targetCamera = AudienceOutputCameraResolver.GetCurrent(m_targetCamera);
+            if (m_targetCamera == null)return;
 
-        if (m_targetCamera == null)return;
-
-        m_nextCullingTime =
-            Time.unscaledTime
-            + Mathf.Max(EMinimumCullingInterval, m_cullingInterval);
-        Plane[] frustumPlanes =
-            GeometryUtility.CalculateFrustumPlanes(m_targetCamera); //Camera視錐台
+            m_nextCullingTime =
+                Time.unscaledTime
+                + Mathf.Max(EMinimumCullingInterval, m_cullingInterval);
+            GeometryUtility.CalculateFrustumPlanes(
+                m_targetCamera,
+                m_outputCameraFrustumPlanes); //一巡中に共有するCamera視錐台
+            if (m_droneViewingSystem == null)
+            {
+                m_droneViewingSystem = FindFirstObjectByType<DroneViewingSystem>();
+            }
+            if (m_droneViewingSystem != null)
+            {
+                m_droneViewingSystem.RefreshVisibilityFrustums();
+            }
+            m_nextCullingAudienceIndex = 0;
+            b_m_cullingCycleActive = true;
+        }
         int audienceCount =
             Mathf.Min(m_audiences.Count, m_audienceBounds.Count); //判定可能人数
-        for (int i = 0; i < audienceCount; ++i)
+        int endIndex = Mathf.Min(
+            audienceCount,
+            m_nextCullingAudienceIndex + Mathf.Max(1, m_cullingBatchSize));
+        for (int i = m_nextCullingAudienceIndex; i < endIndex; ++i)
         {
             AudienceReaction audience = m_audiences[i]; //判定対象
             if (audience == null)continue;
@@ -1115,15 +1143,10 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
                 worldSize); //余白付き判定Bounds
             bool b_isVisible =
                 GeometryUtility.TestPlanesAABB(
-                    frustumPlanes,
+                    m_outputCameraFrustumPlanes,
                     worldBounds); //Camera内判定
             if (!b_isVisible)
             {
-                if (m_droneViewingSystem == null)
-                {
-                    m_droneViewingSystem =
-                        FindFirstObjectByType<DroneViewingSystem>();
-                }
                 b_isVisible = m_droneViewingSystem != null
                     && m_droneViewingSystem.IsVisibleFromDroneCamera(worldBounds);
             }
@@ -1131,6 +1154,33 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
             {
                 audience.gameObject.SetActive(b_isVisible);
             }
+            if (i < m_audiencePenlights.Count
+                && m_audiencePenlights[i] != null)
+            {
+                bool b_showPenlightDetail = b_isVisible;
+                if (b_showPenlightDetail && b_m_enablePenlightDistanceLod)
+                {
+                    float detailDistance =
+                        Mathf.Max(1.0f, m_penlightDetailDistance);
+                    float minimumSqrDistance =
+                        (m_targetCamera.transform.position - worldCenter).sqrMagnitude;
+                    if (m_droneViewingSystem != null)
+                    {
+                        minimumSqrDistance = Mathf.Min(
+                            minimumSqrDistance,
+                            m_droneViewingSystem.GetMinimumCameraSqrDistance(
+                                worldCenter));
+                    }
+                    b_showPenlightDetail =
+                        minimumSqrDistance <= detailDistance * detailDistance;
+                }
+                m_audiencePenlights[i].SetDetailVisible(b_showPenlightDetail);
+            }
+        }
+        m_nextCullingAudienceIndex = endIndex;
+        if (m_nextCullingAudienceIndex >= audienceCount)
+        {
+            b_m_cullingCycleActive = false;
         }
     }
 
