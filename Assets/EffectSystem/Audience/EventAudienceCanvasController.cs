@@ -34,7 +34,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     [SerializeField] private Camera m_eventCamera; //World座標変換Camera
     [SerializeField] private AudienceAreaSpawner m_audienceSpawner; //観客生成元
     [SerializeField] private AudiencePreferenceSystem m_preferenceSystem; //観客好み管理
-    [SerializeField] private Sprite[] m_nodeSprites = new Sprite[EPreferenceCount]; //三種類のNode画像
+    [SerializeField] private UIData m_uiData; //通常Pose UIの画像設定
     [SerializeField] private Color[] m_nodeColors =
     {
         new Color(0.1f, 0.8f, 1.0f, 0.95f),
@@ -229,20 +229,23 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
             Image image = button.GetComponent<Image>();
             if (image != null)
             {
-                image.color = _enabled
-                    ? Color.white
-                    : new Color(0.35f, 0.35f, 0.35f, 0.8f);
+                image.color = new Color(0.35f, 0.35f, 0.35f, 0.8f);
+                if (_enabled)
+                {
+                    image.color = Color.white;
+                }
             }
 
             Outline outline = button.GetComponent<Outline>();
             if (outline != null)
             {
-                outline.effectColor = _enabled
-                    ? new Color(0.15f, 1.0f, 0.35f, 1.0f)
-                    : m_nodeOutlineColor;
-                outline.effectDistance = _enabled
-                    ? new Vector2(14.0f, -14.0f)
-                    : m_nodeOutlineDistance;
+                outline.effectColor = m_nodeOutlineColor;
+                outline.effectDistance = m_nodeOutlineDistance;
+                if (_enabled)
+                {
+                    outline.effectColor = new Color(0.15f, 1.0f, 0.35f, 1.0f);
+                    outline.effectDistance = new Vector2(14.0f, -14.0f);
+                }
             }
         }
 
@@ -381,16 +384,14 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
             * Mathf.Max(0.01f, m_poseFrameScale);
 
         Image image = nodeObject.GetComponent<Image>(); //Node画像
-        image.sprite = m_nodeSprites != null
-            && _poseId >= 0
-            && _poseId < m_nodeSprites.Length
-            ? m_nodeSprites[_poseId]
-            : null;
-        image.color = image.sprite != null
-            ? Color.white
-            : m_nodeColors != null && _index < m_nodeColors.Length
-                ? m_nodeColors[_index]
-                : Color.white;
+        image.sprite = GetNodeSprite(_poseId);
+        image.color = Color.white;
+        if (image.sprite == null
+            && m_nodeColors != null
+            && _index < m_nodeColors.Length)
+        {
+            image.color = m_nodeColors[_index];
+        }
 
         Outline outline = nodeObject.AddComponent<Outline>(); //三Node共通強調枠
         outline.effectColor = m_nodeOutlineColor;
@@ -406,6 +407,28 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         {
             CreatePercentageText(nodeRect, _preference);
         }
+    }
+
+    /// <summary>
+    /// 通常Pose UIと同じ接近中フレーム画像を使用します。
+    /// </summary>
+    private Sprite GetNodeSprite(int _poseId)
+    {
+        if (m_uiData == null
+            || !m_uiData.TryGetApproachingFrame(_poseId, out GameObject frame))
+        {
+            return null;
+        }
+
+        Image frameImage = frame.GetComponent<Image>();
+        if (frameImage == null)
+        {
+            frameImage = frame.GetComponentInChildren<Image>(true);
+        }
+
+        if (frameImage == null)return null;
+
+        return frameImage.sprite;
     }
 
     private static GameObject CreateDecisionCueText(RectTransform _parent)
@@ -454,9 +477,12 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         }
 
         string poseName = candidate.m_eventName;
-        return string.IsNullOrWhiteSpace(poseName)
-            ? $"Pose {_index + 1}"
-            : poseName;
+        if (string.IsNullOrWhiteSpace(poseName))
+        {
+            return $"Pose {_index + 1}";
+        }
+
+        return poseName;
     }
 
     private static void CreatePoseNameText(
@@ -640,6 +666,11 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
         if (m_preferenceSystem == null)
         {
             m_preferenceSystem = FindFirstObjectByType<AudiencePreferenceSystem>();
+        }
+
+        if (m_uiData == null)
+        {
+            m_uiData = FindFirstObjectByType<UIData>(FindObjectsInactive.Include);
         }
     }
 

@@ -88,4 +88,18 @@ public class UIData : MonoBehaviour
         }
 
     }
+
+    /// <summary>
+    /// 指定したPoseの接近中フレームを安全に取得します。
+    /// </summary>
+    public bool TryGetApproachingFrame(
+        int _poseId,
+        out GameObject _frame)
+    {
+        _frame = null;
+        if (ui == null || _poseId < 0 || _poseId >= ui.Count)return false;
+
+        _frame = ui[_poseId].m_currentFrameApproaching;
+        return _frame != null;
+    }
 }
