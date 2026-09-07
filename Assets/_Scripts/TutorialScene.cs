@@ -30,6 +30,7 @@ public sealed class TutorialScene : MonoBehaviour
     [Header("Pose Frame Placement")]
     [SerializeField, Range(1.0f, 1.5f)] private float m_framePadding = 1.12f;
     [SerializeField] private Vector2 m_frameScreenOffset = Vector2.zero;
+    [SerializeField, Min(0.1f)] private float m_frameSizeScale = 1.0f;
 
     private readonly string[] m_posePrefixes = { "Front", "Most", "Side" };
     private List<CSVPoseData> m_poseDatas;
@@ -261,8 +262,13 @@ public sealed class TutorialScene : MonoBehaviour
         if (!b_hasVisiblePoint)return;
 
         Vector2 screenCenter = (screenMin + screenMax) * 0.5f + m_frameScreenOffset;
-        float frameSize = Mathf.Max(screenMax.x - screenMin.x, screenMax.y - screenMin.y)
-            * m_framePadding;
+
+        float frameSize = Mathf.Max(
+        screenMax.x - screenMin.x,
+        screenMax.y - screenMin.y)
+        * m_framePadding
+        * m_frameSizeScale;
+
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect, screenCenter, null, out Vector2 localCenter))return;
 
