@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InputPose : MonoBehaviour
 {
@@ -63,18 +64,20 @@ public class InputPose : MonoBehaviour
         {
             Debug.Log("[posecheckaaa]true");
             isPose[0] = true;
+            //SceneManager.LoadScene("Tutorial");
             //Score?.Invoke(poseID);
 
         }
-        else@if(
-            _Body[13].x >= _Body[14].x &&
-            _Body[15].x <= _Body[16].x &&
-            _Body[13].y <= _Body[15].y &&
-            _Body[14].y <= _Body[16].y 
-            )
+        //else@if(
+        //    _Body[13].x >= _Body[14].x &&
+        //     _Body[15].x <= _Body[16].x &&
+        //     _Body[13].y <= _Body[15].y &&
+        //     _Body[14].y <= _Body[16].y 
+        //    )
+        else
         {
             Debug.Log("[posecheckaaa]false");
-            //isPose[poseID] = false;
+            isPose[0] = false;
 
         }
 

@@ -75,6 +75,24 @@ MonoBehaviour:
     m_eventName: Event
     m_successEffectNames: EffectLight_KIMI_00|Strobe|CameraShake|EffectLight_KIMI_03
     m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 11
+    m_time: 70.27763
+    m_poseId: 6
+    m_eventName: Event
+    m_successEffectNames: CameraShake|EffectUI_Perfect|Strobe|EffectLight_KIMI_04|EffectBurst_01
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 12
+    m_time: 74.6633
+    m_poseId: 7
+    m_eventName: Event
+    m_successEffectNames: CameraShake|EffectUI_Perfect|Strobe|EffectBeam_00
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 13
+    m_time: 81.830124
+    m_poseId: 8
+    m_eventName: Event
+    m_successEffectNames: CameraShake|EffectUI_Perfect|Strobe|EffectBeam_02
+    m_failureEffectNames: EffectUI_Miss
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice

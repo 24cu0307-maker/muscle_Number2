@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 public static class GameSession
 {
     
-    public const string TitleScene = "Title";           // タイトルシーン名
+    public const string TitleScene = "Title_OP";           // タイトルシーン名
     public const string TutorialScene = "Tutorial";     // チュートリアルシーン名
     public const string GameplayScene = "Gameplay";     // インゲームシーン名
     public const string ResultScene = "Result";         // リザルトシーン名

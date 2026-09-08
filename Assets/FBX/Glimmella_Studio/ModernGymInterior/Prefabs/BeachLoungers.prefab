@@ -1,0 +1,258 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3410288173256166773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4211042259989874401}
+  m_Layer: 0
+  m_Name: BeachLoungers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4211042259989874401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3410288173256166773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1490246903560913554}
+  - {fileID: 8631708985661396746}
+  - {fileID: 5967979977299900461}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1509791365356040839
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4211042259989874401}
+    m_Modifications:
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.1342852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.40999985
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526066953860611895, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_Name
+      value: BeachLounger (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cba26f09164425441a481892b68cc9d7, type: 3}
+--- !u!4 &8631708985661396746 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1509791365356040839}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3843276740756827135
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4211042259989874401}
+    m_Modifications:
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7840583688176666984, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+        type: 3}
+      propertyPath: m_Name
+      value: BeachTable
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fb81ea9e1c4253e41a0b303b2c418f33, type: 3}
+--- !u!4 &5967979977299900461 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7459238607514915794, guid: fb81ea9e1c4253e41a0b303b2c418f33,
+    type: 3}
+  m_PrefabInstance: {fileID: 3843276740756827135}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8616596650875774751
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4211042259989874401}
+    m_Modifications:
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.115715
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.40999985
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526066953860611895, guid: cba26f09164425441a481892b68cc9d7,
+        type: 3}
+      propertyPath: m_Name
+      value: BeachLounger
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cba26f09164425441a481892b68cc9d7, type: 3}
+--- !u!4 &1490246903560913554 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7150069868213740941, guid: cba26f09164425441a481892b68cc9d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 8616596650875774751}
+  m_PrefabAsset: {fileID: 0}

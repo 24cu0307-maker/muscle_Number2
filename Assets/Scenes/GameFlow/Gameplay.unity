@@ -18558,7 +18558,7 @@ Light:
   m_InnerSpotAngle: 5.4257793
   m_CookieSize2D: {x: 1e-45, y: 1e-45}
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -141343,9 +141343,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15802284b62a29c4ab399c93755600f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowTemplate.SceneManager
-  m_titleSceneName: Title
+  m_titleSceneName: Title_OP
   m_gameSceneName: Gameplay
-  m_resultSceneName: Result
+  m_resultSceneName: Result_Anime
   m_mediaSceneName: Holistic
   m_bUseResultScene: 1
 --- !u!114 &1843740551
