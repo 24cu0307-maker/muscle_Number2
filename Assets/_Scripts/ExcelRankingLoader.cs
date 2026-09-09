@@ -10,7 +10,8 @@ public class ExcelRankingLoader : MonoBehaviour
 
     public List<RnakingData> RankingList = new List<RnakingData>();
 
-    private string FileName = "ExcelRanking.csv";
+
+    private string CsvPath = @"D:\ExcelRanking.csv";
 
     public List<RnakingData> GetCSVDatas()
     {
@@ -27,7 +28,8 @@ public class ExcelRankingLoader : MonoBehaviour
 
 
         //これを呼び出せばよい
-        //AddRankingData();
+        //ランキングが一つ追加される
+        AddRankingData();
     }
 
 
@@ -36,10 +38,7 @@ public class ExcelRankingLoader : MonoBehaviour
     /// </summary>
     public void LoadCsv()
     {
-        string path = Path.Combine(
-            Application.persistentDataPath,
-            FileName
-        );
+        string path = CsvPath;
 
         // 初回起動
         if (!File.Exists(path))
@@ -131,9 +130,10 @@ public class ExcelRankingLoader : MonoBehaviour
         // 仮順位
         data.RankingNumber = -1;
 
-
+        // Dドライブ直下の保存フォルダ
+        string saveDirectory = @"D:\GeneratedImages";
         // 画像
-        data.Texture = "face" + data.Number;
+        data.Texture = saveDirectory;
 
 
         // Listに追加
@@ -159,10 +159,7 @@ public class ExcelRankingLoader : MonoBehaviour
     /// </summary>
     private void SaveCsv()
     {
-        string path = Path.Combine(
-            Application.persistentDataPath,
-            FileName
-        );
+        string path = CsvPath;
 
 
         StringBuilder builder = new StringBuilder();

@@ -40,5 +40,13 @@ public struct RnakingData
     public int Number;
     public int Score;
     public int RankingNumber;
+
     public string Texture;
+
+    public float PosX;
+    public float PosY;
+
+    public float Scale;
+
+    public int Order;
 }
