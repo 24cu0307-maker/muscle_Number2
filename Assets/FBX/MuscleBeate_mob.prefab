@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &437596887615277337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3659477227617599318}
+  m_Layer: 0
+  m_Name: Lhund
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3659477227617599318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437596887615277337}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4037533322766056161}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!1 &1626705538877457274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4858375411622515795}
+  m_Layer: 0
+  m_Name: Rhund
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4858375411622515795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626705538877457274}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3213666262663862246}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!1001 &3776589439523118986
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.72978
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -9.88217
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.83043
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      propertyPath: m_Name
+      value: MuscleBeate_mob
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 892019749087716715, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3659477227617599318}
+    - targetCorrespondingSourceObject: {fileID: -7426408957390305172, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4858375411622515795}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5891731108512688004}
+  m_SourcePrefab: {fileID: 100100000, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+--- !u!4 &3213666262663862246 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7426408957390305172, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+  m_PrefabInstance: {fileID: 3776589439523118986}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4037533322766056161 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 892019749087716715, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+  m_PrefabInstance: {fileID: 3776589439523118986}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4082598583084868315 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+  m_PrefabInstance: {fileID: 3776589439523118986}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-5891731108512688004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4082598583084868315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4bc9e19b7149a69b99a524789a4f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudiencePenlight
+  m_leftHandAnchor: {fileID: 3659477227617599318}
+  m_rightHandAnchor: {fileID: 4858375411622515795}
+  m_vAngle: 16
+  m_pairSpacing: 0.025
+  b_m_enableTipGlow: 1
+  m_glowSizeMultiplier: 6
+  m_pointLightRange: 1.4
+  m_minimumPointLightIntensity: 0.05
+  m_maximumPointLightIntensity: 0.55
+  m_maximumActivePointLights: 24

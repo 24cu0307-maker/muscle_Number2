@@ -166549,6 +166549,18 @@ PrefabInstance:
       propertyPath: m_voltageSystem
       value: 
       objectReference: {fileID: 1704557581}
+    - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
+      propertyPath: m_audiencePrefab
+      value: 
+      objectReference: {fileID: 4082598583084868315, guid: 812dfe396b9d7474c8c544e51f73f6d0, type: 3}
+    - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
+      propertyPath: m_positionError.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
+      propertyPath: m_positionError.y
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
