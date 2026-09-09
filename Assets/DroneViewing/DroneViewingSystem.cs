@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -36,7 +37,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
     [SerializeField] private bool b_m_useSplineFlight = true;
     [SerializeField] private bool b_m_loopSpline = true;
     [SerializeField, Min(0.01f)] private float m_splineSpeed = 5.0f;
-    [SerializeField] private Vector3[] m_splinePoints =
+    [SerializeField]
+    private Vector3[] m_splinePoints =
     {
         new Vector3(-12.0f, 8.0f, -12.0f),
         new Vector3(-12.0f, 10.0f, 12.0f),
@@ -111,15 +113,22 @@ public sealed class DroneViewingSystem : MonoBehaviour
         m_orbitAngleDegrees = m_startAngleDegrees;
         CreateDrones();
         CreateMonitorTextures();
+        SubscribeCameraRendering();
+    }
+
+    private IEnumerator Start()
+    {
+        yield return null;
+
         FindMonitorMaterialSlots();
         ApplyMonitorTexture();
         UpdateCameraRenderSchedule();
-        SubscribeCameraRendering();
+        Debug.Log($"Drone Viewing: MonitorSlots = {m_monitorSlotsList.Count}");
     }
 
     private void LateUpdate()
     {
-        if (m_droneTransforms.Count == 0)return;
+        if (m_droneTransforms.Count == 0) return;
 
         Vector3 targetPosition = GetLookAtPosition();
         if (b_m_useSplineFlight && m_splinePoints != null
@@ -135,7 +144,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         for (int i = 0; i < m_droneTransforms.Count; ++i)
         {
             Transform droneTransform = m_droneTransforms[i];
-            if (droneTransform == null)continue;
+            if (droneTransform == null) continue;
             Vector3 lookDirection = targetPosition - droneTransform.position;
             if (lookDirection.sqrMagnitude > Mathf.Epsilon)
             {
@@ -180,8 +189,8 @@ public sealed class DroneViewingSystem : MonoBehaviour
             return;
         }
 
-        if (b_m_splineCacheDirty)RebuildSplineCache();
-        if (m_splineTotalDistance <= Mathf.Epsilon)return;
+        if (b_m_splineCacheDirty) RebuildSplineCache();
+        if (m_splineTotalDistance <= Mathf.Epsilon) return;
 
         m_splineDistance += Mathf.Max(0.01f, m_splineSpeed) * Time.deltaTime;
         m_splineDistance = b_m_loopSpline
@@ -210,7 +219,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         m_splineSamplePositions.Clear();
         m_splineSampleDistances.Clear();
         m_splineTotalDistance = 0.0f;
-        if (m_splinePoints == null || m_splinePoints.Length < 2)return;
+        if (m_splinePoints == null || m_splinePoints.Length < 2) return;
 
         int segmentCount = b_m_loopSpline
             ? m_splinePoints.Length
@@ -238,7 +247,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
     {
         for (int i = 1; i < m_splineSampleDistances.Count; ++i)
         {
-            if (_distance > m_splineSampleDistances[i])continue;
+            if (_distance > m_splineSampleDistances[i]) continue;
 
             float previousDistance = m_splineSampleDistances[i - 1];
             float sectionLength = m_splineSampleDistances[i] - previousDistance;
@@ -299,7 +308,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         for (int i = 0; i < m_monitorTextures.Count; ++i)
         {
             RenderTexture monitorTexture = m_monitorTextures[i];
-            if (monitorTexture == null)continue;
+            if (monitorTexture == null) continue;
             monitorTexture.Release();
             Destroy(monitorTexture);
         }
@@ -409,7 +418,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
                     && material.name.IndexOf(
                         keyword,
                         StringComparison.OrdinalIgnoreCase) >= 0;
-                if (!b_isMonitorMaterial)continue;
+                if (!b_isMonitorMaterial) continue;
 
                 m_monitorSlotsList.Add(new MonitorMaterialSlot
                 {
@@ -446,14 +455,21 @@ public sealed class DroneViewingSystem : MonoBehaviour
 
     private void ApplyMonitorTexture()
     {
+
         m_usedDroneCameraCount = b_m_disableUnusedCameras
             ? Mathf.Min(m_droneCameras.Count, m_monitorSlotsList.Count)
             : m_droneCameras.Count;
+
+        Debug.Log(
+    $"[Drone {GetInstanceID()} / {gameObject.name} / {gameObject.scene.name}] " +
+    $"Apply AFTER: UsedCameraCount={m_usedDroneCameraCount}"
+);
+
         for (int i = 0; i < m_monitorSlotsList.Count; ++i)
         {
             MonitorMaterialSlot slot = m_monitorSlotsList[i];
             if (slot.Renderer == null || slot.OriginalMaterial == null
-                || m_monitorTextures.Count == 0)continue;
+                || m_monitorTextures.Count == 0) continue;
 
             RenderTexture monitorTexture =
                 m_monitorTextures[i % m_monitorTextures.Count];
@@ -496,6 +512,25 @@ public sealed class DroneViewingSystem : MonoBehaviour
             slot.RuntimeMaterial = runtimeMaterial;
             m_monitorSlotsList[i] = slot;
         }
+
+        Debug.Log(
+    $"Drone Viewing: Cameras={m_droneCameras.Count}, " +
+    $"Used={m_usedDroneCameraCount}, " +
+    $"Textures={m_monitorTextures.Count}"
+);
+
+        for (int i = 0; i < m_droneCameras.Count; i++)
+        {
+            Camera cam = m_droneCameras[i];
+
+            Debug.Log(
+                $"DroneCam[{i}] " +
+                $"enabled={cam.enabled}, " +
+                $"active={cam.gameObject.activeInHierarchy}, " +
+                $"targetTexture={(cam.targetTexture != null)}, " +
+                $"RTCreated={(cam.targetTexture != null && cam.targetTexture.IsCreated())}"
+            );
+        }
     }
 
     /// <summary>
@@ -508,17 +543,29 @@ public sealed class DroneViewingSystem : MonoBehaviour
             m_usedDroneCameraCount,
             0,
             m_droneCameras.Count);
+
         int cameraToRender = usedCameraCount > 0
             ? Time.frameCount % usedCameraCount
             : -1;
+
+        Debug.Log(
+    $"[Drone {GetInstanceID()} / {gameObject.name} / {gameObject.scene.name}] " +
+    $"Schedule: Used={usedCameraCount}, RenderIndex={cameraToRender}"
+);
+
         for (int i = 0; i < m_droneCameras.Count; ++i)
         {
             Camera droneCamera = m_droneCameras[i];
-            if (droneCamera == null)continue;
+            if (droneCamera == null) continue;
 
             bool b_isUsed = i < usedCameraCount;
+
             droneCamera.enabled = b_isUsed
                 && (!b_m_renderOneCameraPerFrame || i == cameraToRender);
+
+            Debug.Log(
+                $"Drone Schedule Cam[{i}] enabled={droneCamera.enabled}"
+            );
         }
     }
 
@@ -548,7 +595,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
                     slot.Renderer.sharedMaterials = materials;
                 }
             }
-            if (slot.RuntimeMaterial != null)Destroy(slot.RuntimeMaterial);
+            if (slot.RuntimeMaterial != null) Destroy(slot.RuntimeMaterial);
         }
         m_monitorSlotsList.Clear();
     }
@@ -574,26 +621,35 @@ public sealed class DroneViewingSystem : MonoBehaviour
 
     private void HandleCameraPreCull(Camera _camera)
     {
-        if (IsDroneCamera(_camera))HideMonitorRenderers();
+        if (IsDroneCamera(_camera)) HideMonitorRenderers();
     }
 
     private void HandleCameraPostRender(Camera _camera)
     {
-        if (IsDroneCamera(_camera))RestoreMonitorRenderers();
+        if (IsDroneCamera(_camera)) RestoreMonitorRenderers();
     }
 
     private void HandleBeginCameraRendering(
         ScriptableRenderContext _context,
         Camera _camera)
     {
-        if (IsDroneCamera(_camera))HideMonitorRenderers();
+        if (IsDroneCamera(_camera))
+        {
+            Debug.Log(
+                $"RENDERING: {_camera.name}, " +
+                $"enabled={_camera.enabled}, " +
+                $"target={_camera.targetTexture?.name}"
+            );
+
+            HideMonitorRenderers();
+        }
     }
 
     private void HandleEndCameraRendering(
         ScriptableRenderContext _context,
         Camera _camera)
     {
-        if (IsDroneCamera(_camera))RestoreMonitorRenderers();
+        if (IsDroneCamera(_camera)) RestoreMonitorRenderers();
     }
 
     private bool IsDroneCamera(Camera _camera)
@@ -615,7 +671,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         {
             Camera droneCamera = m_droneCameras[i];
             if (droneCamera == null
-                || !droneCamera.gameObject.activeInHierarchy)continue;
+                || !droneCamera.gameObject.activeInHierarchy) continue;
 
             while (m_droneFrustumPlanes.Count <= m_activeDroneFrustumCount)
             {
@@ -635,7 +691,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         {
             if (GeometryUtility.TestPlanesAABB(
                 m_droneFrustumPlanes[i],
-                _worldBounds))return true;
+                _worldBounds)) return true;
         }
         return false;
     }
@@ -650,7 +706,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
         for (int i = 0; i < cameraCount; ++i)
         {
             Camera droneCamera = m_droneCameras[i];
-            if (droneCamera == null)continue;
+            if (droneCamera == null) continue;
 
             float sqrDistance =
                 (droneCamera.transform.position - _worldPosition).sqrMagnitude;
@@ -661,14 +717,14 @@ public sealed class DroneViewingSystem : MonoBehaviour
 
     private void HideMonitorRenderers()
     {
-        if (b_m_monitorRenderersHidden)return;
+        if (b_m_monitorRenderersHidden) return;
 
         m_monitorOriginalForceRenderingOff.Clear();
         for (int i = 0; i < m_monitorSlotsList.Count; ++i)
         {
             Renderer renderer = m_monitorSlotsList[i].Renderer;
             if (renderer == null
-                || m_monitorOriginalForceRenderingOff.ContainsKey(renderer))continue;
+                || m_monitorOriginalForceRenderingOff.ContainsKey(renderer)) continue;
 
             m_monitorOriginalForceRenderingOff.Add(
                 renderer,
@@ -680,7 +736,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
 
     private void RestoreMonitorRenderers()
     {
-        if (!b_m_monitorRenderersHidden)return;
+        if (!b_m_monitorRenderersHidden) return;
 
         foreach (KeyValuePair<Renderer, bool> rendererEntry
             in m_monitorOriginalForceRenderingOff)
@@ -704,7 +760,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
     private void CreateDroneVisual(Transform _parent)
     {
         Shader droneShader = Shader.Find("Universal Render Pipeline/Lit");
-        if (droneShader == null)droneShader = Shader.Find("Standard");
+        if (droneShader == null) droneShader = Shader.Find("Standard");
         if (m_droneMaterial == null)
         {
             m_droneMaterial = new Material(droneShader);
@@ -766,9 +822,9 @@ public sealed class DroneViewingSystem : MonoBehaviour
         visual.transform.localPosition = _localPosition;
         visual.transform.localScale = _localScale;
         Collider collider = visual.GetComponent<Collider>();
-        if (collider != null)Destroy(collider);
+        if (collider != null) Destroy(collider);
         Renderer renderer = visual.GetComponent<Renderer>();
-        if (renderer != null)renderer.sharedMaterial = _material;
+        if (renderer != null) renderer.sharedMaterial = _material;
     }
 
     private void OnDrawGizmosSelected()
