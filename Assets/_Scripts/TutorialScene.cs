@@ -5,12 +5,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// 3種類のポーズを成功するまで練習し、全て成功したらGameplayへ遷移します。
+/// チュートリアル用のポーズ練習を管理します。
+/// 外部から開始し、成功するまで同じポーズに挑戦します。
 /// </summary>
 public sealed class TutorialScene : MonoBehaviour
 {
     private const string EMediaPipeSceneName = "Holistic";
-    private const int EPoseCount = 3;
+    private const int EPoseCount = 1;
 
     [Header("Tutorial Assets")]
     [SerializeField] private GameObject m_characterPrefab;
@@ -48,6 +49,10 @@ public sealed class TutorialScene : MonoBehaviour
     private float m_poseHoldElapsed;
     private bool b_m_attemptRunning;
     private bool b_m_resolvingAttempt;
+    public bool IsReady { get; private set; }
+    public bool PracticeCompleted { get; private set; }
+
+    public event System.Action<bool> AttemptResolved;
 
     private GameObject m_approachingFrame;
     private GameObject m_waitingFrame;
@@ -59,7 +64,6 @@ public sealed class TutorialScene : MonoBehaviour
     {
         PrepareTutorialPresentation();
         LoadPoseData();
-        ShowCurrentPoseFrames();
         SetStatus("カメラの前に全身が映るように立ってください…");
 
         Scene mediaPipeScene = SceneManager.GetSceneByName(EMediaPipeSceneName);
@@ -76,7 +80,10 @@ public sealed class TutorialScene : MonoBehaviour
 
         m_armController.enabled = true;
         m_bodyController.enabled = true;
-        BeginAttempt();
+        HideAllPoseFrames();
+        SetStatus("");
+
+        IsReady = true;
     }
 
     private void Update()
@@ -173,11 +180,25 @@ public sealed class TutorialScene : MonoBehaviour
         m_poseDatas = loader.GetCSVDatas();
     }
 
+    public void StartPractice()
+    {
+        if (!IsReady)
+        {
+            Debug.LogWarning("TutorialScene: MediaPipe is not ready.");
+            return;
+        }
+
+        m_currentPoseIndex = 0;
+        PracticeCompleted = false;
+
+        HideAllPoseFrames();
+        BeginAttempt();
+    }
+
     private void BeginAttempt()
     {
         if (m_currentPoseIndex >= EPoseCount)
         {
-            GameSession.Load(GameSession.GameplayScene);
             return;
         }
 
@@ -311,22 +332,25 @@ public sealed class TutorialScene : MonoBehaviour
 
         if (_success)
         {
-            SetStatus("成功！ 次のポーズへ進みます");
+            SetStatus("成功！");
             StartCoroutine(PlaySuccessPresentation());
             ++m_currentPoseIndex;
         }
         else
         {
-            SetStatus($"失敗… ポーズ {m_currentPoseIndex + 1}をもう一度！");
+            SetStatus("失敗… もう一度！");
         }
 
+        // 成功・失敗を外部へ通知
+        AttemptResolved?.Invoke(_success);
         yield return new WaitForSeconds(m_resultDisplaySeconds);
 
         if (m_currentPoseIndex >= EPoseCount)
         {
-            SetStatus("チュートリアルクリア！");
-            yield return new WaitForSeconds(0.5f);
-            GameSession.Load(GameSession.GameplayScene);
+            HideAllPoseFrames();
+            SetStatus("");
+
+            PracticeCompleted = true;
             yield break;
         }
 
