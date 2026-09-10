@@ -476,7 +476,6 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             Coroutine clearAnimation = clearFrame != null
                 ? StartCoroutine(AnimateClearFrameRoutine(clearFrame))
                 : null;
-            m_poseFlowDataManager?.QueueNextPose(candidate.m_poseId);
             m_gameManager?.AddScore(_bonusScore);
             m_audienceSpawner?.StartSequentialSuccessVoices(_preference);
             m_venueVoltageSystem?.RegisterSuccess(_bonusScore);

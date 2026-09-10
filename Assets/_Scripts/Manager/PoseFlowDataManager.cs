@@ -6,10 +6,6 @@ public class PoseFlowDataManager : MonoBehaviour
     [SerializeField] private MusicNodeSequence m_sequence; //BGM時刻とPose Node設定を一括保持するSequence
 
     private int m_currentNodeIndex = -1; //現在のBGM時刻に該当する通常Node番号。開始前は-1
-    private bool b_m_hasQueuedPose; //Event成功Poseを次の通常Nodeへ引き継ぐ予約があるか
-    private int m_queuedPoseId; //次の通常Node表示へ上書きするEvent成功PoseID
-    private int m_overrideNodeIndex = -1; //予約Poseを適用中のNode番号。別Nodeへ移動したら解除する
-
     public bool IsInitialized => m_sequence != null; //時刻同期に必要なSequenceが設定済みか
     public bool HasActivePose => m_currentNodeIndex >= 0; //現在表示・判定すべき通常Poseが存在するか
     public float TimelineDuration => m_sequence != null
@@ -35,8 +31,6 @@ public class PoseFlowDataManager : MonoBehaviour
         if (_sequence == null)return;
         m_sequence = _sequence;
         m_currentNodeIndex = -1;
-        b_m_hasQueuedPose = false;
-        m_overrideNodeIndex = -1;
     }
 
     /// <summary>
@@ -57,22 +51,12 @@ public class PoseFlowDataManager : MonoBehaviour
         if (synchronizedIndex == m_currentNodeIndex)return false;
 
         m_currentNodeIndex = synchronizedIndex;
-        if (b_m_hasQueuedPose && m_currentNodeIndex >= 0)
-        {
-            m_overrideNodeIndex = m_currentNodeIndex;
-            b_m_hasQueuedPose = false;
-        }
-        else if (m_overrideNodeIndex != m_currentNodeIndex)
-        {
-            m_overrideNodeIndex = -1;
-        }
-
         return true;
     }
 
     /// <summary>
     /// 現在Nodeを既存UI・判定処理が扱うCSVDataPoseFlow形式へ変換します。
-    /// EventからPoseが予約されているNodeでは、Sequence本来のPoseIDだけを一時的に差し替えます。
+    /// Event終了後もSequenceに設定されたPoseをそのまま使用します。
     /// </summary>
     public CSVDataPoseFlow GetPose()
     {
@@ -80,13 +64,10 @@ public class PoseFlowDataManager : MonoBehaviour
 
         SMusicNodeEvent node = m_sequence.EventsList[m_currentNodeIndex];
         float duration = GetCurrentNodeDuration();
-        int poseId = m_overrideNodeIndex == m_currentNodeIndex
-            ? m_queuedPoseId
-            : node.m_poseId;
         return new CSVDataPoseFlow
         {
             FlowNumber = node.m_nodeNumber,
-            PoseID = poseId,
+            PoseID = node.m_poseId,
             PoseName = node.m_eventName,
             time = duration,
             SuccessEffectNames = node.m_successEffectNames,
@@ -108,17 +89,8 @@ public class PoseFlowDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Audience Choiceで成立したPoseを、次に同期される通常Nodeへ一度だけ引き継ぐ予約を作成します。
-    /// </summary>
-    public void QueueNextPose(int _poseid)
-    {
-        m_queuedPoseId = Mathf.Max(0, _poseid);
-        b_m_hasQueuedPose = true;
-    }
-
-    /// <summary>
     /// Event中に通過した通常Nodeを表示済みとして扱い、終了後の遅延表示を防ぎます。
-    /// 予約Poseは、この時刻より後に通常Nodeが存在する場合だけ次Nodeへ引き継ぎます。
+    /// Event終了後は、この時刻より後の通常Node設定へそのまま進みます。
     /// </summary>
     public void SkipElapsedNodesAfterEvent(float _bgmtimeseconds)
     {
@@ -132,12 +104,6 @@ public class PoseFlowDataManager : MonoBehaviour
         }
 
         m_currentNodeIndex = elapsedNodeIndex;
-        m_overrideNodeIndex = -1;
-        bool b_hasFutureNode = elapsedNodeIndex + 1 < m_sequence.EventsList.Count;
-        if (!b_hasFutureNode)
-        {
-            b_m_hasQueuedPose = false;
-        }
     }
 
     /// <summary>

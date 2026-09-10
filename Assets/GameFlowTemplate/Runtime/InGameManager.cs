@@ -50,10 +50,16 @@ public sealed class InGameManager : MonoBehaviour
     [SerializeField] private bool b_m_playStartupTimeline;
     [SerializeField] private PlayableDirector m_startupTimelineDirector;
 
+    [Header("Ending Timeline")]
+    [Tooltip("ゲーム終了時、Resultへ遷移する前にTimelineを再生します。")]
+    [SerializeField] private bool b_m_playEndingTimeline;
+    [SerializeField] private PlayableDirector m_endingTimelineDirector;
+
 
     private InGameState m_inGameState = InGameState.Start;
     private float GameTimeSeconds;                  //現在のゲーム時間
     private bool b_m_gameStarted;
+    private bool b_m_gameEnding;
     private CanvasGroup m_loadingScreen;
     private float m_timeScaleBeforeStartup;
     private bool b_m_audioPauseBeforeStartup;
@@ -190,7 +196,9 @@ public sealed class InGameManager : MonoBehaviour
         ReleaseStartupPause();
 
         // ゲーム時間を開始する前に、専用Timelineの終了を待ちます。
-        yield return PlayStartupTimeline();
+        yield return PlayTimelineAndWait(
+            b_m_playStartupTimeline,
+            m_startupTimelineDirector);
 
         // すべての準備と開始演出が完了してから時計を0秒で開始します。
         m_gameManager?.StartGame();
@@ -198,17 +206,19 @@ public sealed class InGameManager : MonoBehaviour
     }
 
     /// <summary>ロード完了後の開始Timelineを終了まで再生します。</summary>
-    private IEnumerator PlayStartupTimeline()
+    private static IEnumerator PlayTimelineAndWait(
+        bool _shouldPlay,
+        PlayableDirector _director)
     {
-        if (!b_m_playStartupTimeline || m_startupTimelineDirector == null
-            || m_startupTimelineDirector.playableAsset == null)yield break;
+        if (!_shouldPlay || _director == null
+            || _director.playableAsset == null)yield break;
 
-        m_startupTimelineDirector.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
-        m_startupTimelineDirector.extrapolationMode = DirectorWrapMode.Hold;
-        m_startupTimelineDirector.time = 0.0d;
-        m_startupTimelineDirector.Evaluate();
-        m_startupTimelineDirector.Play();
-        while (m_startupTimelineDirector.state == PlayState.Playing)
+        _director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
+        _director.extrapolationMode = DirectorWrapMode.Hold;
+        _director.time = 0.0d;
+        _director.Evaluate();
+        _director.Play();
+        while (_director.state == PlayState.Playing)
         {
             yield return null;
         }
@@ -353,7 +363,7 @@ public sealed class InGameManager : MonoBehaviour
         }
         if (finishTime > 0.0f && GameTimeSeconds >= finishTime)
         {
-            m_gameManager?.FinishGame();
+            BeginGameEnding();
             return;
         }
 
@@ -396,6 +406,27 @@ public sealed class InGameManager : MonoBehaviour
         m_poseJudgeManager?.PoseJudgeManagerUpdate(
             m_inGameState,
             currentPose);
+    }
+
+    /// <summary>
+    /// ゲーム進行を止め、終了Timelineが完了してからResultへ遷移します。
+    /// </summary>
+    private void BeginGameEnding()
+    {
+        if (b_m_gameEnding)return;
+
+        b_m_gameEnding = true;
+        b_m_gameStarted = false;
+        m_gameManager?.PauseForDirection();
+        StartCoroutine(FinishGameAfterTimeline());
+    }
+
+    private IEnumerator FinishGameAfterTimeline()
+    {
+        yield return PlayTimelineAndWait(
+            b_m_playEndingTimeline,
+            m_endingTimelineDirector);
+        m_gameManager?.FinishGame();
     }
 
     private void UpdateTime()
