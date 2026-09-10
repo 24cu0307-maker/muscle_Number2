@@ -231,14 +231,33 @@ public sealed class InGameManager : MonoBehaviour
         if (!_shouldPlay || _director == null
             || _director.playableAsset == null)yield break;
 
+        DirectorUpdateMode previousUpdateMode = _director.timeUpdateMode;
+        DirectorWrapMode previousWrapMode = _director.extrapolationMode;
+        _director.Stop();
         _director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
-        _director.extrapolationMode = DirectorWrapMode.Hold;
+        _director.extrapolationMode = DirectorWrapMode.None;
         _director.time = 0.0d;
         _director.Evaluate();
-        _director.Play();
-        while (_director.state == PlayState.Playing)
+
+        try
         {
-            yield return null;
+            _director.Play();
+            double duration = _director.duration;
+            bool hasFiniteDuration = duration > 0.0d
+                && !double.IsInfinity(duration)
+                && !double.IsNaN(duration);
+            while (_director.state == PlayState.Playing
+                && (!hasFiniteDuration || _director.time < duration))
+            {
+                yield return null;
+            }
+        }
+        finally
+        {
+            // Timeline‚ª‘€ì‚µ‚½Camera‚âActiveó‘Ô‚ð’Êí‚ÌƒQ[ƒ€§Œä‚Ö•Ô‚µ‚Ü‚·B
+            _director.Stop();
+            _director.timeUpdateMode = previousUpdateMode;
+            _director.extrapolationMode = previousWrapMode;
         }
     }
 
