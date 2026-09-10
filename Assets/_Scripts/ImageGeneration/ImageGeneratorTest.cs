@@ -55,7 +55,8 @@ public class ImageGeneratorTest : MonoBehaviour
 
 
         //ファイル内の画像をImageのリスト分を貼り付ける
-        //SetImage(Resultimage);
+        SetImage(Resultimage);
+        SetImage(Titleimage);
 
         path = Path.Combine(
            folderPath,

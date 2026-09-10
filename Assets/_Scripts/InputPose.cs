@@ -62,7 +62,6 @@ public class InputPose : MonoBehaviour
             AngleDataManager.Instance.angleData.angle[3] >= (pose.RightShoulderRotation[0] - pose.RightShoulderRotation[1])
             )
         {
-            Debug.Log("[posecheckaaa]true");
             isPose[0] = true;
             //SceneManager.LoadScene("Tutorial");
             //Score?.Invoke(poseID);
@@ -76,7 +75,6 @@ public class InputPose : MonoBehaviour
         //    )
         else
         {
-            Debug.Log("[posecheckaaa]false");
             isPose[0] = false;
 
         }
