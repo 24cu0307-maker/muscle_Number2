@@ -4,11 +4,13 @@
 *@author 24cu0312 久場洸太*
 *@date 2026/07/29*
 *最終更新日 2026/07/29*
-*@remarks AnimatorがなくてもTransform Animationで動作*
+*@remarks 弱いTransform Animationへ任意のAnimation Clipを重ねて再生可能*
 *━━━━━━━━━*/
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
 /// <summary>
 /// 観客が使用するリアクション種類です。
@@ -20,6 +22,35 @@ public enum EAudienceReaction
     Cheer,
     Bounce,
     Disappointed
+}
+
+[System.Serializable]
+public sealed class AudienceReactionAnimationSet
+{
+    [SerializeField] private AnimationClip m_jump;
+    [SerializeField] private AnimationClip m_sway;
+    [SerializeField] private AnimationClip m_cheer;
+    [SerializeField] private AnimationClip m_bounce;
+    [SerializeField] private AnimationClip m_disappointed;
+
+    public AnimationClip GetClip(EAudienceReaction _reaction)
+    {
+        switch (_reaction)
+        {
+            case EAudienceReaction.Jump:
+                return m_jump;
+            case EAudienceReaction.Sway:
+                return m_sway;
+            case EAudienceReaction.Cheer:
+                return m_cheer;
+            case EAudienceReaction.Bounce:
+                return m_bounce;
+            case EAudienceReaction.Disappointed:
+                return m_disappointed;
+        }
+
+        return null;
+    }
 }
 
 /// <summary>
@@ -35,10 +66,19 @@ public sealed class AudienceReaction : MonoBehaviour
     [SerializeField] private float m_scaleAmount = 0.08f; //拡縮量
     [SerializeField] private float m_duration = 0.75f; //一回の長さ
 
+    [Header("Reaction Animation")]
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float m_proceduralStrengthMultiplier = 0.35f;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_animationWeight = 1.0f;
+    [SerializeField] private Animator m_animator;
+    [SerializeField] private AudienceReactionAnimationSet m_animationSet =
+        new AudienceReactionAnimationSet();
+
     private Vector3 m_baseLocalPosition; //基準位置
     private Quaternion m_baseLocalRotation; //基準回転
     private Vector3 m_baseLocalScale; //基準Scale
     private Coroutine m_reactionCoroutine; //現在の動作
+    private PlayableGraph m_animationGraph; //現在のAnimation Clip再生Graph
     private static AudiencePreferenceSystem s_preferenceSystem; //全観客で共有する好み管理元
 
     /// <summary>
@@ -54,6 +94,22 @@ public sealed class AudienceReaction : MonoBehaviour
         m_baseLocalPosition = transform.localPosition;
         m_baseLocalRotation = transform.localRotation;
         m_baseLocalScale = transform.localScale;
+    }
+
+    /// <summary>生成元で設定した共通Animationをこの観客へ適用します。</summary>
+    public void ConfigureAnimation(
+        float _proceduralStrengthMultiplier,
+        float _animationWeight,
+        AudienceReactionAnimationSet _animationSet)
+    {
+        m_proceduralStrengthMultiplier =
+            Mathf.Clamp01(_proceduralStrengthMultiplier);
+        m_animationWeight = Mathf.Clamp01(_animationWeight);
+        m_animationSet = _animationSet;
+        if (m_animator == null)
+        {
+            m_animator = GetComponentInChildren<Animator>(true);
+        }
     }
 
     /// <summary>
@@ -88,11 +144,17 @@ public sealed class AudienceReaction : MonoBehaviour
             StopCoroutine(m_reactionCoroutine);
         }
 
+        StopConfiguredAnimation();
         ResetTransform();
+        float animationDuration = PlayConfiguredAnimation(
+            _reaction,
+            Mathf.Max(0.0f, _strength));
         m_reactionCoroutine = StartCoroutine(
             PlayReactionRoutine(
                 _reaction,
-                Mathf.Max(0.0f, _strength)));
+                Mathf.Max(0.0f, _strength)
+                    * m_proceduralStrengthMultiplier,
+                animationDuration));
     }
 
     /// <summary>
@@ -100,25 +162,80 @@ public sealed class AudienceReaction : MonoBehaviour
     /// </summary>
     private IEnumerator PlayReactionRoutine(
         EAudienceReaction _reaction,
-        float _strength)
+        float _strength,
+        float _animationDuration)
     {
-        float duration = Mathf.Max(EMinimumDuration, m_duration); //安全な動作時間
+        float proceduralDuration =
+            Mathf.Max(EMinimumDuration, m_duration); //従来動作の再生時間
+        float duration = Mathf.Max(
+            proceduralDuration,
+            _animationDuration); //両方の動作が終わるまで待つ時間
         float elapsedSeconds = 0.0f; //経過時間
+        bool b_proceduralComplete = false;
         while (elapsedSeconds < duration)
         {
             elapsedSeconds += Time.deltaTime;
-            float progress = Mathf.Clamp01(elapsedSeconds / duration); //進行率
-            float wave = Mathf.Sin(progress * EFullCycleRadians); //周期波形
-            ApplyReaction(
-                _reaction,
-                progress,
-                wave,
-                _strength);
+            if (elapsedSeconds < proceduralDuration)
+            {
+                float progress =
+                    Mathf.Clamp01(elapsedSeconds / proceduralDuration); //進行率
+                float wave = Mathf.Sin(progress * EFullCycleRadians); //周期波形
+                ApplyReaction(
+                    _reaction,
+                    progress,
+                    wave,
+                    _strength);
+            }
+            else if (!b_proceduralComplete)
+            {
+                ResetTransform();
+                b_proceduralComplete = true;
+            }
             yield return null;
         }
 
         ResetTransform();
+        StopConfiguredAnimation();
         m_reactionCoroutine = null;
+    }
+
+    /// <summary>設定されたClipをAnimatorへ一度だけ出力します。</summary>
+    private float PlayConfiguredAnimation(
+        EAudienceReaction _reaction,
+        float _strength)
+    {
+        if (m_animationSet == null)return 0.0f;
+
+        AnimationClip clip = m_animationSet.GetClip(_reaction);
+        if (clip == null)return 0.0f;
+        if (m_animator == null)
+        {
+            m_animator = GetComponentInChildren<Animator>(true);
+        }
+        if (m_animator == null)return 0.0f;
+
+        m_animationGraph = PlayableGraph.Create(
+            $"AudienceReaction_{GetInstanceID()}");
+        m_animationGraph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+        AnimationClipPlayable clipPlayable =
+            AnimationClipPlayable.Create(m_animationGraph, clip);
+        clipPlayable.SetApplyFootIK(false);
+        clipPlayable.SetApplyPlayableIK(false);
+        AnimationPlayableOutput output = AnimationPlayableOutput.Create(
+            m_animationGraph,
+            "Audience Reaction",
+            m_animator);
+        output.SetSourcePlayable(clipPlayable);
+        output.SetWeight(m_animationWeight * Mathf.Clamp01(_strength));
+        m_animationGraph.Play();
+        return clip.length;
+    }
+
+    private void StopConfiguredAnimation()
+    {
+        if (!m_animationGraph.IsValid())return;
+
+        m_animationGraph.Destroy();
     }
 
     /// <summary>
@@ -194,6 +311,7 @@ public sealed class AudienceReaction : MonoBehaviour
             m_reactionCoroutine = null;
         }
 
+        StopConfiguredAnimation();
         ResetTransform();
     }
 

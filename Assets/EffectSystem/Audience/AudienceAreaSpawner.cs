@@ -64,6 +64,15 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
     [SerializeField] private bool b_m_autoReaction = true; //自動Reaction
     [SerializeField] private Vector2 m_reactionIntervalRange =
         new Vector2(1.0f, 2.5f); //Reaction間隔
+
+    [Header("Audience Reaction Animation")]
+    [Tooltip("従来のTransform動作へ掛ける倍率です。0でAnimation Clipだけを再生します。")]
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float m_proceduralReactionStrengthMultiplier = 0.35f;
+    [SerializeField, Range(0.0f, 1.0f)] private float m_reactionAnimationWeight = 1.0f;
+    [SerializeField] private AudienceReactionAnimationSet m_reactionAnimations =
+        new AudienceReactionAnimationSet();
+
     [SerializeField] private bool b_m_enableCameraCulling = true; //画面外の観客を無効化
     [SerializeField] private Camera m_targetCamera; //可視範囲を使用するCamera
     private DroneViewingSystem m_droneViewingSystem; //Drone視点の観客表示判定
@@ -557,6 +566,10 @@ public sealed class AudienceAreaSpawner : MonoBehaviour
         {
             reaction = audienceObject.AddComponent<AudienceReaction>();
         }
+        reaction.ConfigureAnimation(
+            m_proceduralReactionStrengthMultiplier,
+            m_reactionAnimationWeight,
+            m_reactionAnimations);
         reaction.CaptureCurrentTransform();
 
         // 観客モデル生成後にBoundsが確定してから、手元へペンライトを装着します。
