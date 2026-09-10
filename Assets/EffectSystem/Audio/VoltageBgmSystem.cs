@@ -159,7 +159,9 @@ public sealed class VoltageBgmSystem : MonoBehaviour
 
         CreateAudioSources();
         m_openingCameraWaitStartTime = Time.unscaledTime;
-        if (b_m_playOnStart && !b_m_playAfterOpeningCamera)
+        if (b_m_playOnStart
+            && !b_m_playAfterOpeningCamera
+            && !b_m_completedAutoStart)
         {
             Play();
             b_m_completedAutoStart = true;
@@ -340,6 +342,19 @@ public sealed class VoltageBgmSystem : MonoBehaviour
             m_audioSources[i].time = 0.0f;
             m_audioSources[i].PlayScheduled(m_scheduledStartTime);
         }
+    }
+
+    /// <summary>
+    /// InGame開始演出中の自動再生を止め、開始処理側へ再生権限を渡します。
+    /// </summary>
+    /// <returns>開始演出後にBGMを再生する必要がある場合はtrueです。</returns>
+    public bool DeferAutoStartUntilGameBegins()
+    {
+        if (!b_m_playOnStart)return false;
+
+        b_m_completedAutoStart = true;
+        Stop();
+        return true;
     }
 
     /// <summary>

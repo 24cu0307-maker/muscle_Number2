@@ -60,6 +60,8 @@ public sealed class InGameManager : MonoBehaviour
     private float GameTimeSeconds;                  //現在のゲーム時間
     private bool b_m_gameStarted;
     private bool b_m_gameEnding;
+    private VoltageBgmSystem m_startupBgmSystem;
+    private bool b_m_startBgmAfterStartup;
     private CanvasGroup m_loadingScreen;
     private float m_timeScaleBeforeStartup;
     private bool b_m_audioPauseBeforeStartup;
@@ -128,6 +130,17 @@ public sealed class InGameManager : MonoBehaviour
         if (m_mediaPipeLoader == null)
         {
             m_mediaPipeLoader = FindFirstObjectByType<ScenesLoad>();
+        }
+
+        m_startupBgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        if (m_startupBgmSystem == null)
+        {
+            m_startupBgmSystem = FindFirstObjectByType<VoltageBgmSystem>();
+        }
+        if (m_startupBgmSystem != null)
+        {
+            b_m_startBgmAfterStartup =
+                m_startupBgmSystem.DeferAutoStartUntilGameBegins();
         }
     }
 
@@ -199,6 +212,11 @@ public sealed class InGameManager : MonoBehaviour
         yield return PlayTimelineAndWait(
             b_m_playStartupTimeline,
             m_startupTimelineDirector);
+
+        if (b_m_startBgmAfterStartup && m_startupBgmSystem != null)
+        {
+            m_startupBgmSystem.Play();
+        }
 
         // すべての準備と開始演出が完了してから時計を0秒で開始します。
         m_gameManager?.StartGame();
