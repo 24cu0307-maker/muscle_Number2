@@ -59,7 +59,7 @@ public class PasteImage_Result : MonoBehaviour
         return maxNumber + 1;
     }
 
-
+    //画像を取得　ファイル内の
     public Texture2D LoadResultImage(int number)
     {
         string saveDirectory = @"D:\GeneratedImages";

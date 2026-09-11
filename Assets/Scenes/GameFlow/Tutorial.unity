@@ -1588,7 +1588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51d115a6d8d3d6408b9d07ce6b45ef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialScene
-  m_characterPrefab: {fileID: 2263665786403691035, guid: a33c254c0334f79449cda39074c0c44d, type: 3}
+  m_characterPrefab: {fileID: 8937430212161693466, guid: 5a67ba70de84b71409b21abe1ea43966, type: 3}
   m_poseCanvasPrefab: {fileID: 6031576699090875130, guid: 15e58747a1064234eacb1565701e526c, type: 3}
   m_attemptSeconds: 3
   m_resultDisplaySeconds: 1
@@ -1693,10 +1693,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde67f536ba91604aac7c99ca2a9416d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArmController
-  Correction1: d70000009cffffffecffffff
-  Correction2: 68010000460000004cffffff
-  Correction3: 2700000056000000ebffffff
-  Correction4: 0e010000e7ffffff78000000
+  CorrectionValue: []
+  Correction1: 540000002e00000036000000
+  Correction2: 6fffffff92ffffffc4ffffff
+  Correction3: caffffff1301000054000000
+  Correction4: 42ffffffa6ffffff6e000000
+  debugLeftUpperAngle: 0
+  debugLeftShoulderCorrection: {x: 0, y: 0, z: 0}
+  debugLeftElbowCorrection: {x: 0, y: 0, z: 0}
+  debugRightUpperAngle: 0
+  debugRightShoulderCorrection: {x: 0, y: 0, z: 0}
+  debugRightElbowCorrection: {x: 0, y: 0, z: 0}
+  debugLeftLerp: 0
+  debugRightLerp: 0
+  downAngle: -90
+  horizontalAngle: 0
+  upAngle: 90
   _camera: {fileID: 1862486929}
   playerArm: {fileID: 3992672911985692810}
   _Body:
