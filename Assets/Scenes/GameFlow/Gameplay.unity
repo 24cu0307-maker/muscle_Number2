@@ -18873,7 +18873,7 @@ Light:
   m_InnerSpotAngle: 5.4257793
   m_CookieSize2D: {x: 1e-45, y: 1e-45}
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -19801,7 +19801,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4066164426106519510, guid: c7f2bec7c4a535445a4d94c932f85050, type: 3}
       propertyPath: m_Name
-      value: Live_05_GlitterShower
+      value: ShowerLeft
       objectReference: {fileID: 0}
     - target: {fileID: 4066164426106519510, guid: c7f2bec7c4a535445a4d94c932f85050, type: 3}
       propertyPath: m_IsActive
@@ -20568,7 +20568,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_Name
-      value: Live_04_StarBurst
+      value: BustRight
       objectReference: {fileID: 0}
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_IsActive
@@ -37423,7 +37423,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_Name
-      value: Live_04_StarBurst
+      value: BustLeft
       objectReference: {fileID: 0}
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_IsActive
@@ -50289,7 +50289,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4066164426106519510, guid: c7f2bec7c4a535445a4d94c932f85050, type: 3}
       propertyPath: m_Name
-      value: Live_05_GlitterShower
+      value: ShowerRight
       objectReference: {fileID: 0}
     - target: {fileID: 4066164426106519510, guid: c7f2bec7c4a535445a4d94c932f85050, type: 3}
       propertyPath: m_IsActive
@@ -103416,7 +103416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -104353,7 +104353,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_Name
-      value: Live_04_StarBurst (1)
+      value: BurstRightshot
       objectReference: {fileID: 0}
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_IsActive
@@ -117136,7 +117136,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_Name
-      value: Live_04_StarBurst (1)
+      value: BurstLeftshot
       objectReference: {fileID: 0}
     - target: {fileID: 1178494948731584542, guid: 7a219502437fdab4997ca04808a7f35b, type: 3}
       propertyPath: m_IsActive

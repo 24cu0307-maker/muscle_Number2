@@ -38,7 +38,7 @@ public sealed class TutorialScene : MonoBehaviour
     private GameObject m_poseCanvasInstance;
     private GameObject m_characterInstance;
     private Camera m_tutorialCamera;
-    private Text m_statusText;
+    
     private Image m_successFlash;
     private Text m_successText;
     private readonly List<Image> m_successRays = new List<Image>();
@@ -64,8 +64,7 @@ public sealed class TutorialScene : MonoBehaviour
     {
         PrepareTutorialPresentation();
         LoadPoseData();
-        SetStatus("カメラの前に全身が映るように立ってください…");
-
+      
         Scene mediaPipeScene = SceneManager.GetSceneByName(EMediaPipeSceneName);
         if (!mediaPipeScene.isLoaded)
         {
@@ -74,14 +73,12 @@ public sealed class TutorialScene : MonoBehaviour
 
         while (!HasTrackingData())
         {
-            SetStatus("カメラの前に全身が映るように立ってください…");
             yield return null;
         }
 
         m_armController.enabled = true;
         m_bodyController.enabled = true;
         HideAllPoseFrames();
-        SetStatus("");
 
         IsReady = true;
     }
@@ -124,7 +121,6 @@ public sealed class TutorialScene : MonoBehaviour
     {
         SetNamedObjectActive("Panel", false);
         SetNamedObjectActive("PLAY Button", false);
-        CreateStatusText();
         CreateSuccessPresentation();
 
         if (m_poseCanvasPrefab != null)
@@ -208,7 +204,6 @@ public sealed class TutorialScene : MonoBehaviour
         m_poseHoldElapsed = 0.0f;
         b_m_resolvingAttempt = false;
         b_m_attemptRunning = true;
-        SetStatus($"ポーズ {m_currentPoseIndex + 1} / {EPoseCount}\n動く枠が重なるタイミングでポーズを合わせよう！");
     }
 
     /// <summary>現在のポーズ枠を、カメラ初期化状態に関係なく表示します。</summary>
@@ -332,13 +327,8 @@ public sealed class TutorialScene : MonoBehaviour
 
         if (_success)
         {
-            SetStatus("成功！");
             StartCoroutine(PlaySuccessPresentation());
             ++m_currentPoseIndex;
-        }
-        else
-        {
-            SetStatus("失敗… もう一度！");
         }
 
         // 成功・失敗を外部へ通知
@@ -348,7 +338,6 @@ public sealed class TutorialScene : MonoBehaviour
         if (m_currentPoseIndex >= EPoseCount)
         {
             HideAllPoseFrames();
-            SetStatus("");
 
             PracticeCompleted = true;
             yield break;
@@ -427,33 +416,6 @@ public sealed class TutorialScene : MonoBehaviour
             if (transforms[i].name == _name)return transforms[i].gameObject;
         }
         return null;
-    }
-
-    private void CreateStatusText()
-    {
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        if (canvas == null)return;
-
-        GameObject statusObject = new GameObject(
-            "Tutorial Progress",
-            typeof(RectTransform),
-            typeof(CanvasRenderer),
-            typeof(Text));
-        statusObject.transform.SetParent(canvas.transform, false);
-        RectTransform rect = statusObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 1.0f);
-        rect.anchorMax = new Vector2(0.5f, 1.0f);
-        rect.pivot = new Vector2(0.5f, 1.0f);
-        rect.anchoredPosition = new Vector2(0.0f, -100.0f);
-        rect.sizeDelta = new Vector2(1100.0f, 150.0f);
-
-        m_statusText = statusObject.GetComponent<Text>();
-        m_statusText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        m_statusText.fontSize = 32;
-        m_statusText.alignment = TextAnchor.MiddleCenter;
-        m_statusText.color = Color.white;
-        m_statusText.horizontalOverflow = HorizontalWrapMode.Wrap;
-        m_statusText.verticalOverflow = VerticalWrapMode.Overflow;
     }
 
     /// <summary>成功時だけ最前面に表示するFlash、放射光、文字を生成します。</summary>
@@ -579,11 +541,6 @@ public sealed class TutorialScene : MonoBehaviour
         }
         m_successText.color = new Color(1.0f, 0.9f, 0.2f, 0.0f);
         m_successText.rectTransform.localScale = Vector3.zero;
-    }
-
-    private void SetStatus(string _message)
-    {
-        if (m_statusText != null)m_statusText.text = _message;
     }
 
     private static void SetNamedObjectActive(string _name, bool _active)

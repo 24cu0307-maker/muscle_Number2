@@ -400,7 +400,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
                 layerClip = m_musicNodeSequence.BgmClip;
             }
             audioSource.clip = layerClip;
-            audioSource.loop = true;
+            audioSource.loop = false;
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0.0f;
             audioSource.priority = EHighestAudioPriority;

@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2665e906a8e9e844b9bf13a6c359ed47, type: 3}
+  m_Sprite: {fileID: 21300000, guid: caca26a97522f7840ac7b116c2cc5580, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3726,7 +3726,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ee592838f92e41947b8670f126b8259a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2bf4fdcb2417d62479e9ce6b839c5cfd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7064,7 +7064,7 @@ MonoBehaviour:
   m_audienceMesh: {fileID: 0}
   m_materials: []
   m_generationVolumeObject: {fileID: 0}
-  m_areaSize: {x: 300, y: 100}
+  m_areaSize: {x: 150, y: 100}
   m_areaHeight: 20
   b_m_showAreaVolumes: 1
   m_exclusionObjects:
@@ -7073,10 +7073,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_groundOffset: 0
-  m_audienceCount: 700
-  m_positionError: {x: 60, y: 60}
+  m_audienceCount: 1400
+  m_positionError: {x: 50, y: 50}
   m_scaleRange: {x: 0.9, y: 1.1}
-  m_yawError: 8
+  m_yawError: 3
   m_facingTarget: {fileID: 0}
   m_modelYawOffset: 0
   b_m_spawnOnStart: 1
