@@ -454,6 +454,8 @@ public sealed class InGameManager : MonoBehaviour
 
         b_m_gameEnding = true;
         b_m_gameStarted = false;
+        VoltageBgmSystem bgmSystem = m_gameManager?.GetVoltageBgmSystem();
+        bgmSystem?.Stop();
         m_gameManager?.PauseForDirection();
         StartCoroutine(FinishGameAfterTimeline());
     }
