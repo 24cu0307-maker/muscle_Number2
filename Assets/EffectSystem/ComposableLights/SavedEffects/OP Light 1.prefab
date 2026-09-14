@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 6377760990245966277}
   - component: {fileID: 6756698763694728981}
   - component: {fileID: 7816316610014309770}
+  - component: {fileID: 9120859705363742112}
   m_Layer: 0
-  m_Name: OP Light
+  m_Name: OP Light 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,13 +30,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3202490405218570652}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.105176345, y: -0.012085633, z: 0.113515876, w: 0.9878795}
+  m_LocalPosition: {x: 1.2000016, y: 8.599998, z: 8.300002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -11.833, y: -2.797, z: 13.4}
 --- !u!108 &6547910832625375811
 Light:
   m_ObjectHideFlags: 0
@@ -116,38 +117,38 @@ MonoBehaviour:
   b_m_previewEffectsInEditMode: 1
   m_effects:
   - m_name: 
-    b_m_enabled: 1
+    b_m_enabled: 0
     m_effectPrefab: {fileID: 9192339068133502779, guid: 0c2cd97b1caefec4e84eae6e4b0f051c, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
   - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 1311253844554028484, guid: c748a6d30ce542b4793f2840772d7c2c, type: 3}
+    m_effectPrefab: {fileID: 1058960545068698877, guid: 8465ab15a2288c3469372389c02d898d, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
   - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 3746656655208628824, guid: 2335a61a7eb0615429a286c258eac34e, type: 3}
+    m_effectPrefab: {fileID: 7251356011910047887, guid: bbc212d1abae73042a09a66e27073ba3, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
   - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 4269329167256538501, guid: 9383f10a6632c3447810e1ecd7a5d210, type: 3}
+    m_effectPrefab: {fileID: 4243478348007839972, guid: 7749d7150da5aea489e4d7440cbabdfd, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
   - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 5244449067601954013, guid: 24e5cc025299ad140902613dd0aceaf2, type: 3}
+    m_effectPrefab: {fileID: 7545893206148463167, guid: d593c8ae45d2d4d41ba623cd0c431a9f, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
   - m_name: 
     b_m_enabled: 1
-    m_effectPrefab: {fileID: 5751861515428142403, guid: fd09fc3bf818f55488c6550dbc90d418, type: 3}
+    m_effectPrefab: {fileID: 5478210454663403575, guid: 8ceab47e1f4a0784981c6548a0e19336, type: 3}
     m_localPosition: {x: 0, y: 0, z: 0}
     m_localEulerAngles: {x: 0, y: 0, z: 0}
     m_localScale: {x: 0, y: 0, z: 0}
@@ -217,3 +218,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9120859705363742112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202490405218570652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8bca95f7c947b4db5fb152a0d693d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.cqf.urpvolumetricfog.runtime::VolumetricAdditionalLight
+  anisotropy: 0.25
+  scattering: 1
+  radius: 0.2
