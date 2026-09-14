@@ -10,15 +10,6 @@ public class ImageGeneratorTest : MonoBehaviour
     [SerializeField]
     Camera camera;
 
-    [Header("一番上に現在の写真、次に１個前の写真と続く")]
-    [SerializeField]
-    private List<Image> Resultimage;
-
-    [Header("一番上に現在の写真、次に１個前の写真と続く")]
-    [SerializeField]
-    private List<Image> Titleimage;
-    
-
     [SerializeField]
     private ImageGenerator imageGenerator;
 
@@ -44,49 +35,20 @@ public class ImageGeneratorTest : MonoBehaviour
 
         }
 
-
-        //ImageにTextureを設定
-        //CreateSprite(LoadResultImage(1));
-
-        //ファイル内のTextureを読み込む
-        //引数：画像の番号
-        //LoadResultImage(1);
-
-
-        //ファイル内の画像をImageのリスト分を貼り付ける
-        SetImage(Resultimage);
-        SetImage(Titleimage);
-
         path = Path.Combine(
            folderPath,
            "ScreenShot.png");
 
 
         //撮影
-        SaveScreen();
+        //SaveScreen();
 
         //指定したファイルパスの画像を読み込んで、Unityで使える Texture2D に変換して返す処理
         //元画像（ゲーム内で撮影した画像の読み込み）
-        LoadImage(path);
+        //LoadImage(path);
 
         //画像作成
-        CreateImage();
-    }
-
-    private void Update()
-    {
-        if (Keyboard.current.aKey.wasReleasedThisFrame)
-        {
-            //撮影
-            SaveScreen();
-
-            //指定したファイルパスの画像を読み込んで、Unityで使える Texture2D に変換して返す処理
-            //元画像（ゲーム内で撮影した画像の読み込み）
-            LoadImage(path);
-
-            //画像作成
-            CreateImage();
-        }
+        //CreateImage();
     }
 
 
@@ -157,56 +119,6 @@ public class ImageGeneratorTest : MonoBehaviour
         }
 
         return maxNumber + 1;
-    }
-
-
-    public Texture2D LoadResultImage(int number)
-    {
-        string saveDirectory = @"D:\GeneratedImages";
-
-        string fileName = $"Result_{number:D3}.png";
-
-        string path = Path.Combine(
-            saveDirectory,
-            fileName
-        );
-
-        if (!File.Exists(path))
-        {
-            Debug.LogError("画像がありません：" + path);
-            return null;
-        }
-
-        byte[] bytes = File.ReadAllBytes(path);
-
-        Texture2D texture = new Texture2D(2, 2);
-
-        if (texture.LoadImage(bytes))
-        {
-            Debug.Log("画像を再取得しました：" + path);
-            return texture;
-        }
-
-        Debug.LogError("画像の読み込みに失敗しました：" + path);
-        return null;
-    }
-
-
-    public Sprite CreateSprite(Texture2D texture)
-    {
-        if (texture == null)
-        {
-            Debug.LogError("Texture2Dがありません");
-            return null;
-        }
-
-        Sprite sprite = Sprite.Create(
-            texture,
-            new Rect(0, 0, texture.width, texture.height),
-            new Vector2(0.5f, 0.5f)
-        );
-
-        return sprite;
     }
 
 
@@ -314,16 +226,6 @@ public class ImageGeneratorTest : MonoBehaviour
         return null;
     }
 
-    //
-    public void SetImage(List<Image> image)
-    {
-        int number = GetNextImageNumber(saveDirectory) - 1;
-
-        foreach (Image setting in image)
-        {
-            setting.sprite = CreateSprite(LoadResultImage(number));
-            number--;
-        }
-    }
+  
 
 }

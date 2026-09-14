@@ -6691,6 +6691,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3110195103508083798, guid: 31db4facf86a4a1448a0513a1b5c4e3b, type: 3}
   m_PrefabInstance: {fileID: 2051786221}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &136606635 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+  m_PrefabInstance: {fileID: 9188044402292737792}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c248d34649455e449124b359a616148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImageGeneratorTest
 --- !u!4 &137298994 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: a03152e1ed8346b5ba4c618df1499bbc, type: 3}
@@ -56155,7 +56166,7 @@ Light:
   m_InnerSpotAngle: 14.307065
   m_CookieSize2D: {x: 1e-45, y: 1e-45}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -89758,7 +89769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -96730,6 +96741,55 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1221305755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1221305757}
+  - component: {fileID: 1221305756}
+  m_Layer: 0
+  m_Name: FreePoseCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1221305756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221305755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd25d6c07a62bff42a0c4dbf5e8a2455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreePoseCamera
+  m_targetCamera: {fileID: 2040577845}
+  m_imageGeneratorTest: {fileID: 136606635}
+  m_flowDataManager: {fileID: 1397185640}
+  m_maxZoomZ: -10
+  m_positionTolerance: 0.1
+--- !u!4 &1221305757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221305755}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.12673, y: -9.25935, z: 1.40523}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1231299819 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4336454631035741112, guid: 31db4facf86a4a1448a0513a1b5c4e3b, type: 3}
@@ -169146,3 +169206,4 @@ SceneRoots:
   - {fileID: 1893164770}
   - {fileID: 1793563437}
   - {fileID: 8452185199594202899}
+  - {fileID: 1221305757}

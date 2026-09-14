@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 public class PasteImage_Result : MonoBehaviour
 {
