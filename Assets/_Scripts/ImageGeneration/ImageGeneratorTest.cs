@@ -54,6 +54,8 @@ public class ImageGeneratorTest : MonoBehaviour
 
     public void CreateImage()
     {
+        excelRankingLoader.AddRankingData();
+
         RankingList = excelRankingLoader.GetCSVDatas();
 
         // ランキングデータが取得できているか確認
@@ -63,9 +65,9 @@ public class ImageGeneratorTest : MonoBehaviour
             return;
         }
 
-        data = RankingList[RankingList.Count - 1];
+        //data = RankingList[RankingList.Count - 1];
 
-       
+        
 
         //ファイルを生成
         //なかったら生成しない

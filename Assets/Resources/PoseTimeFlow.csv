@@ -2,7 +2,7 @@ PoseFlow,PoseID,EventName,time,SuccessEffectNames,FailureEffectNames
 1,0,Event,5.9,CameraShake|Strobe|EffectLight_KIMI_03|EffectLight_KIMI_02|EffectBeam_02|EffectBeam_01|EffectUI_Perfect,EffectUI_Miss
 2,1,Event,6.185,EffectBeam_00|EffectLight_KIMI_00|CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04,EffectUI_Miss
 3,2,Event,6.611,CameraShake|Strobe|EffectBurst_00|EffectBurst_01|EffectBeam_01|EffectUI_Perfect,EffectUI_Miss
-4,0,Event,8.442,CameraShake|Strobe|EffectLight_KIMI_01|EffectBeam_00|EffectUI_Perfect,EffectUI_Miss
+4,6,Event,8.442,CameraShake|Strobe|EffectLight_KIMI_01|EffectBeam_00|EffectUI_Perfect,EffectUI_Miss
 5,0,Event,7.734,EffectBurst_01|CameraShake|Strobe|EffectBeam_01|EffectUI_Perfect,EffectUI_Miss
 6,1,Event,4.235,CameraShake|EffectBeam_01|EffectLight_KIMI_03,EffectUI_Miss
 7,3,Event,7.509,CameraShake|EffectBeam_01|EffectBurst_00|EffectUI_Perfect,EffectUI_Miss
@@ -15,5 +15,10 @@ PoseFlow,PoseID,EventName,time,SuccessEffectNames,FailureEffectNames
 14,0,Event,11.437,CameraShake|Strobe|EffectLight_KIMI_04|EffectUI_Perfect,EffectUI_Miss
 15,1,Event,3.199,CameraShake|Strobe|EffectLight_KIMI_03|EffectUI_Perfect,EffectUI_Miss
 16,5,Event,3.341,CameraShake|Strobe|EffectBurst_00|EffectLight_KIMI_04|EffectUI_Perfect,EffectUI_Miss
-17,4,Event,3.625,CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04,
-18,6,Event,2.559,CameraShake|Strobe|EffectLight_KIMI_03,
+17,4,Event,3.625,CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04,EffectUI_Miss
+18,6,Event,2.559,CameraShake|Strobe|EffectLight_KIMI_03|EffectUI_Perfect|EffectBurst_01,EffectUI_Miss
+19,7,Event,6.202,CameraShake|Strobe|EffectUI_Perfect|EffectBeam_00|EffectLight_KIMI_03|EffectBurst_01,EffectUI_Miss
+20,2,Event,3.12,CameraShake|Strobe|EffectUI_Perfect|EffectBurst_01|EffectLight_KIMI_00,EffectUI_Miss
+21,3,Event,2.908,CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_03|EffectBurst_00|EffectLight_KIMI_04,EffectUI_Miss
+22,8,Event,3.191,CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04|EffectLight_KIMI_03,EffectUI_Miss
+23,9,Event,5.319,CameraShake|Strobe|EffectUI_Perfect|EffectBurst_01|EffectLight_KIMI_03|EffectBeam_01,EffectUI_Miss

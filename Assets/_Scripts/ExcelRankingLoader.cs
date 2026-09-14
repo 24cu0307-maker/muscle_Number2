@@ -29,7 +29,7 @@ public class ExcelRankingLoader : MonoBehaviour
 
         //これを呼び出せばよい
         //ランキングが一つ追加される
-        AddRankingData();
+        //AddRankingData();
     }
 
 
@@ -209,7 +209,7 @@ public class ExcelRankingLoader : MonoBehaviour
             Debug.LogError("ScoreManagerが見つかりません");
             return 0;
         }
-
+        Debug.Log("ScoreManagerが見つかりません" + scoreManager.CurrentScore);
         return scoreManager.CurrentScore;
     }
 

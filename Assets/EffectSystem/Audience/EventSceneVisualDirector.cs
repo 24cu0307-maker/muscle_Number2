@@ -544,6 +544,8 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
             out SMusicNodeEvent candidate))
         {
             m_poseJudgeController.PoseJudge(candidate.m_poseId);
+
+            //A  Debug.Log("aiuogfag" + m_poseJudgeController.GetisPose(candidate.m_poseId));
             if (m_poseJudgeController.GetisPose(candidate.m_poseId))
             {
                 m_canvasController?.SetPoseDetectionEnabled(false);
@@ -657,6 +659,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     private bool IsSelectedPoseSuccessful(CSVDataPoseFlow _pose)
     {
+        Debug.Log("aiuogfag" + m_poseJudgeController.GetisPose(_pose.PoseID));
         return EffectDebugKeySettings.ForceAllSuccess
             || m_poseJudgeController != null
             && m_poseJudgeController.GetisPose(_pose.PoseID);

@@ -67,7 +67,7 @@ public class PoseJudgeManager : MonoBehaviour
                 break;
 
             case InGameState.Active:
-
+                Debug.Log("judge???" + _pose.PoseID);
                 Judge(_pose);
 
                 break;
@@ -103,13 +103,19 @@ public class PoseJudgeManager : MonoBehaviour
         }
 
         bool b_poseMatched = m_poseJudgeController.GetisPose(_pose.PoseID);
+
+        //Debug.Log("aiuogfag" + m_poseJudgeController.GetisPose(_pose.PoseID));
         bool b_inJudgeWindow = m_poseJudgeController.PoseJudge_Normal(
             m_uiController.GetCurrentApproachingFrame(_pose),
             m_uiController.GetCurrentWatingFrame(_pose));
+        Debug.Log("aiuogfagageg" + b_inJudgeWindow + " && " + b_poseMatched);
         if (b_poseMatched && b_inJudgeWindow)
         {
+            Debug.Log("aiuogfagageg" + "Succses");
             float matchRate = m_scoreController.GetMatchRate();
+            Debug.Log("aiuogfagageg" + m_scoreController.GetMatchRate());
             CompleteJudge(_pose, GetGrade(matchRate), matchRate);
+            Debug.Log("aiuogfagageg" + GetGrade(matchRate) + "And" + matchRate);
             return;
         }
 
@@ -117,6 +123,7 @@ public class PoseJudgeManager : MonoBehaviour
             m_uiController.GetCurrentApproachingFrame(_pose),
             m_uiController.GetCurrentWatingFrame(_pose)))
         {
+            Debug.Log("aiuogfagageg" + "Failure");
             CompleteJudge(_pose, EPoseMatchGrade.Miss, 0.0f);
         }
     }

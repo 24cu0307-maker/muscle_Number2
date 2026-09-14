@@ -59,11 +59,19 @@ public class ScoreController : MonoBehaviour
         ///指定されたポーズデータを入れる
         CSVPoseData pose = m_poseDatas[_poseID];
 
-        ///ポーズのスコア計算
-        m_score = m_scoreCalculator.TotalScore(
-            Mathf.Abs(pose.LeftShoulderRotation[0] - AngleDataManager.Instance.angleData.angle[1]), Mathf.Abs(pose.RightShoulderRotation[0] - AngleDataManager.Instance.angleData.angle[3]),
-            Mathf.Abs(pose.LeftelbowRotation[0] - AngleDataManager.Instance.angleData.angle[0]), Mathf.Abs(pose.RightelbowRotation[0] - AngleDataManager.Instance.angleData.angle[2])
-            );
+        if(_poseID != 9)
+        {
+            ///ポーズのスコア計算
+            m_score = m_scoreCalculator.TotalScore(
+                Mathf.Abs(pose.LeftShoulderRotation[0] - AngleDataManager.Instance.angleData.angle[1]), Mathf.Abs(pose.RightShoulderRotation[0] - AngleDataManager.Instance.angleData.angle[3]),
+                Mathf.Abs(pose.LeftelbowRotation[0] - AngleDataManager.Instance.angleData.angle[0]), Mathf.Abs(pose.RightelbowRotation[0] - AngleDataManager.Instance.angleData.angle[2])
+                );
+        }
+        else
+        {
+            m_score = 10000;
+        }
+        
 
        
     }

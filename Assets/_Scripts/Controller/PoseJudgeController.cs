@@ -107,8 +107,29 @@ public class PoseJudgeController : MonoBehaviour
             return;
         }
 
+
+
         ///指定されたポーズデータを入れる
         CSVPoseData pose = poseDatas[poseID];
+
+        Debug.Log("aiuogfagageg" + pose.PoseID);
+
+        Debug.Log("aiuogfagageg" + "\n" +
+            AngleDataManager.Instance.angleData.angle[0] + " <= " + (pose.LeftelbowRotation[0] + pose.LeftelbowRotation[1]) + "\n" +
+            AngleDataManager.Instance.angleData.angle[0] + " >= " + (pose.LeftelbowRotation[0] - pose.LeftelbowRotation[1]) + "\n" +
+             AngleDataManager.Instance.angleData.angle[1] + " <= " + (pose.LeftShoulderRotation[0] + pose.LeftShoulderRotation[1]) + "\n" +
+
+            AngleDataManager.Instance.angleData.angle[1] + " >= " + (pose.LeftShoulderRotation[0] - pose.LeftShoulderRotation[1]) + "\n" +
+
+            AngleDataManager.Instance.angleData.angle[2] + " <= " + (pose.RightelbowRotation[0] + pose.RightelbowRotation[1]) + "\n" +
+
+            AngleDataManager.Instance.angleData.angle[2] + " >= " + (pose.RightelbowRotation[0] - pose.RightelbowRotation[1]) + "\n" +
+
+            AngleDataManager.Instance.angleData.angle[3] + " <= " + (pose.RightShoulderRotation[0] + pose.RightShoulderRotation[1]) + "\n" +
+
+            AngleDataManager.Instance.angleData.angle[3] + " >= " + (pose.RightShoulderRotation[0] - pose.RightShoulderRotation[1])
+
+            );
 
         ///ポーズの判定
         if (AngleDataManager.Instance &&
@@ -134,14 +155,14 @@ public class PoseJudgeController : MonoBehaviour
         {
             isPose = true;
             Score?.Invoke(poseID);
-
+            Debug.Log("PoseID???" + isPose);
 
         }
 
         else
         {
             isPose = false;
-
+            Debug.Log("PoseID???" + isPose);
 
         }
 

@@ -35,7 +35,7 @@ MonoBehaviour:
     m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 4
     m_time: 27.137463
-    m_poseId: 0
+    m_poseId: 6
     m_eventName: Event
     m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_01|EffectBeam_00|EffectUI_Perfect
     m_failureEffectNames: EffectUI_Miss
@@ -116,13 +116,43 @@ MonoBehaviour:
     m_poseId: 4
     m_eventName: Event
     m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04
-    m_failureEffectNames: 
+    m_failureEffectNames: EffectUI_Miss
   - m_nodeNumber: 18
     m_time: 106.48761
     m_poseId: 6
     m_eventName: Event
-    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_03
-    m_failureEffectNames: 
+    m_successEffectNames: CameraShake|Strobe|EffectLight_KIMI_03|EffectUI_Perfect|EffectBurst_01
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 19
+    m_time: 112.68965
+    m_poseId: 7
+    m_eventName: Event
+    m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectBeam_00|EffectLight_KIMI_03|EffectBurst_01
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 20
+    m_time: 115.810074
+    m_poseId: 2
+    m_eventName: Event
+    m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectBurst_01|EffectLight_KIMI_00
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 21
+    m_time: 118.71773
+    m_poseId: 3
+    m_eventName: Event
+    m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_03|EffectBurst_00|EffectLight_KIMI_04
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 22
+    m_time: 121.90907
+    m_poseId: 8
+    m_eventName: Event
+    m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectLight_KIMI_04|EffectLight_KIMI_03
+    m_failureEffectNames: EffectUI_Miss
+  - m_nodeNumber: 23
+    m_time: 127.22797
+    m_poseId: 9
+    m_eventName: Event
+    m_successEffectNames: CameraShake|Strobe|EffectUI_Perfect|EffectBurst_01|EffectLight_KIMI_03|EffectBeam_01
+    m_failureEffectNames: EffectUI_Miss
   m_eventScenesList:
   - b_m_enabled: 1
     m_eventName: Audience Choice
@@ -145,9 +175,9 @@ MonoBehaviour:
       m_failureEffectNames: 
     - m_nodeNumber: 3
       m_time: 40
-      m_poseId: 2
-      m_eventName: Side Pose
-      m_successEffectNames: 
+      m_poseId: 6
+      m_eventName: Lumbar
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
       m_failureEffectNames: 
     - m_nodeNumber: 8
       m_time: 42
@@ -172,19 +202,19 @@ MonoBehaviour:
       m_time: 63.977867
       m_poseId: 3
       m_eventName: Front Double Biceps
-      m_successEffectNames: 
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
       m_failureEffectNames: 
     - m_nodeNumber: 2
       m_time: 64.97308
       m_poseId: 4
       m_eventName: Most Muscular
-      m_successEffectNames: 
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
       m_failureEffectNames: 
     - m_nodeNumber: 3
       m_time: 66.03938
       m_poseId: 5
       m_eventName: Side Pose
-      m_successEffectNames: 
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
       m_failureEffectNames: 
     - m_nodeNumber: 4
       m_time: 68.0298
@@ -204,7 +234,37 @@ MonoBehaviour:
     m_eventType: 0
     m_minimumBonusScore: 100
     m_maximumBonusScore: 1000
-    m_eventNodesList: []
+    m_eventNodesList:
+    - m_nodeNumber: 1
+      m_time: 108.43453
+      m_poseId: 6
+      m_eventName: Event Node
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
+      m_failureEffectNames: 
+    - m_nodeNumber: 2
+      m_time: 109.28556
+      m_poseId: 0
+      m_eventName: Event Node
+      m_successEffectNames: EffectBeam_02|CameraShake|EffectBurst_00
+      m_failureEffectNames: 
+    - m_nodeNumber: 3
+      m_time: 110.207504
+      m_poseId: 8
+      m_eventName: Event Node
+      m_successEffectNames: EffectBeam_02|CameraShake|Strobe|EffectLight_KIMI_00
+      m_failureEffectNames: 
+    - m_nodeNumber: 4
+      m_time: 111.83862
+      m_poseId: 0
+      m_eventName: Decision
+      m_successEffectNames: 
+      m_failureEffectNames: 
+    - m_nodeNumber: 5
+      m_time: 113.54067
+      m_poseId: 0
+      m_eventName: End
+      m_successEffectNames: 
+      m_failureEffectNames: 
   m_conditionalEffectsList:
   - m_eventName: 
     b_m_enabled: 0

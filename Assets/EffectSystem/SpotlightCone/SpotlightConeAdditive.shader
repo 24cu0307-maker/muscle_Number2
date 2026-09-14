@@ -108,7 +108,7 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
                 //端を強調するFresnelではなく、Cameraへ向いた面をわずかに濃くして立体感を作ります。
                 //輪郭側は暗くなる方向だけに補正するため、以前のような端の白飛びは発生しません。
                 half3 normal = normalize(input.normalWS)
-                    * (isFrontFace ? 1.0h : -1.0h);
+                    * (isFrontFace ? 1.0h : 1.0h);
                 half facing = abs(dot(normal, normalize(input.viewDirWS)));
                 // コーン輪郭の接線部分ではAlphaを0まで落とし、背景との硬い境界を防ぎます。
                 half volumeShading = lerp(
@@ -245,7 +245,7 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
             {
                 GlowVaryings output;
                 //光源側はほぼ動かさず、Coneが広がるほど外側Shellも広げます。
-                float spread = _GlowSpread * smoothstep(0.0, 0.35, input.uv.y);
+                float spread = _GlowSpread * smoothstep(0.0, 0.15, input.uv.y);
                 float3 expandedPositionOS =
                     input.positionOS.xyz + normalize(input.normalOS) * spread;
                 VertexPositionInputs positions =
@@ -260,30 +260,42 @@ Shader "Muscle/Effects/Spotlight Cone Additive"
 
             half4 GlowFrag(GlowVaryings input) : SV_Target
             {
-                half facing = abs(dot(
-                    normalize(input.normalWS),
-                    normalize(input.viewDirWS)));
-                //正面は薄く、シルエット付近だけを柔らかく残します。
-                half rim = pow(saturate(1.0h - facing), _GlowSoftness);
-                half startFade = smoothstep(
-                    0.0h,
-                    max(_StartFade, 0.001h),
-                    input.uv.y);
-                half endFade = 1.0h - smoothstep(
-                    1.0h - max(_EndFade, 0.001h),
-                    1.0h,
-                    input.uv.y);
-                half distanceFade = lerp(1.0h, 0.25h, saturate(input.uv.y));
-                half alpha = _Opacity
-                    * _GlowIntensity
-                    * rim
-                    * startFade
-                    * endFade
-                    * distanceFade;
-                half3 glowColor = _Color.rgb
-                    * max(_Intensity, 0.0h)
-                    * _GlowIntensity;
-                return half4(glowColor, alpha * _Color.a);
+         half facing = abs(dot(
+    normalize(input.normalWS),
+    normalize(input.viewDirWS)));
+
+    _GlowSoftness = 0.001f;
+
+// カメラ正面を濃く、外周に近づくほど透明にする
+half edgeFade = pow(saturate(facing), _GlowSoftness);
+
+half startFade = smoothstep(
+    0.0h,
+    max(_StartFade, 0.001h),
+    input.uv.y);
+
+half endFade = 1.0h - smoothstep(
+    1.0h - max(_EndFade, 0.001h),
+    1.0h,
+    input.uv.y);
+
+half distanceFade = lerp(
+    0.9h,
+    0.15h,
+    saturate(input.uv.y));
+
+half alpha = _Opacity
+    * _GlowIntensity
+    * edgeFade
+    * startFade
+    * endFade
+    * distanceFade;
+
+half3 glowColor = _Color.rgb
+    * max(_Intensity, 0.0h)
+    * _GlowIntensity;
+
+return half4(glowColor, alpha * _Color.a);
             }
             ENDHLSL
         }

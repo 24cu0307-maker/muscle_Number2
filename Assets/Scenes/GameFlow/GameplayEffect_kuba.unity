@@ -18240,10 +18240,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde67f536ba91604aac7c99ca2a9416d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArmController
+  CorrectionValue: []
   Correction1: d70000009cffffffecffffff
   Correction2: 68010000460000004cffffff
   Correction3: 29ffffff6400000014000000
   Correction4: 0e010000e7ffffff78000000
+  debugLeftUpperAngle: 0
+  debugLeftShoulderCorrection: {x: 0, y: 0, z: 0}
+  debugLeftElbowCorrection: {x: 0, y: 0, z: 0}
+  debugRightUpperAngle: 0
+  debugRightShoulderCorrection: {x: 0, y: 0, z: 0}
+  debugRightElbowCorrection: {x: 0, y: 0, z: 0}
+  debugLeftLerp: 0
+  debugRightLerp: 0
+  downAngle: -90
+  horizontalAngle: 0
+  upAngle: 90
   _camera: {fileID: 2040577841}
   playerArm: {fileID: 896158109}
   _Body:
@@ -50372,7 +50384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -56479,6 +56491,8 @@ MonoBehaviour:
   b_m_pauseSceneDuringStartup: 1
   b_m_playStartupTimeline: 1
   m_startupTimelineDirector: {fileID: 2200000002}
+  b_m_playEndingTimeline: 0
+  m_endingTimelineDirector: {fileID: 0}
   m_endtimer: 2
 --- !u!4 &813159518
 Transform:
@@ -115059,7 +115073,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -117711,10 +117725,7 @@ MonoBehaviour:
   m_eventCamera: {fileID: 2040577845}
   m_audienceSpawner: {fileID: 0}
   m_preferenceSystem: {fileID: 1137925156}
-  m_nodeSprites:
-  - {fileID: 21300000, guid: a43bb8b0b5303db46a9143f57a182144, type: 3}
-  - {fileID: 21300000, guid: 3187ae5aced32f34f8b6baf07c8487bb, type: 3}
-  - {fileID: 21300000, guid: eb6e072e2f2dc154d96061a2c53328d6, type: 3}
+  m_uiData: {fileID: 0}
   m_nodeColors:
   - {r: 0.1, g: 0.8, b: 1, a: 0.95}
   - {r: 1, g: 0.85, b: 0.1, a: 0.95}

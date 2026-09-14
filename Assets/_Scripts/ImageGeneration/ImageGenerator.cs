@@ -381,8 +381,11 @@ public class ImageGenerator : MonoBehaviour
 
             data = RankingList[RankingList.Count - 1];
 
+            Debug.Log("agnagingoe"+ (RankingList.Count - 1));
 
-            if(index == 0)
+            Debug.Log("agnagingoe" + data.Number);
+
+            if (index == 0)
             {
                 setting.number = data.Score;
 
@@ -450,8 +453,9 @@ public class ImageGenerator : MonoBehaviour
 
                 // ˆêTexture‚ğíœ
                 Destroy(digitTexture);
-                index++;
+                
             }
+            index++;
         }
 
 

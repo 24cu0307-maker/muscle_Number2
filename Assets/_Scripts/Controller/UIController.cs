@@ -149,12 +149,23 @@ public class UIController : MonoBehaviour
 
     public void UISet_normal(CSVDataPoseFlow pose)
     {
+        if(pose.PoseID != 9)
+        {
+            m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+        }
+        else 
+        {
+            m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, new Vector2(m_uiData.setUINumber9().x, m_uiData.setUINumber9().y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, new Vector2(m_uiData.setUINumber9().x, m_uiData.setUINumber9().y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, new Vector2(m_uiData.setUINumber9().x, m_uiData.setUINumber9().y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+            m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, new Vector2(m_uiData.setUINumber9().x, m_uiData.setUINumber9().y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+        }
 
 
-        m_Frame[pose.PoseID].m_currentFrameSuccess = CreateFrame(pose.PoseID, m_currentFrameSuccess, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
-        m_Frame[pose.PoseID].m_currentFrameApproaching = CreateFrame(pose.PoseID, m_currentFrameApproaching, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
-        m_Frame[pose.PoseID].m_currentFrameFailure = CreateFrame(pose.PoseID, m_currentFrameFailure, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
-        m_Frame[pose.PoseID].m_currentFrameWating = CreateFrame(pose.PoseID, m_currentFrameWating, new Vector2(playerCharacterPosition.x, playerCharacterPosition.y), m_canvas, new Vector2(playerCharacterSize.x, playerCharacterSize.y));
+       
         Debug.Log("wafewggg" + m_Frame[pose.PoseID].m_currentFrameSuccess);
         Show(m_Frame[pose.PoseID].m_currentFrameApproaching);
         Show(m_Frame[pose.PoseID].m_currentFrameWating);
