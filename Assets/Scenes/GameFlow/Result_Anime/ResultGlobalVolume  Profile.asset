@@ -28,8 +28,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: com.cqf.urpvolumetricfog.runtime::VolumetricFogVolumeComponent
   active: 1
   distance:
-    m_OverrideState: 0
-    m_Value: 64
+    m_OverrideState: 1
+    m_Value: 109
   baseHeight:
     m_OverrideState: 1
     m_Value: 0
@@ -70,11 +70,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   maxSteps:
-    m_OverrideState: 0
-    m_Value: 128
+    m_OverrideState: 1
+    m_Value: 48
   blurIterations:
-    m_OverrideState: 0
-    m_Value: 2
+    m_OverrideState: 1
+    m_Value: 1
   enabled:
     m_OverrideState: 1
     m_Value: 1
