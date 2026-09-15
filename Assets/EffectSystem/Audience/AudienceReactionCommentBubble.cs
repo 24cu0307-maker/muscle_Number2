@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +16,8 @@ public sealed class AudienceReactionCommentBubble : MonoBehaviour
     [SerializeField] private Color m_textColor = Color.black;
     [SerializeField] private Vector2 m_textAnchorMin = new Vector2(0.12f, 0.2f);
     [SerializeField] private Vector2 m_textAnchorMax = new Vector2(0.88f, 0.82f);
+
+    [SerializeField] private InGameManager m_Ingame;
 
     private Coroutine m_hideCoroutine;
 
@@ -36,6 +40,8 @@ public sealed class AudienceReactionCommentBubble : MonoBehaviour
         Sprite _bubbleSprite,
         float _durationSeconds)
     {
+
+        if (!m_Ingame.GetStartFlag()) return;
         EnsureVisuals();
         if (m_bubbleImage != null)
         {

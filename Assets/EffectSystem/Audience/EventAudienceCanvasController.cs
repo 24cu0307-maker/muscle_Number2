@@ -385,7 +385,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
 
         Image image = nodeObject.GetComponent<Image>(); //Node画像
         image.sprite = GetNodeSprite(_poseId);
-        image.color = Color.white;
+        image.color = Color.darkOrange;
         if (image.sprite == null
             && m_nodeColors != null
             && _index < m_nodeColors.Length)
@@ -415,7 +415,7 @@ public sealed class EventAudienceCanvasController : MonoBehaviour
     private Sprite GetNodeSprite(int _poseId)
     {
         if (m_uiData == null
-            || !m_uiData.TryGetApproachingFrame(_poseId, out GameObject frame))
+            || !m_uiData.TryGetWaitingFrame(_poseId, out GameObject frame))
         {
             return null;
         }

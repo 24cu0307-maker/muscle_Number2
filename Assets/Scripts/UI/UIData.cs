@@ -114,6 +114,20 @@ public class UIData : MonoBehaviour
         }
     }
 
+    public bool TryGetWaitingFrame(
+    int _poseId,
+    out GameObject _frame)
+    {
+        _frame = null;
+
+        if (ui == null || _poseId < 0 || _poseId >= ui.Count)
+            return false;
+
+        _frame = ui[_poseId].m_currentFrameWating;
+
+        return _frame != null;
+    }
+
     public bool TryGetApproachingFrame(
         int _poseId,
         out GameObject _frame)

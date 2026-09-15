@@ -67,6 +67,7 @@ public sealed class InGameManager : MonoBehaviour
     private bool b_m_audioPauseBeforeStartup;
     private bool b_m_startupPauseApplied;
     public float GetCurrentTIme() { return GameTimeSeconds; }
+    public bool GetStartFlag() { return b_m_gameStarted; }
 
     [Header("I—¹‚ÌŠÔ")]
     [SerializeField] private float m_endtimer;
