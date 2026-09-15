@@ -96803,8 +96803,12 @@ MonoBehaviour:
   m_targetCamera: {fileID: 2040577845}
   m_imageGeneratorTest: {fileID: 136606635}
   m_flowDataManager: {fileID: 1397185640}
+  m_judgeManager: {fileID: 1499480926}
   m_maxZoomZ: -10
   m_positionTolerance: 0.1
+  m_isCaptureSystemOn: 1
+  m_captureDelay: 3
+  folderPath: D:\MyGame\ScreenShots
 --- !u!4 &1221305757
 Transform:
   m_ObjectHideFlags: 0
@@ -135371,7 +135375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -156540,7 +156544,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 225
-  field of view: 100
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -156567,7 +156571,7 @@ Transform:
   m_GameObject: {fileID: 2040577841}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.36000013, z: -26.13}
+  m_LocalPosition: {x: 0, y: -0.36000013, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169831,10 +169835,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageGenerator
       objectReference: {fileID: 0}
+    - target: {fileID: 5583515268730664011, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: CsvPath
+      value: D:\MyGame\ExcelRanking.csv
+      objectReference: {fileID: 0}
     - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
       propertyPath: camera
       value: 
       objectReference: {fileID: 2040577845}
+    - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: folderPath
+      value: D:\MyGame\ScreenShots
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: saveDirectory
+      value: D:\MyGame\GeneratedImages
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

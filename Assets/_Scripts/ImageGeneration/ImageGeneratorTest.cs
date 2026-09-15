@@ -20,12 +20,14 @@ public class ImageGeneratorTest : MonoBehaviour
 
     RnakingData data;
 
-    string folderPath = @"D:\MyGame\ScreenShots";
+    [SerializeField]
+    private string folderPath = @"D:\MyGame\ScreenShots";
 
     string path;
 
     // Dドライブ直下の保存フォルダ
-    string saveDirectory = @"D:\GeneratedImages";
+    [SerializeField]
+    private string saveDirectory = @"D:\MyGame\GeneratedImages";
 
     private void Start()
     {
@@ -134,8 +136,6 @@ public class ImageGeneratorTest : MonoBehaviour
         int height = 1080;
 
 
-        string folderPath = @"D:\MyGame\ScreenShots";
-
         // フォルダが存在しなければ作成
         if (!Directory.Exists(folderPath))
         {
@@ -203,6 +203,7 @@ public class ImageGeneratorTest : MonoBehaviour
     //指定したファイルパスの画像を読み込んで、Unityで使える Texture2D に変換して返す処理
     public Texture2D LoadImage(string path)
     {
+        Debug.Log("画像を読み込みましたなぜ：" + path);
         if (!File.Exists(path))
         {
             Debug.LogError("画像が見つかりません：" + path);

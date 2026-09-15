@@ -11,7 +11,8 @@ public class ExcelRankingLoader : MonoBehaviour
     public List<RnakingData> RankingList = new List<RnakingData>();
 
 
-    private string CsvPath = @"D:\ExcelRanking.csv";
+    [SerializeField]
+    private string CsvPath = @"D:\MyGame\ExcelRanking.csv";
 
     public List<RnakingData> GetCSVDatas()
     {
