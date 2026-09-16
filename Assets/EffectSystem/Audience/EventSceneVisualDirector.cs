@@ -19,6 +19,8 @@ using UnityEngine.UI;
 /// </summary>
 public sealed class EventSceneVisualDirector : MonoBehaviour
 {
+    [Header("Third Person Explanation UI")]
+    [SerializeField] private ThirdPersonExplanationUI m_explanationUI = new ThirdPersonExplanationUI(); //説明UI専用の制御
     [SerializeField] private PoseCameraDirector m_cameraDirector; //既存Camera演出制御
     [SerializeField] private CameraSequence m_cameraSequence; //Event用旋回Sequence
     [SerializeField] private MusicNodeSequence m_musicNodeSequence; //特殊NodeとTrigger設定
@@ -90,6 +92,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
+        m_explanationUI.HideImmediately(this);
         FindReferences();
         if (m_specialNodePlayer != null)
         {
@@ -109,6 +112,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        m_explanationUI.HideImmediately(this);
         if (m_specialNodePlayer != null)
         {
             m_specialNodePlayer.EventNodesCompleted -= OnEventNodesCompleted;
@@ -131,6 +135,18 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    [ContextMenu("Create Explanation UI Preview")]
+    private void CreateExplanationUIPreview()
+    {
+        if (Application.isPlaying) { return; }
+        UnityEditor.Undo.RegisterFullObjectHierarchyUndo(gameObject, "Create Explanation UI");
+        m_explanationUI.PreparePreview(this);
+        UnityEditor.EditorUtility.SetDirty(this);
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+    }
+#endif
+
     /// <summary>
     /// 特殊Node成功後に呼び出すEvent演出開始関数です。
     /// </summary>
@@ -141,6 +157,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
         if (b_m_isPlaying)return;
 
         b_m_isPlaying = true;
+        m_explanationUI.Show(this);
         if (m_cameraDirector != null && m_cameraSequence != null)
         {
             m_cameraDirector.PlaySequence(m_cameraSequence);
@@ -183,6 +200,7 @@ public sealed class EventSceneVisualDirector : MonoBehaviour
     [ContextMenu("Stop Event Visual")]
     public void StopEventVisual()
     {
+        m_explanationUI.Hide(this);
         m_audienceSpawner?.StopSequentialSuccessVoices();
         if (m_playCoroutine != null)
         {

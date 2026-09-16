@@ -1,0 +1,9 @@
+三人称の説明画像の使い方
+
+・Gameplayに仮設定済みです。三人称イベント開始時に再生されます。
+・画像変更：EventSceneVisualDirector → Third Person Explanation UI → Sprite。
+・位置・サイズ：Hierarchyの Explanation のRectTransformで調整。
+・動き・フェード：ExplanationTimeline を選び、Timelineウィンドウで編集。
+・別のTimelineを使う場合：Motion Director に専用のPlayable Directorを指定。
+・イベント終了時に画像が消えるので、終了フェードはそれまでに完了させます。
+・変更後はシーンとTimelineを保存してください。
