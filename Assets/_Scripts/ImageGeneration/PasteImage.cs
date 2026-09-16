@@ -12,10 +12,11 @@ public class PasteImage : MonoBehaviour
     private List<Image> Resultimage;
 
 
-  
+
 
     // Dドライブ直下の保存フォルダ
-    string saveDirectory = @"D:\GeneratedImages";
+    [SerializeField]
+    private string saveDirectory = @"D:\MyGame\GeneratedImages";
 
     private void Start()
     {
@@ -61,7 +62,7 @@ public class PasteImage : MonoBehaviour
 
     public Texture2D LoadResultImage(int number)
     {
-        string saveDirectory = @"D:\GeneratedImages";
+        //string saveDirectory = @"D:\GeneratedImages";
 
         string fileName = $"Result_{number:D3}.png";
 

@@ -18546,7 +18546,7 @@ MonoBehaviour:
   horizontalAngle: 0
   upAngle: 90
   _camera: {fileID: 2040577841}
-  playerArm: {fileID: 9152299367609531384}
+  playerArm: {fileID: 3701378069711115069}
   _Body:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
@@ -96803,8 +96803,12 @@ MonoBehaviour:
   m_targetCamera: {fileID: 2040577845}
   m_imageGeneratorTest: {fileID: 136606635}
   m_flowDataManager: {fileID: 1397185640}
+  m_judgeManager: {fileID: 1499480926}
   m_maxZoomZ: -10
   m_positionTolerance: 0.1
+  m_isCaptureSystemOn: 1
+  m_captureDelay: 3
+  folderPath: D:\MyGame\ScreenShots
 --- !u!4 &1221305757
 Transform:
   m_ObjectHideFlags: 0
@@ -102892,7 +102896,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  playerBody: {fileID: 9152299367609531384}
+  playerBody: {fileID: 3701378069711115069}
   _camera: {fileID: 2040577841}
   _BodyDir:
   - {x: 0, y: 0, z: 0}
@@ -135371,7 +135375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1896389531826865426, guid: 6651b3e26de143aaa3a6130692984408, type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -169075,6 +169079,71 @@ MonoBehaviour:
   m_textAnchorMin: {x: 0.12, y: 0.2}
   m_textAnchorMax: {x: 0.88, y: 0.82}
   m_Ingame: {fileID: 813159517}
+--- !u!1001 &617120757046630115
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5973493095929112195, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_Name
+      value: MuscleBeat_player_models_0916
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -6.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462046435828972601, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7010733939486746588, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_judgeManager
+      value: 
+      objectReference: {fileID: 1499480926}
+    - target: {fileID: 7010733939486746588, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: m_flowDataManager
+      value: 
+      objectReference: {fileID: 1397185640}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
 --- !u!1001 &2397175214923521222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169132,6 +169201,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fde56bac33262da41b70fd90611bff28, type: 3}
+--- !u!114 &3701378069711115069 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4153116445438643683, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+  m_PrefabInstance: {fileID: 617120757046630115}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb37ca2681e8595489afde322013f760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HumanoidSkeleton
 --- !u!1001 &4289606968008062532
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169759,22 +169839,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: MuscleBeat_player_models_0910_v1
       objectReference: {fileID: 0}
+    - target: {fileID: 8937430212161693466, guid: 5a67ba70de84b71409b21abe1ea43966, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a67ba70de84b71409b21abe1ea43966, type: 3}
---- !u!114 &9152299367609531384 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6303269910691276238, guid: 5a67ba70de84b71409b21abe1ea43966, type: 3}
-  m_PrefabInstance: {fileID: 8452185199594202899}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb37ca2681e8595489afde322013f760, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HumanoidSkeleton
 --- !u!1001 &9188044402292737792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169831,10 +169904,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageGenerator
       objectReference: {fileID: 0}
+    - target: {fileID: 5583515268730664011, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: CsvPath
+      value: D:\MyGame\ExcelRanking.csv
+      objectReference: {fileID: 0}
     - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
       propertyPath: camera
       value: 
       objectReference: {fileID: 2040577845}
+    - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: folderPath
+      value: D:\MyGame\ScreenShots
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284191816149661578, guid: 93ecdfde68d4fd84f81cd8291a83f377, type: 3}
+      propertyPath: saveDirectory
+      value: D:\MyGame\GeneratedImages
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -169873,3 +169958,4 @@ SceneRoots:
   - {fileID: 8452185199594202899}
   - {fileID: 1221305757}
   - {fileID: 4289606968008062532}
+  - {fileID: 617120757046630115}
