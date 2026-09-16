@@ -3,16 +3,14 @@
 *@brief Gameplayで使用するDebugキーとDebug操作を一括管理する*
 *@author 24cu0312 久場洸太*
 *@date 2026/07/29*
-*最終更新日 2026/07/29*
+*最終更新日 2026/09/16*
 *@remarks InspectorからすべてのDebugキーを変更可能*
 *━━━━━━━━━*/
 
 using GameFlowTemplate;
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-#endif
 
 /// <summary>
 /// EffectSystem関連のDebug表示に使用するキー設定を管理します。
@@ -20,68 +18,71 @@ using UnityEngine.InputSystem.Controls;
 [DisallowMultipleComponent]
 public sealed class EffectDebugKeySettings : MonoBehaviour
 {
-    private const string EAlphaPrefix = "Alpha"; //数字KeyCodeの接頭辞
     private bool b_m_resultRequested; //F10によるResult遷移の多重実行防止
     private bool b_m_restartRequested; //Restartの多重実行防止
 
     public static bool ForceAllSuccess { get; private set; } //全成功Debug状態
 
-    [SerializeField] private KeyCode m_voltageToggleKey =
-        KeyCode.F8; //Voltage Debug Panel表示切替Key
-    [SerializeField] private KeyCode m_exitDebugKey =
-        KeyCode.F10; //Debug再生終了Key
-    [SerializeField] private KeyCode m_restartKey =
-        KeyCode.F5; //現在のGameplayを最初から再読込するKey
-    [SerializeField] private KeyCode m_forceSuccessToggleKey =
-        KeyCode.F6; //全判定成功の切替Key
-    [SerializeField] private KeyCode m_cameraRetargetKey =
-        KeyCode.F9; //Camera注視対象を再設定するKey
+    [SerializeField] private Key m_voltageToggleInputKey =
+        Key.F8; //Voltage Debug Panel表示切替Key
+    [SerializeField] private Key m_exitDebugInputKey =
+        Key.F10; //Debug再生終了Key
+    [SerializeField] private Key m_restartInputKey =
+        Key.F5; //現在のGameplayを最初から再読込するKey
+    [SerializeField] private Key m_forceSuccessToggleInputKey =
+        Key.F6; //全判定成功の切替Key
+    [SerializeField] private Key m_cameraRetargetInputKey =
+        Key.F9; //Camera注視対象を再設定するKey
 
-    public KeyCode VoltageToggleKey
+    public Key VoltageToggleKey
     {
         get
         {
-            return m_voltageToggleKey;
+            return m_voltageToggleInputKey;
         }
     }
 
-    public KeyCode ExitDebugKey
+    public Key ExitDebugKey
     {
         get
         {
-            return m_exitDebugKey;
+            return m_exitDebugInputKey;
         }
     }
 
-    public KeyCode RestartKey => m_restartKey;
-    public KeyCode ForceSuccessToggleKey => m_forceSuccessToggleKey;
-    public KeyCode CameraRetargetKey => m_cameraRetargetKey;
+    public Key RestartKey => m_restartInputKey;
+    public Key ForceSuccessToggleKey => m_forceSuccessToggleInputKey;
+    public Key CameraRetargetKey => m_cameraRetargetInputKey;
 
     /// <summary>
     /// Debug表示Componentの有効状態に関係なく、Result遷移キーを監視します。
     /// </summary>
     private void Update()
     {
-        if (!b_m_restartRequested && IsKeyDown(m_restartKey))
+        if (!b_m_restartRequested && IsKeyDown(m_restartInputKey))
         {
             RestartCurrentScene();
             return;
         }
 
-        if (IsKeyDown(m_forceSuccessToggleKey))
+        if (IsKeyDown(m_forceSuccessToggleInputKey))
         {
             ForceAllSuccess = !ForceAllSuccess;
-            Debug.Log(
-                $"[DebugKey] 全成功判定: {(ForceAllSuccess ? "ON" : "OFF")}",
-                this);
+            string forceSuccessState = "OFF";
+            if (ForceAllSuccess)
+            {
+                forceSuccessState = "ON";
+            }
+
+            Debug.Log($"[DebugKey] 全成功判定: {forceSuccessState}", this);
         }
 
-        if (IsKeyDown(m_cameraRetargetKey))
+        if (IsKeyDown(m_cameraRetargetInputKey))
         {
             RetargetCamera();
         }
 
-        if (!b_m_resultRequested && IsKeyDown(m_exitDebugKey))
+        if (!b_m_resultRequested && IsKeyDown(m_exitDebugInputKey))
         {
             MoveToResult();
         }
@@ -143,48 +144,12 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
     /// <summary>
     /// 現在のInput方式に合わせて指定キーの押下を判定します。
     /// </summary>
-    public static bool IsKeyDown(KeyCode _keycode)
+    public static bool IsKeyDown(Key _inputSystemKey)
     {
-#if ENABLE_INPUT_SYSTEM
         Keyboard keyboard = Keyboard.current; //現在接続中のKeyboard
         if (keyboard == null)return false;
 
-        KeyControl keyControl =
-            keyboard.FindKeyOnCurrentKeyboardLayout(
-                GetDisplayName(_keycode)); //指定Keyに対応するControl
+        KeyControl keyControl = keyboard[_inputSystemKey];
         return keyControl != null && keyControl.wasPressedThisFrame;
-#elif ENABLE_LEGACY_INPUT_MANAGER
-        return Input.GetKeyDown(_keycode);
-#else
-        return false;
-#endif
     }
-
-#if ENABLE_INPUT_SYSTEM
-    /// <summary>
-    /// KeyCodeをInput Systemの表示名へ変換します。
-    /// </summary>
-    private static string GetDisplayName(KeyCode _keycode)
-    {
-        string keyName = _keycode.ToString(); //KeyCode名
-        if (keyName.StartsWith(EAlphaPrefix))
-        {
-            return keyName.Substring(EAlphaPrefix.Length);
-        }
-
-        switch (_keycode)
-        {
-            case KeyCode.Return: return "Enter";
-            case KeyCode.LeftArrow: return "Left Arrow";
-            case KeyCode.RightArrow: return "Right Arrow";
-            case KeyCode.UpArrow: return "Up Arrow";
-            case KeyCode.DownArrow: return "Down Arrow";
-            case KeyCode.LeftShift: return "Left Shift";
-            case KeyCode.RightShift: return "Right Shift";
-            case KeyCode.LeftControl: return "Left Ctrl";
-            case KeyCode.RightControl: return "Right Ctrl";
-            default: return keyName;
-        }
-    }
-#endif
 }
