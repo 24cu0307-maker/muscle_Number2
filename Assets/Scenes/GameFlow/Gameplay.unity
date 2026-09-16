@@ -6033,11 +6033,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74dc04df4efc7654f9ba0c6d2208886e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectDebugKeySettings
-  m_voltageToggleKey: 289
-  m_exitDebugKey: 256
-  m_restartKey: 286
-  m_forceSuccessToggleKey: 287
-  m_cameraRetargetKey: 290
+  m_voltageToggleInputKey: 101
+  m_exitDebugInputKey: 103
+  m_restartInputKey: 98
+  m_forceSuccessToggleInputKey: 99
+  m_cameraRetargetInputKey: 102
 --- !u!114 &130277792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169372,19 +169372,19 @@ PrefabInstance:
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_jump
       value: 
-      objectReference: {fileID: 7400000, guid: 54e6336569c57534dbf59cf8efce87b8, type: 2}
+      objectReference: {fileID: 1827226128182048838, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_sway
       value: 
-      objectReference: {fileID: 7400000, guid: b678bc65a28d59842bab02c2e201ce5f, type: 2}
+      objectReference: {fileID: -998496362607748373, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_cheer
       value: 
-      objectReference: {fileID: 1827226128182048838, guid: a894ed171da6ea8469491661690dab62, type: 3}
+      objectReference: {fileID: -3291206362154003629, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_bounce
       value: 
-      objectReference: {fileID: 7400000, guid: 98bf2cbffbbb1e4439ee92c56dce8ae0, type: 2}
+      objectReference: {fileID: -1493303027246044120, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
