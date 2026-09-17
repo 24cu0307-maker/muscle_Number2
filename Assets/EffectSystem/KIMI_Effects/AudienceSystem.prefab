@@ -189,6 +189,14 @@ MonoBehaviour:
   m_startupSpawnBatchSize: 20
   b_m_autoReaction: 1
   m_reactionIntervalRange: {x: 1, y: 2.5}
+  m_proceduralReactionStrengthMultiplier: 0.35
+  m_reactionAnimationWeight: 1
+  m_reactionAnimations:
+    m_jump: {fileID: 0}
+    m_sway: {fileID: 0}
+    m_cheer: {fileID: 0}
+    m_bounce: {fileID: 0}
+    m_disappointed: {fileID: 7400000, guid: f833126f4b3ac4648a4e0a463fbaf6ef, type: 2}
   b_m_enableCameraCulling: 1
   m_targetCamera: {fileID: 0}
   m_cullingInterval: 0.1
