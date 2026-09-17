@@ -124,7 +124,7 @@ public sealed class MusicEventSceneData
         for (int i = 0; i < m_eventNodesList.Count; ++i)
         {
             SMusicNodeEvent node = m_eventNodesList[i];
-            if (IsAudienceChoiceControlNode(node))continue;
+            if (IsAudienceChoiceControlNode(node)) continue;
             if (foundIndex == _candidateindex)
             {
                 _candidate = node;
@@ -181,13 +181,17 @@ public sealed class MusicNodeSequence : ScriptableObject
 {
     [SerializeField] private AudioClip m_bgmClip; //編集対象BGM
     [SerializeField] private float m_manualTimelineDuration = 60.0f; //BGM未設定時の編集時間
-    [SerializeField] private List<SMusicNodeEvent> m_eventsList =
+    [SerializeField]
+    public List<SMusicNodeEvent> m_eventsList =
         new List<SMusicNodeEvent>(); //Node一覧
-    [SerializeField] private List<MusicEventSceneData> m_eventScenesList =
+    [SerializeField]
+    private List<MusicEventSceneData> m_eventScenesList =
         new List<MusicEventSceneData>(); //Event Scene設定一覧
-    [SerializeField] private List<ConditionalEffectEvent> m_conditionalEffectsList =
+    [SerializeField]
+    private List<ConditionalEffectEvent> m_conditionalEffectsList =
         new List<ConditionalEffectEvent>(); //条件で発火する演出一覧
-    [SerializeField] private List<MusicBranchNode> m_musicBranchesList =
+    [SerializeField]
+    private List<MusicBranchNode> m_musicBranchesList =
         new List<MusicBranchNode>(); //別Sequenceへ切り替えるBGM分岐Node一覧
 
     public AudioClip BgmClip
@@ -262,5 +266,30 @@ public sealed class MusicNodeSequence : ScriptableObject
             }
             return m_musicBranchesList;
         }
+    }
+
+    /// <summary>
+    /// 現在の再生時間に対応するNode番号を取得します。
+    /// </summary>
+    public int GetCurrentNodeNumber(float _currentTime)
+    {
+        if (m_eventsList == null || m_eventsList.Count == 0)
+            return -1;
+
+        int currentNodeNumber = -1;
+
+        for (int i = 0; i < m_eventsList.Count; i++)
+        {
+            if (_currentTime >= m_eventsList[i].m_time)
+            {
+                currentNodeNumber = m_eventsList[i].m_nodeNumber;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return currentNodeNumber;
     }
 }

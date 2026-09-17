@@ -1,5 +1,7 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Animation : MonoBehaviour
 {
@@ -11,199 +13,320 @@ public class Animation : MonoBehaviour
     [SerializeField]
     private PoseJudgeManager m_judgeManager;
 
-    [Header("Animation")]
+    [Header("Animator")]
     [SerializeField]
-    private Animator m_animatorFront;
+    private Animator m_animator;
 
+    [Header("判定")]
     [SerializeField]
-    private Animator m_animatorSide;
+    private MusicNodeSequence m_sequence;
+
+    [Header("In")]
+    [SerializeField]
+    private InGameManager m_gameManager;
 
     [Header("Idleに戻るまでの待ち時間")]
     [SerializeField]
     private float m_idleDelay = 2.0f;
 
-    private bool m_isFrontPlaying = false;
-    private bool m_isSidePlaying = false;
+    [Header("AnimationCrip Front")]
+    [SerializeField]
+    private AnimationClip m_CripFront;
 
-    // 今回のGreat / Perfectですでに再生したか
+    [Header("AnimationCrip Side")]
+    [SerializeField]
+    private AnimationClip m_CripSide;
+
+    // 再生中
+    private bool m_isPlaying = false;
+
+    // 今回の判定ですでに再生したか
     private bool m_hasPlayed = false;
 
+    // 現在選択しているアニメーション
+    private string m_currentAnimation = "";
+
+    // アニメーションを一時停止しているか
+    private bool m_isPaused = false;
+
+    float curentTime;
+
+    [Header("再生誤差")]
+    [SerializeField]
+    private float m_time = 2.5f;
 
     private void Start()
     {
-        // ゲーム開始時はAnimatorを止める
-        if (m_animatorFront != null)
-        {
-            m_animatorFront.enabled = false;
-        }
+        if (m_animator == null)
+            return;
 
-        if (m_animatorSide != null)
-        {
-            m_animatorSide.enabled = false;
-        }
+        // Animatorを無効化
+        m_animator.enabled = false;
+
+        // 再生速度を通常に戻す
+        m_animator.speed = 1f;
+
+        // 最初はIdle
+        m_animator.Play(
+            "Base Layer.Idle",
+            0,
+            0f
+        );
     }
 
 
     private void Update()
     {
-        bool isGood =
-            m_judgeManager.LastGrade == EPoseMatchGrade.Great ||
-            m_judgeManager.LastGrade == EPoseMatchGrade.Perfect;
-
-
-        // Great / Perfectではない
-        if (!isGood)
-        {
-            // 次の判定で再生できるようにリセット
-            m_hasPlayed = false;
+        if (m_animator == null)
             return;
+
+
+        // ==========================================
+        // キーボードテスト
+        // ==========================================
+        if (Keyboard.current != null)
+        {
+            // A → Front
+            if (Keyboard.current.aKey.wasPressedThisFrame)
+            {
+                if (!m_isPlaying)
+                {
+                    m_hasPlayed = true;
+                    PlayFront();
+                }
+            }
+
+            // S → Side
+            if (Keyboard.current.sKey.wasPressedThisFrame)
+            {
+                if (!m_isPlaying)
+                {
+                    m_hasPlayed = true;
+                    PlaySide();
+                }
+            }
+
+            // Space → 一時停止 / 再開
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                TogglePause();
+            }
         }
 
 
-        // すでに今回の判定で再生済み
-        if (m_hasPlayed)
-            return;
+
+        // ==========================================
+        // 実際のゲーム判定
+        // ==========================================
+
+    
+
+        float a = m_sequence.m_eventsList[0].m_time;
+        float b = m_sequence.m_eventsList[1].m_time;
+      
+
+        int poseID =
+            m_flowDataManager.GetPose().PoseID;
+
+        int FlowID = m_sequence.GetCurrentNodeNumber(m_gameManager.GetCurrentTIme()) - 1;
 
 
-        int poseID = m_flowDataManager.GetPose().PoseID;
 
-
-        // PoseID 0 → Front
-        if (poseID == 0 && !m_isFrontPlaying)
+        if (poseID != 2 && FlowID >= 0
+            && (m_gameManager.GetCurrentTIme() >= ((m_sequence.m_eventsList[FlowID].m_time + m_time) - m_CripFront.length))
+            && (curentTime + 1 <= ((m_sequence.m_eventsList[FlowID].m_time + m_time) - m_CripFront.length)))
         {
-            m_hasPlayed = true;
+            curentTime = m_gameManager.GetCurrentTIme();
 
+            m_hasPlayed = true;
             PlayFront();
         }
 
 
-        // PoseID 2 → Side
-        else if (poseID == 2 && !m_isSidePlaying)
+        if (poseID == 2 && FlowID >= 0
+            && (m_gameManager.GetCurrentTIme() >= ((m_sequence.m_eventsList[FlowID].m_time + m_time) - m_CripSide.length))
+            && (curentTime + 1 <= ((m_sequence.m_eventsList[FlowID].m_time + m_time) - m_CripSide.length)))
         {
-            m_hasPlayed = true;
+            curentTime = m_gameManager.GetCurrentTIme();
 
+            m_hasPlayed = true;
             PlaySide();
         }
+
+
     }
 
 
-    // Front再生
-
+    // =========================================================
+    // Front
+    // =========================================================
     public void PlayFront()
     {
-        m_isFrontPlaying = true;
+        if (m_isPlaying)
+            return;
 
-        m_animatorFront.enabled = true;
+        m_isPlaying = true;
+        m_isPaused = false;
 
-        // Frontを最初から再生
-        m_animatorFront.Play(
+        m_currentAnimation = "Front";
+
+        m_animator.enabled = true;
+        m_animator.speed = 1f;
+
+        // ★ Frontを実際に再生
+        m_animator.Play(
             "Base Layer.Front",
             0,
             0f
         );
 
-        StartCoroutine(WaitFrontAnimation());
-    }
-
-    //待機して再生
-    private IEnumerator WaitFrontAnimation()
-    {
-        // AnimatorにPlayを反映
-        yield return null;
-
-        // Frontの状態になるまで待つ
-        yield return new WaitUntil(() =>
-            m_animatorFront.GetCurrentAnimatorStateInfo(0).IsName("Front")
-        );
-
-        // Frontの再生終了まで待つ
-        yield return new WaitUntil(() =>
-            m_animatorFront.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
-        );
-
-        // Idleに戻るまで待つ
-        yield return new WaitForSeconds(m_idleDelay);
-
-        // Idleへ戻す
-        m_animatorFront.Play(
-            "Base Layer.Idle",
-            0,
-            0f
-        );
-
-        // Idleの再生終了まで待つ
-        yield return new WaitUntil(() =>
-            m_animatorFront.GetCurrentAnimatorStateInfo(0).IsName("Idle")
-        );
-
-        yield return new WaitUntil(() =>
-            m_animatorFront.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
-        );
-
-        // Idle終了後にAnimatorを停止
-        m_animatorFront.enabled = false;
-
-        // Frontの再生可能状態を解除
-        m_isFrontPlaying = false;
+        StartCoroutine(WaitAnimation("Front"));
     }
 
 
-    // Side再生
+    // =========================================================
+    // Side
+    // =========================================================
     public void PlaySide()
     {
-        m_isSidePlaying = true;
+        if (m_isPlaying)
+            return;
 
-        m_animatorSide.enabled = true;
+        m_isPlaying = true;
+        m_isPaused = false;
 
-        // Sideを最初から再生
-        m_animatorSide.Play(
+        m_currentAnimation = "Side";
+
+        m_animator.enabled = true;
+        m_animator.speed = 1f;
+
+        // ★ Sideを実際に再生
+        m_animator.Play(
             "Base Layer.Side",
             0,
             0f
         );
 
-        StartCoroutine(WaitSideAnimation());
+        StartCoroutine(WaitAnimation("Side"));
     }
 
-    //待機して再生
-    private IEnumerator WaitSideAnimation()
+
+    // =========================================================
+    // アニメーション終了待ち
+    // =========================================================
+    private IEnumerator WaitAnimation(string animationName)
     {
         // AnimatorにPlayを反映
         yield return null;
 
-        // Sideの状態になるまで待つ
+        // ==========================================
+        // 指定したアニメーションになるまで待つ
+        // ==========================================
         yield return new WaitUntil(() =>
-            m_animatorSide.GetCurrentAnimatorStateInfo(0).IsName("Side")
-        );
+        {
+            return m_animator
+                .GetCurrentAnimatorStateInfo(0)
+                .IsName(animationName);
+        });
 
-        // Sideの再生終了まで待つ
+        // ==========================================
+        // アニメーション終了まで待つ
+        // ==========================================
         yield return new WaitUntil(() =>
-            m_animatorSide.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
-        );
+        {
+            if (m_isPaused)
+                return false;
 
-        // Idleに戻るまで待つ
+            AnimatorStateInfo state =
+                m_animator.GetCurrentAnimatorStateInfo(0);
+
+            return state.IsName(animationName)
+                && state.normalizedTime >= 1.0f;
+        });
+
+        // ==========================================
+        // ポーズを数秒維持
+        // ==========================================
         yield return new WaitForSeconds(m_idleDelay);
 
-        // Idleへ戻す
-        m_animatorSide.Play(
+        // ==========================================
+        // Idleへ
+        // ==========================================
+        m_animator.speed = 1f;
+        m_isPaused = false;
+
+        m_animator.Play(
             "Base Layer.Idle",
             0,
             0f
         );
 
-        // Idleの再生終了まで待つ
+        yield return null;
+
+        // ==========================================
+        // Idle終了まで待つ
+        // ==========================================
         yield return new WaitUntil(() =>
-            m_animatorSide.GetCurrentAnimatorStateInfo(0).IsName("Idle")
-        );
+        {
+            if (m_isPaused)
+                return false;
 
-        yield return new WaitUntil(() =>
-            m_animatorSide.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f
-        );
+            AnimatorStateInfo state =
+                m_animator.GetCurrentAnimatorStateInfo(0);
 
-        // Idle終了後にAnimatorを停止
-        m_animatorSide.enabled = false;
+            return state.IsName("Idle")
+                && state.normalizedTime >= 1.0f;
+        });
 
-        // Frontの再生可能状態を解除
-        m_isSidePlaying = false;
+        // ==========================================
+        // Animator停止
+        // ==========================================
+        m_animator.speed = 0f;
+        m_animator.enabled = false;
+
+        m_isPlaying = false;
+        m_isPaused = false;
+        m_currentAnimation = "";
+
     }
+
+
+
+    // =========================================================
+    // 一時停止 / 再開
+    // =========================================================
+    public void TogglePause()
+    {
+        if (!m_isPlaying)
+            return;
+
+
+        if (m_isPaused)
+        {
+            ResumeAnimation();
+        }
+        else
+        {
+            PauseAnimation();
+        }
+    }
+
+
+    public void PauseAnimation()
+    {
+        m_isPaused = true;
+
+        m_animator.speed = 0f;
+    }
+
+
+    public void ResumeAnimation()
+    {
+        m_isPaused = false;
+
+        m_animator.speed = 1f;
+    }
+
+
+
 }
