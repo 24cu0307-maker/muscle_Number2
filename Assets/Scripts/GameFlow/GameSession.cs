@@ -64,6 +64,6 @@ public static class GameSession
     /// </summary>
     public static void Load(string _sceneName)
     {
-        SceneManager.LoadScene(_sceneName);
+        SceneFadeTransition.LoadScene(_sceneName);
     }
 }

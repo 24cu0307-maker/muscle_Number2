@@ -62,7 +62,12 @@ namespace GameFlowTemplate
             if (string.IsNullOrWhiteSpace(_scenename)) { return; }
 
             SceneLoadRequested?.Invoke(_scenename);
-            UnitySceneManager.LoadScene(_scenename, mode);
+            if (mode == LoadSceneMode.Additive)
+            {
+                UnitySceneManager.LoadScene(_scenename, mode);
+                return;
+            }
+            SceneFadeTransition.LoadScene(_scenename);
         }
 
         public void LoadResultSceneIfNeeded()

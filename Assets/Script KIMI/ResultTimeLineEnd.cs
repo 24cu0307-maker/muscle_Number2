@@ -19,6 +19,6 @@ public class ResultTimelineEnd : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector playableDirector)
     {
-        SceneManager.LoadScene(titleSceneName);
+        SceneFadeTransition.LoadScene(titleSceneName);
     }
 }
