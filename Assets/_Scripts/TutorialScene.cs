@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public sealed class TutorialScene : MonoBehaviour
 {
     private const string EMediaPipeSceneName = "Holistic";
-    private const int EPoseCount = 1;
+    private const int EPoseCount = 2;
 
     [Header("Tutorial Assets")]
     [SerializeField] private GameObject m_characterPrefab;

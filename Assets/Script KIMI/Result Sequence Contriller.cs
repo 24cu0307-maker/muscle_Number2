@@ -1,3 +1,5 @@
+// このスクリプトは生成AIを活用して作成・調整しています。
+// 内容を確認し、プロジェクトに合わせて使用しています。
 using UnityEngine;
 using UnityEngine.Playables;
 using System.Collections;

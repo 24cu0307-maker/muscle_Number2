@@ -1067,6 +1067,7 @@ MonoBehaviour:
   practiceImages:
   - {fileID: 21300000, guid: bd2150f2afef72e458ca520ef19ebe5d, type: 3}
   practiceActiveImage: {fileID: 21300000, guid: 757e7538f56cfbf45a9ada13faa20684, type: 3}
+  nextPoseImage: {fileID: 21300000, guid: 2b6bf670bab3a9f46a08736e616b0830, type: 3}
   successImage: {fileID: 21300000, guid: 430a6bbba1d6fc44197678108310520e, type: 3}
   failureImage: {fileID: 21300000, guid: f71e45331993c7548b7196315a458f7a, type: 3}
   outroImages:
@@ -1085,6 +1086,7 @@ MonoBehaviour:
   finishSE: {fileID: 0}
   imageDisplaySeconds: 4
   resultDisplaySeconds: 3
+  nextPoseDisplaySeconds: 3
   bgmFadeOutSeconds: 0.7
   jingleFadeInSeconds: 0.4
 --- !u!1 &1652121697
@@ -1591,7 +1593,7 @@ MonoBehaviour:
   m_characterPrefab: {fileID: 8937430212161693466, guid: 5a67ba70de84b71409b21abe1ea43966, type: 3}
   m_poseCanvasPrefab: {fileID: 6031576699090875130, guid: 15e58747a1064234eacb1565701e526c, type: 3}
   m_attemptSeconds: 3
-  m_resultDisplaySeconds: 1
+  m_resultDisplaySeconds: 3
   m_requiredHoldSeconds: 0.3
   m_approachingStartScale: 1.4
   m_characterPosition: {x: 0, y: -4.6, z: 100}

@@ -1,3 +1,6 @@
+// このスクリプトは生成AIを活用して作成・調整しています。
+// 内容を確認し、プロジェクトに合わせて使用しています。
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -25,6 +28,9 @@ public class TutorialFlowController : MonoBehaviour
     [Header("Practice Active Image")]
     [SerializeField] private Sprite practiceActiveImage;
 
+    [Header("Next Pose Image")]
+    [SerializeField] private Sprite nextPoseImage;
+
     [Header("Result Images")]
     [SerializeField] private Sprite successImage;
     [SerializeField] private Sprite failureImage;
@@ -51,12 +57,17 @@ public class TutorialFlowController : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float imageDisplaySeconds = 2.5f;
     [SerializeField] private float resultDisplaySeconds = 1.5f;
+    [SerializeField] private float nextPoseDisplaySeconds = 2.0f;
 
     [Header("Audio Transition")]
     [SerializeField] private float bgmFadeOutSeconds = 0.4f;
     [SerializeField] private float jingleFadeInSeconds = 0.25f;
 
     private bool failureImagePlaying = false;
+    private bool nextPoseImagePlaying = false;
+
+    // 成功したポーズ数を数える
+    private int successfulPoseCount = 0;
 
 
     private IEnumerator Start()
@@ -95,23 +106,21 @@ public class TutorialFlowController : MonoBehaviour
         // 4. ポーズ練習
         // =========================
 
-        // 練習中の説明画像を表示
         ShowPracticeActiveImage();
 
-        // ポーズ開始SE
         PlaySE(poseStartSE);
 
-        // ポーズ練習開始
         tutorialScene.StartPractice();
 
-        // 成功するまで待つ
+        // 全ポーズ終了まで待つ
         while (!tutorialScene.PracticeCompleted)
         {
             yield return null;
         }
 
-        // 失敗画像が表示中なら終了を待つ
-        while (failureImagePlaying)
+        // 表示中の案内があれば終了を待つ
+        while (failureImagePlaying ||
+               nextPoseImagePlaying)
         {
             yield return null;
         }
@@ -119,7 +128,7 @@ public class TutorialFlowController : MonoBehaviour
         explanationRoot.SetActive(false);
 
         // =========================
-        // 5. 成功画像
+        // 5. 最終成功画像
         // =========================
         yield return ShowSingleImage(
             successImage,
@@ -128,8 +137,6 @@ public class TutorialFlowController : MonoBehaviour
 
         // =========================
         // 6. 本番前の説明
-        // 最後の画像と同時に
-        // BGM → ジングルへクロスフェード
         // =========================
         yield return ShowOutroImages();
 
@@ -150,11 +157,12 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// 通常の説明画像を順番に表示
+    /// 説明画像を順番に表示します。
     /// </summary>
     private IEnumerator ShowImages(Sprite[] images)
     {
-        if (images == null || images.Length == 0)
+        if (images == null ||
+            images.Length == 0)
         {
             yield break;
         }
@@ -182,7 +190,7 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// 1枚の画像を指定時間表示
+    /// 1枚の画像を指定時間表示します。
     /// </summary>
     private IEnumerator ShowSingleImage(
         Sprite sprite,
@@ -204,7 +212,7 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// ポーズ練習中の画像を表示
+    /// ポーズ練習中の画像を表示します。
     /// </summary>
     private void ShowPracticeActiveImage()
     {
@@ -214,18 +222,30 @@ public class TutorialFlowController : MonoBehaviour
         }
 
         explanationRoot.SetActive(true);
-        explanationImage.sprite = practiceActiveImage;
+        explanationImage.sprite =
+            practiceActiveImage;
     }
 
 
     /// <summary>
-    /// TutorialSceneから成功・失敗を受け取る
+    /// TutorialSceneから成功・失敗を受け取ります。
     /// </summary>
     private void OnAttemptResolved(bool success)
     {
         if (success)
         {
             PlaySE(successSE);
+
+            successfulPoseCount++;
+
+            // 1ポーズ目の成功時だけ
+            // 「次のポーズの確認!!」を表示
+            if (successfulPoseCount == 1)
+            {
+                StartCoroutine(
+                    ShowNextPoseImage()
+                );
+            }
         }
         else
         {
@@ -239,8 +259,48 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
+    /// 1ポーズ目成功後、
+    /// 「次のポーズの確認!!」を表示します。
+    ///
+    /// 次のポーズそのものはTutorialScene側が
+    /// 既存処理で自動的に開始します。
+    /// </summary>
+    private IEnumerator ShowNextPoseImage()
+    {
+        if (nextPoseImagePlaying)
+        {
+            yield break;
+        }
+
+        nextPoseImagePlaying = true;
+
+        if (nextPoseImage != null)
+        {
+            explanationRoot.SetActive(true);
+
+            explanationImage.sprite =
+                nextPoseImage;
+
+            PlaySE(explanationSE);
+
+            yield return new WaitForSeconds(
+                nextPoseDisplaySeconds
+            );
+        }
+
+        // 次のポーズ用の通常説明へ戻す
+        ShowPracticeActiveImage();
+
+        // 2ポーズ目開始の合図
+        PlaySE(poseStartSE);
+
+        nextPoseImagePlaying = false;
+    }
+
+
+    /// <summary>
     /// 失敗画像を表示したあと、
-    /// 練習中の画像へ戻す
+    /// 練習中の画像へ戻します。
     /// </summary>
     private IEnumerator ShowFailureImage()
     {
@@ -254,7 +314,9 @@ public class TutorialFlowController : MonoBehaviour
         if (failureImage != null)
         {
             explanationRoot.SetActive(true);
-            explanationImage.sprite = failureImage;
+
+            explanationImage.sprite =
+                failureImage;
 
             yield return new WaitForSeconds(
                 resultDisplaySeconds
@@ -268,9 +330,9 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// 本番前の説明画像を順番に表示。
-    /// 最後の画像が表示された瞬間に
-    /// BGMからジングルへクロスフェードする。
+    /// 本番前の説明画像を順番に表示します。
+    /// 最後の画像表示時にBGMから
+    /// ジングルへの切り替えを開始します。
     /// </summary>
     private IEnumerator ShowOutroImages()
     {
@@ -282,23 +344,25 @@ public class TutorialFlowController : MonoBehaviour
 
         explanationRoot.SetActive(true);
 
-        for (int i = 0; i < outroImages.Length; i++)
+        for (int i = 0;
+             i < outroImages.Length;
+             i++)
         {
-            Sprite sprite = outroImages[i];
+            Sprite sprite =
+                outroImages[i];
 
             if (sprite == null)
             {
                 continue;
             }
 
-            // 画像表示
-            explanationImage.sprite = sprite;
+            explanationImage.sprite =
+                sprite;
 
-            // 説明切り替えSE
             PlaySE(explanationSE);
 
-            // 最後の画像が表示された瞬間
-            if (i == outroImages.Length - 1)
+            if (i ==
+                outroImages.Length - 1)
             {
                 StartAudioTransition();
             }
@@ -313,7 +377,7 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// チュートリアルBGMを再生
+    /// チュートリアルBGMを再生します。
     /// </summary>
     private void PlayBGM()
     {
@@ -323,16 +387,19 @@ public class TutorialFlowController : MonoBehaviour
             return;
         }
 
-        bgmSource.clip = tutorialBGM;
+        bgmSource.clip =
+            tutorialBGM;
+
         bgmSource.loop = true;
         bgmSource.volume = 1.0f;
+
         bgmSource.Play();
     }
 
 
     /// <summary>
     /// BGMからジングルへの
-    /// クロスフェードを開始
+    /// クロスフェードを開始します。
     /// </summary>
     private void StartAudioTransition()
     {
@@ -347,7 +414,8 @@ public class TutorialFlowController : MonoBehaviour
 
 
     /// <summary>
-    /// チュートリアルBGMをフェードアウト
+    /// チュートリアルBGMを
+    /// フェードアウトします。
     /// </summary>
     private IEnumerator FadeOutBGM()
     {
@@ -356,22 +424,26 @@ public class TutorialFlowController : MonoBehaviour
             yield break;
         }
 
-        float startVolume = bgmSource.volume;
+        float startVolume =
+            bgmSource.volume;
+
         float elapsedTime = 0.0f;
 
-        // フェード時間が0以下なら即停止
         if (bgmFadeOutSeconds <= 0.0f)
         {
             bgmSource.Stop();
             yield break;
         }
 
-        while (elapsedTime < bgmFadeOutSeconds)
+        while (elapsedTime <
+               bgmFadeOutSeconds)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime +=
+                Time.deltaTime;
 
             float t =
-                elapsedTime / bgmFadeOutSeconds;
+                elapsedTime /
+                bgmFadeOutSeconds;
 
             bgmSource.volume =
                 Mathf.Lerp(
@@ -386,13 +458,15 @@ public class TutorialFlowController : MonoBehaviour
         bgmSource.volume = 0.0f;
         bgmSource.Stop();
 
-        // 次回再生用に戻しておく
-        bgmSource.volume = startVolume;
+        // 次回再生用に元の音量へ戻す
+        bgmSource.volume =
+            startVolume;
     }
 
 
     /// <summary>
-    /// ジングルを0からフェードイン
+    /// ジングルを0から
+    /// フェードインします。
     /// </summary>
     private IEnumerator FadeInJingle()
     {
@@ -402,33 +476,37 @@ public class TutorialFlowController : MonoBehaviour
             yield break;
         }
 
-        // Inspectorで設定した本来の音量を保存
-        float targetVolume = jingleSource.volume;
+        float targetVolume =
+            jingleSource.volume;
 
-        // まず音量0にする
         jingleSource.volume = 0.0f;
 
-        jingleSource.clip = transitionJingle;
+        jingleSource.clip =
+            transitionJingle;
+
         jingleSource.loop = false;
 
-        // 音量0の状態で再生開始
         jingleSource.Play();
 
-        // フェード時間が0以下なら即座に本来の音量へ
         if (jingleFadeInSeconds <= 0.0f)
         {
-            jingleSource.volume = targetVolume;
+            jingleSource.volume =
+                targetVolume;
+
             yield break;
         }
 
         float elapsedTime = 0.0f;
 
-        while (elapsedTime < jingleFadeInSeconds)
+        while (elapsedTime <
+               jingleFadeInSeconds)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime +=
+                Time.deltaTime;
 
             float t =
-                elapsedTime / jingleFadeInSeconds;
+                elapsedTime /
+                jingleFadeInSeconds;
 
             jingleSource.volume =
                 Mathf.Lerp(
@@ -440,12 +518,13 @@ public class TutorialFlowController : MonoBehaviour
             yield return null;
         }
 
-        jingleSource.volume = targetVolume;
+        jingleSource.volume =
+            targetVolume;
     }
 
 
     /// <summary>
-    /// SEを再生
+    /// SEを再生します。
     /// </summary>
     private void PlaySE(AudioClip clip)
     {
@@ -461,7 +540,7 @@ public class TutorialFlowController : MonoBehaviour
 
     /// <summary>
     /// Timelineを再生し、
-    /// 終了まで待つ
+    /// 終了まで待機します。
     /// </summary>
     private IEnumerator PlayTimeline(
         PlayableDirector director
