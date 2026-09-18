@@ -1,0 +1,23 @@
+・F2：タイトル（Title_OP）に戻ります。全成功判定はOFFに戻ります。
+・F3：現在のシーンを飛ばします。
+  タイトル→Tutorial→Gameplay→Result_Anime→タイトル。
+  FilmingからはTutorial、それ以外の専用シーンからは標準でGameplayへ移動。
+  Gameplayを飛ばす場合は、F10と同じ終了処理で結果を保存します。
+・F5：現在のシーンを最初から再読み込み。
+・F6：すべてのポーズ判定を成功（Perfect）にする機能をON／OFF。
+  ON／OFFはログに表示。F5でリスタートするとOFFに戻ります。
+・F8：Voltage操作パネルを表示／非表示。
+  スライダー、＋10／－10、SUCCESS／FAILUREで動作を確認できます。
+・F9：カメラの再フォーカス
+・F10：ゲームを終了してResultへ遷移。
+
+・全シーンでキーを監視します。F6の状態はシーン切り替え後も保持します。
+・F8／F9はVoltage／カメラの操作対象があるシーンでのみ効果があります。
+・F10はGameManagerがない場合、Result_Animeへ直接移動します。
+・設定のないシーンから起動すると標準キーを使用します。
+・GameplayのLiveEffectDeploymentにあるキー設定は、そのシーンに入ると反映されます。
+・再生中の共通設定はGlobalDebugKeysで確認できます。
+・F2／F3もInspectorでキーを変更できます。
+・専用シーンのF3移動先はSkip Fallback Scene Nameで変更できます。
+・F2／F3は通常ビルドでも有効です。変更後は再ビルドしてください。
+・遷移には画面・音声フェードを使います。遷移中のキー操作は無効です。

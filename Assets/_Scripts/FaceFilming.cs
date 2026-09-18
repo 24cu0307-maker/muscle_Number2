@@ -150,7 +150,7 @@ public class FaceFilming : MonoBehaviour
 
         Debug.Log("スクリーンショットを保存しました：" + path);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
+        SceneFadeTransition.LoadScene("Tutorial");
     }
     /*
     private void SaveScreen()

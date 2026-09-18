@@ -137,7 +137,7 @@ public class TitlePoseGauge : MonoBehaviour
             sceneLoadDelay
         );
 
-        SceneManager.LoadScene(
+        SceneFadeTransition.LoadScene(
             nextSceneName
         );
     }

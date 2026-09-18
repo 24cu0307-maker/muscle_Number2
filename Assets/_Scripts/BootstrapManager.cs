@@ -18,6 +18,6 @@ public class BootstrapManager : MonoBehaviour
         DontDestroyOnLoad(ExcelLoader.gameObject);
         DontDestroyOnLoad(GameManager.gameObject);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
+        SceneFadeTransition.LoadScene("Title");
     }
 }

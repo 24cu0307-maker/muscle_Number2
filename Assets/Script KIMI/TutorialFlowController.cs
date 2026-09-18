@@ -54,6 +54,8 @@ public class TutorialFlowController : MonoBehaviour
 
     [Header("Audio Transition")]
     [SerializeField] private float bgmFadeOutSeconds = 0.4f;
+    [Tooltip("BGMはシーン遷移の暗転と同時に消します。OFFは従来のジングル切替時に停止します。")]
+    [SerializeField] private bool b_m_syncBgmWithSceneFade = true;
     [SerializeField] private float jingleFadeInSeconds = 0.25f;
 
     private bool failureImagePlaying = false;
@@ -336,9 +338,11 @@ public class TutorialFlowController : MonoBehaviour
     /// </summary>
     private void StartAudioTransition()
     {
-        StartCoroutine(
-            FadeOutBGM()
-        );
+        //先にBGMを消すと説明・終了Timelineの後の暗転とずれるため、共通遷移へ任せます。
+        if (!b_m_syncBgmWithSceneFade)
+        {
+            StartCoroutine(FadeOutBGM());
+        }
 
         StartCoroutine(
             FadeInJingle()
