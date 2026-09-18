@@ -1,0 +1,26 @@
+・GameplayEffect_kubaを開いて再生します。
+・カメラ認識の準備が完了するとRealtimeCameraPreviewに実映像が出ます。
+・RealtimeCameraPreviewは会場内に固定された四角いモニターです。カメラに追従しません。
+・親のRealtimeCameraPreviewを選び、Transformで移動・回転・拡大縮小します。
+・MonitorBodyが本体、CameraSurfaceが実映像を貼る表面です。
+・CameraSurfaceのWidthで映像の幅を設定できます。
+・Mirror Horizontally：左右反転。Keep Aspect Ratio：縦横比を維持。
+・Keep Aspect RatioをOFFにするとTransformで縦横サイズを自由に変更できます。
+・Crop To SurfaceがONなら、枠の比率に合わせて上下・左右を切り取り、映像を変形させません。
+・View Center（0～1）で切り取り位置、View Zoom（1以上）で映像の拡大率を調整できます。
+・親を縦横別に拡縮した場合も切り取り比率を自動調整します。
+・変更するのはモニターの表示範囲だけです。カメラの撮影範囲・ポーズ認識は変わりません。
+・3Dモニターは再生時にLiveCameraPreviewレイヤーへ移し、ドローンの描画対象から外します。
+・プレイヤー用カメラのCulling MaskではLiveCameraPreviewをONにしてください。
+・ポーズ認識の映像を共有するため、別のWebカメラを起動しません。
+・既存のGameplayとカメラ認識処理は変更していません。
+・作業シーンの変更前バックアップ：C:\muscle\Backups\RealtimeCamera_20260918
+
+UI版
+・GameplayEffect_kubaのRealtimeCameraUICanvas内に配置しています（画面右下）。
+・RealtimeCameraUIのRectTransformで位置・幅・高さを変更します。
+・Crop To SurfaceはON。枠の比率を変えても映像は歪まず、表示範囲が変わります。
+・View Centerで切り取り位置、View Zoomで拡大率、Mirror Horizontallyで左右反転を変更。
+・Prefab：Assets/EffectSystem/RealtimeCameraUIPreview.prefab。他のシーンのHierarchyへ置けます。
+・複数表示する場合はUIを複製してください。それぞれ別々の表示範囲を設定できます。
+・カメラ認識が動くシーンで表示されます。未準備時は映像を隠します。

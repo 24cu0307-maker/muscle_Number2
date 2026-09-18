@@ -17,6 +17,7 @@ public sealed class DroneViewingSystem : MonoBehaviour
     private const string EEmissionColorProperty = "_EmissionColor";
     private const string EDroneObjectName = "VenueViewingDrone";
     private const string EDroneCameraName = "DroneCamera";
+    private const string ELiveCameraPreviewLayerName = "LiveCameraPreview";
     private const int EMinimumTextureSize = 256;
     private const int ESplineSamplesPerSegment = 24;
     private const int ERenderTextureDepthBits = 16;
@@ -358,8 +359,14 @@ public sealed class DroneViewingSystem : MonoBehaviour
             droneCamera.fieldOfView = m_fieldOfView;
             droneCamera.nearClipPlane = m_nearClipPlane;
             droneCamera.farClipPlane = m_farClipPlane;
+            int previewLayer = LayerMask.NameToLayer(ELiveCameraPreviewLayerName);
+            int previewMask = 0;
+            if (previewLayer >= 0)
+            {
+                previewMask = 1 << previewLayer;
+            }
             droneCamera.cullingMask =
-                m_cameraCullingMask.value & ~m_excludedCameraLayers.value;
+                m_cameraCullingMask.value & ~m_excludedCameraLayers.value & ~previewMask;
             droneCamera.depth = -10.0f - i;
             droneCamera.allowHDR = b_m_allowHdr;
             droneCamera.allowMSAA = b_m_allowMsaa;
