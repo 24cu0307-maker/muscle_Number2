@@ -59,7 +59,7 @@ public class ScoreController : MonoBehaviour
         ///指定されたポーズデータを入れる
         CSVPoseData pose = m_poseDatas[_poseID];
 
-        if(_poseID != 9)
+        if (_poseID != 9)
         {
             ///ポーズのスコア計算
             m_score = m_scoreCalculator.TotalScore(
@@ -71,10 +71,20 @@ public class ScoreController : MonoBehaviour
         {
             m_score = 10000;
         }
-        
 
-       
+        if (_poseID == 4)
+        {
+            m_score += 2000;
+        }
+
+        if(m_score > 10000)
+        {
+            m_score = 10000;
+        }
+
+        Debug.Log("aiuogfagageg" + m_score);
+
     }
 
-  
+
 }
