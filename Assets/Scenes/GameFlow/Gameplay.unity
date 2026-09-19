@@ -170535,6 +170535,30 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: -2828841054461121086, guid: 8980ec250c60bc745865698a7403f820, type: 3}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5fb46067497d46948802d45fe54d0ffc, type: 2}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 96af4eceaa41152488882c1cba7e097e, type: 2}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e5d4035996074744d84365e5b153c208, type: 2}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b7613a67f9801614a8664b55eccb79c2, type: 2}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2ccc6e9c2708a2640bedb4efaae9d926, type: 2}
+    - target: {fileID: 6773272537855233600, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
+      propertyPath: 'm_Materials.Array.data[5]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 063a525a1a4a9054ab1707d897f6f166, type: 2}
     - target: {fileID: 6845350652715726561, guid: 6bf47e6b55175ab47bde91ff5b8e7f07, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.0000028972281
@@ -171083,7 +171107,7 @@ PrefabInstance:
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_audiencePrefab
       value: 
-      objectReference: {fileID: 4082598583084868315, guid: 812dfe396b9d7474c8c544e51f73f6d0, type: 3}
+      objectReference: {fileID: 5233169302969643246, guid: baa91317982f6b344b892a9c0ae52b1d, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_positionError.x
       value: 3
@@ -171097,21 +171121,29 @@ PrefabInstance:
       value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
+      propertyPath: m_reactionAnimationWeight
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_jump
       value: 
-      objectReference: {fileID: 1827226128182048838, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      objectReference: {fileID: 1827226128182048838, guid: dfa4af4ec034c4d4e89bd25d4086e1aa, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_sway
       value: 
-      objectReference: {fileID: -998496362607748373, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      objectReference: {fileID: -8481709605947105597, guid: dfa4af4ec034c4d4e89bd25d4086e1aa, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_cheer
       value: 
-      objectReference: {fileID: -3291206362154003629, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      objectReference: {fileID: 1950896874197824025, guid: dfa4af4ec034c4d4e89bd25d4086e1aa, type: 3}
     - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
       propertyPath: m_reactionAnimations.m_bounce
       value: 
-      objectReference: {fileID: -1493303027246044120, guid: 3e9c07a03ac270c47940a8d73fb1818d, type: 3}
+      objectReference: {fileID: -2529017216748528031, guid: dfa4af4ec034c4d4e89bd25d4086e1aa, type: 3}
+    - target: {fileID: 8596751126432645430, guid: 88a08e1db25f59742ad0d501de0a2e5d, type: 3}
+      propertyPath: m_reactionAnimations.m_disappointed
+      value: 
+      objectReference: {fileID: 5530032110195653110, guid: dfa4af4ec034c4d4e89bd25d4086e1aa, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
