@@ -6038,6 +6038,9 @@ MonoBehaviour:
   m_restartInputKey: 98
   m_forceSuccessToggleInputKey: 99
   m_cameraRetargetInputKey: 102
+  m_returnTitleInputKey: 95
+  m_skipSceneInputKey: 96
+  m_skipFallbackSceneName: Gameplay
 --- !u!114 &130277792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18932,7 +18935,7 @@ Light:
   m_InnerSpotAngle: 5.4257793
   m_CookieSize2D: {x: 1e-45, y: 1e-45}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -50068,7 +50071,7 @@ Light:
   m_InnerSpotAngle: 5.9169335
   m_CookieSize2D: {x: 1e-45, y: 1e-45}
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: 256
     m_Strength: 0.65
@@ -97027,7 +97030,7 @@ MonoBehaviour:
   m_maxZoomZ: -10
   m_positionTolerance: 0.1
   m_isCaptureSystemOn: 1
-  m_captureDelay: 2
+  m_captureDelay: 2.6
   folderPath: D:\MyGame\ScreenShots
 --- !u!4 &1221305757
 Transform:
