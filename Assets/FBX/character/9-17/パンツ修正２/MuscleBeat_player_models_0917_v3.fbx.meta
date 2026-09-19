@@ -3,7 +3,37 @@ guid: 8980ec250c60bc745865698a7403f820
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Cloth1
+    second: {fileID: 2100000, guid: b7613a67f9801614a8664b55eccb79c2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Face1
+    second: {fileID: 2100000, guid: 96af4eceaa41152488882c1cba7e097e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Hair1
+    second: {fileID: 2100000, guid: 5fb46067497d46948802d45fe54d0ffc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_LowerBody1
+    second: {fileID: 2100000, guid: 2ccc6e9c2708a2640bedb4efaae9d926, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_UpperBody1
+    second: {fileID: 2100000, guid: e5d4035996074744d84365e5b153c208, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: standardSurface2
+    second: {fileID: 2100000, guid: 063a525a1a4a9054ab1707d897f6f166, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
