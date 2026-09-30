@@ -31,8 +31,19 @@ public static class GameSession
     /// </summary>
     public static void StartNewGame()
     {
-        m_score = MinimumScore;
+        ResetPlayState();
         Load(TutorialScene);
+    }
+
+    /// <summary>
+    /// シーンをまたいで保持される前回プレイの状態を初期化します。
+    /// </summary>
+    public static void ResetPlayState()
+    {
+        m_score = MinimumScore;
+        EventNodeRuntimeContext.Clear();
+        PositionDataManager.Instance?.ResetData();
+        AngleDataManager.Instance?.ResetData();
     }
 
     /// <summary>

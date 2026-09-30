@@ -24,6 +24,14 @@ public class PositionDataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /// <summary>
+    /// 前回のプレイヤー座標を次のゲームへ持ち越さないよう初期化します。
+    /// </summary>
+    public void ResetData()
+    {
+        positionData = new PositionData();
+    }
 }
 
 /*

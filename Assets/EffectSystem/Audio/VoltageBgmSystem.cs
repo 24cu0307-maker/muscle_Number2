@@ -102,6 +102,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     private AudioSource m_branchAudioSource;
     private Coroutine m_branchCoroutine;
     private float m_originalBgmVolumeMultiplier = 1.0f;
+    private double m_expectedPlaybackEndTime; //自然終了と意図しない停止を区別するDSP時刻
 
     public MusicNodeSequence CurrentSequence => m_musicNodeSequence;
 
@@ -111,6 +112,13 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         {
             AudioSource source = GetClockSource();
             if (source == null)return 0.0f;
+            if (source.clip != null
+                && m_expectedPlaybackEndTime > 0.0d
+                && AudioSettings.dspTime >= m_expectedPlaybackEndTime)
+            {
+                //自然終了時にAudioSource.timeが0へ戻っても、終了判定には曲末時刻を返します。
+                return source.clip.length;
+            }
             return source.time;
         }
     }
@@ -288,6 +296,9 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         Destroy(m_branchAudioSource);
         m_branchAudioSource = null;
         m_originalBgmVolumeMultiplier = 1.0f;
+        m_scheduledStartTime = AudioSettings.dspTime - targetTime;
+        m_expectedPlaybackEndTime = AudioSettings.dspTime
+            + Mathf.Max(0.0f, targetClip.length - targetTime);
         m_musicNodeSequence = _branch.m_targetSequence;
         m_triggeredBranchNodes.Clear();
         SequenceChanged?.Invoke(m_musicNodeSequence);
@@ -333,6 +344,8 @@ public sealed class VoltageBgmSystem : MonoBehaviour
 
         m_scheduledStartTime =
             AudioSettings.dspTime + EPlaybackStartDelay; //同期開始時刻
+        m_expectedPlaybackEndTime = CalculateExpectedPlaybackEndTime(
+            m_scheduledStartTime);
         b_m_shouldBePlaying = true;
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
@@ -363,6 +376,7 @@ public sealed class VoltageBgmSystem : MonoBehaviour
     public void Stop()
     {
         b_m_shouldBePlaying = false;
+        m_expectedPlaybackEndTime = 0.0d;
         if (m_audioSources == null)return;
 
         for (int i = 0; i < m_audioSources.Length; ++i)
@@ -489,6 +503,13 @@ public sealed class VoltageBgmSystem : MonoBehaviour
         if (!b_m_shouldBePlaying)return;
         if (AudioSettings.dspTime
             <= m_scheduledStartTime + ERestartToleranceSeconds)return;
+        if (m_expectedPlaybackEndTime > 0.0d
+            && AudioSettings.dspTime >= m_expectedPlaybackEndTime)
+        {
+            //曲の自然終了後は0秒から再生せず、InGame側の終了処理へ任せます。
+            b_m_shouldBePlaying = false;
+            return;
+        }
 
         for (int i = 0; i < m_audioSources.Length; ++i)
         {
@@ -499,6 +520,24 @@ public sealed class VoltageBgmSystem : MonoBehaviour
 
             audioSource.Play();
         }
+    }
+
+    /// <summary>
+    /// 現在のLayer群が自然終了するDSP時刻を返します。
+    /// </summary>
+    private double CalculateExpectedPlaybackEndTime(double _startTime)
+    {
+        float maximumDuration = 0.0f;
+        for (int i = 0; i < m_audioSources.Length; ++i)
+        {
+            AudioSource audioSource = m_audioSources[i];
+            if (audioSource == null || audioSource.clip == null)continue;
+
+            maximumDuration = Mathf.Max(maximumDuration, audioSource.clip.length);
+        }
+
+        if (maximumDuration <= 0.0f)return 0.0d;
+        return _startTime + maximumDuration;
     }
 
     public float GetBGMTime(int index)

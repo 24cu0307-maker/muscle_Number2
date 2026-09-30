@@ -24,6 +24,15 @@ public class AngleDataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /// <summary>
+    /// 前回の判定角度を次のゲームへ持ち越さないよう初期化します。
+    /// </summary>
+    public void ResetData()
+    {
+        angleData = new AngleData();
+    }
+
     /*
     private void Awake()
     {

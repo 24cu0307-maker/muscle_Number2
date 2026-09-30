@@ -176,6 +176,7 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
     private void ReturnToTitle()
     {
         ForceAllSuccess = false;
+        GameSession.ResetPlayState();
         SceneFadeTransition.LoadScene(GameSession.TitleScene);
     }
 
