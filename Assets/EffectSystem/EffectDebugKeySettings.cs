@@ -3,7 +3,7 @@
 *@brief Gameplayで使用するDebugキーとDebug操作を一括管理する*
 *@author 24cu0312 久場洸太*
 *@date 2026/07/29*
-*最終更新日 2026/09/18*
+*最終更新日 2026/09/30*
 *@remarks InspectorからすべてのDebugキーを変更可能*
 *━━━━━━━━━*/
 
@@ -46,7 +46,6 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
     {
         EnsurePersistentSettings(null);
         m_instance.b_m_resultRequested = false;
-        m_instance.b_m_restartRequested = false;
     }
 
     private void Awake()
@@ -128,7 +127,15 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
             SkipCurrentScene();
             return;
         }
-        if (!b_m_restartRequested && IsKeyDown(m_restartInputKey))
+        if (b_m_restartRequested)
+        {
+            //再読込後に同じ押下を拾わないよう、実際にキーが離されるまで再実行を禁止します。
+            if (!IsKeyPressed(m_restartInputKey))
+            {
+                b_m_restartRequested = false;
+            }
+        }
+        else if (IsKeyDown(m_restartInputKey))
         {
             RestartCurrentScene();
             return;
@@ -256,5 +263,17 @@ public sealed class EffectDebugKeySettings : MonoBehaviour
 
         KeyControl keyControl = keyboard[_inputSystemKey];
         return keyControl != null && keyControl.wasPressedThisFrame;
+    }
+
+    /// <summary>
+    /// シーン再読込をまたいだキーの押下状態を確認します。
+    /// </summary>
+    private static bool IsKeyPressed(Key _inputSystemKey)
+    {
+        Keyboard keyboard = Keyboard.current; //現在接続中のKeyboard
+        if (keyboard == null)return false;
+
+        KeyControl keyControl = keyboard[_inputSystemKey];
+        return keyControl != null && keyControl.isPressed;
     }
 }
